@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { sections, ui, updated } from '../data/content';
+import { render, questions, sources, fullGuide } from '../lib/content';
+const hero = sections[0].markdown.split('\n\n');
+const definition = sections[1].markdown.split('\n\n')[0];
+const chapters = sections.filter(s => s.id !== 'hero' && s.id !== 'updates');
+const faq = questions();
+const stages = [
+  { title: 'Query', glyph: '?', text: 'The system interprets what you’re actually asking.' },
+  { title: 'Discover', glyph: '↗', text: 'It retrieves a set of candidate sources from the web.' },
+  { title: 'Select', glyph: '≋', text: 'It chooses specific passages from those candidates.' },
+  { title: 'Answer', glyph: '↳', text: 'It synthesises a response, sometimes showing citations.' }
+];
+const schema = { '@context': 'https://schema.org', '@type': 'Article', headline: 'What is GEO? A practical guide to Generative Engine Optimisation', description: 'A beginner’s guide to GEO, AI search, and making useful content easier to find and cite.', mainEntityOfPage: 'https://whatisgeo.app/', inLanguage: 'en-GB', datePublished: '2026-09-14', dateModified: '2026-09-14', author: { '@type': 'Organization', name: 'Adapt Progress Evolve', url: 'https://adaptprogressevolve.com/' }, publisher: { '@type': 'Organization', name: 'What is GEO', url: 'https://whatisgeo.app/' }, citation: sources.map(s=>s.url), wordCount: fullGuide().split(/\s+/).length };
+---
+<Base title="What is GEO? A practical guide to Generative Engine Optimisation" description="Learn what GEO means, how AI answers find sources, and how to make your website useful, discoverable and easier to cite. A practical beginner's guide.">
+  <main id="main">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-meta"><p class="eyebrow">{ui.eyebrow}</p><span class="edition">Independent thinking. Clear answers.</span></div>
+      <h1 id="hero-title">Become a source<br />AI can <span class="accent">actually cite.</span></h1>
+      <div class="hero-bottom"><div><p class="hero-intro">{hero[1]}</p><div class="hero-links"><a class="pill" href="#guide">Understand GEO <span aria-hidden="true">↘</span></a><a class="text-link" href="#updates">{ui.signupButton} ↗</a></div></div>
+      <div class="answer-preview"><div class="preview-label"><span>A useful answer</span><span>01 / GEO</span></div><p>“Generative Engine Optimisation is the practice of making your content <mark>visible and accurately represented</mark> in AI answers.”</p><a class="citation-tag" href="#what-is-geo"><b>1</b> whatisgeo.app ↗</a><div class="preview-caption">An illustration of a citation. Not a live AI result.</div></div></div>
+      <div class="hero-note"><span>For business owners, marketers & curious minds</span><span>Scroll to understand ↓</span></div>
+    </section>
+    <div class="statement-band" aria-hidden="true"><span>Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing. <i>✳</i> Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing.</span></div>
+    <section class="process" aria-labelledby="process-title"><div class="process-header"><div><p class="eyebrow">How AI answers happen</p><h2 id="process-title">From a question.<br />To <span style="color:var(--blue)">your expertise.</span></h2></div><p>When a system searches the live web, it roughly follows four stages.</p></div><div class="process-flow">{stages.map((s,i)=><article class="process-card"><span class="step">0{i+1}</span><span class="step-glyph" aria-hidden="true">{s.glyph}</span><h3>{s.title}</h3><p>{s.text}</p></article>)}</div><p class="process-foot">A simplified explanation. Not every AI answer uses live search, and not every source becomes a citation.</p></section>
+    <div class="guide-shell" id="guide"><aside class="toc"><p class="eyebrow">{ui.tocTitle}</p><ol>{chapters.map((s,i)=><li><a href={'#'+s.id}><span>{String(i+1).padStart(2,'0')}</span>{s.title}</a></li>)}</ol><p class="read-note">{Math.ceil(fullGuide().split(/\s+/).length / 200)} minute read<br />Updated {updated}<br /><a href="https://adaptprogressevolve.com/">By Adapt Progress Evolve ↗</a></p></aside>
+      <div class="chapters">{chapters.map((s,i)=><section class="chapter" id={s.id} aria-labelledby={s.id+'-title'}><div class="chapter-meta"><b>{String(i+1).padStart(2,'0')} / {s.title}</b><a href={'#'+s.id} aria-label={'Link to '+s.title}>↗</a></div><h2 id={s.id+'-title'}>{s.title}</h2>{s.id==='what-is-geo' ? <><div class="definition-panel"><p>{definition}</p></div><div class="prose" set:html={render(s.markdown.split('\n\n').slice(1).join('\n\n'))} /></> : s.id==='questions' ? <div class="faq-list">{faq.map(q=><details><summary>{q.question}</summary><div class="prose" set:html={render(q.answer)} /></details>)}</div> : <div class="prose" set:html={render(s.markdown)} />}</section>)}
+      <section class="sources" aria-labelledby="sources-title"><h3 id="sources-title">{ui.sourcesTitle}</h3><ol>{sources.map(s=><li><a href={s.url}>{s.name} ↗</a></li>)}</ol><p>Reviewed {updated}. Practical recommendations are distinguished from platform requirements and research findings.</p></section></div>
+    </div>
+    <section class="newsletter" id="updates" aria-labelledby="signup-title"><div><p class="eyebrow">Stay in the loop</p><h2 id="signup-title">{ui.signupTitle}</h2><p>{ui.signupBody}</p></div><form class="signup-form" action="/api/subscribe" method="post"><label for="signup-email">{ui.emailLabel}</label><div class="input-row"><input id="signup-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder={ui.emailPlaceholder} required /><button type="submit">{ui.signupButton} ↗</button></div><label class="consent-row"><input name="consent" type="checkbox" value="yes" required /><span>{ui.consent}</span></label><div class="honeypot" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" tabindex="-1" autocomplete="off" /></div><p class="privacy-note"><a href="/privacy/">{ui.privacyLink}</a> · Email confirmation required.</p><div class="form-message" role="status" aria-live="polite" tabindex="-1"></div><noscript><p>Submitting opens the signup response page.</p></noscript></form></section>
+  </main>
+  <div class="scroll-progress" aria-hidden="true"></div>
+</Base>

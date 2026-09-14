@@ -1,0 +1,15 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+/confirm/*
+  Referrer-Policy: no-referrer
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+/guide.md
+  Content-Type: text/markdown; charset=utf-8

@@ -1,0 +1,5 @@
+import { sections } from '../data/content';
+export function GET() {
+ const body = '# What is GEO\n\n> A practical, source-linked guide to Generative Engine Optimisation for business owners and marketers.\n\nPublisher: Adapt Progress Evolve (https://adaptprogressevolve.com/). Updated 14 September 2026.\n\nGEO aims to improve visibility and accurate representation in AI answers. It does not guarantee inclusion or replace SEO. This file is a navigation aid, not a statement of ranking eligibility or crawl permission.\n\n## Guide\n\n- [Complete guide, Markdown](https://whatisgeo.app/guide.md): Full educational content and source links.\n- [Full text](https://whatisgeo.app/llms-full.txt): Same guide as plain text.\n' + sections.filter(s=>s.id !== 'hero' && s.id !== 'updates').map(s=>`- [${s.title}](https://whatisgeo.app/#${s.id})`).join('\n') + '\n\n## Optional\n\n- [Privacy](https://whatisgeo.app/privacy/): Newsletter data and website preferences.\n- [Sitemap](https://whatisgeo.app/sitemap.xml)\n';
+ return new Response(body, {headers:{'Content-Type':'text/plain; charset=utf-8'}});
+}

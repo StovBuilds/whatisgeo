@@ -1,0 +1,45 @@
+---
+import '@fontsource-variable/manrope';
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+interface Props { title: string; description: string; noindex?: boolean; }
+const { title, description, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, 'https://whatisgeo.app');
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="text/markdown" href="/guide.md" title="What is GEO — text version" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="What is GEO" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="theme-color" content="#ffffff" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <script is:inline>
+      try { document.documentElement.dataset.theme = localStorage.getItem('wig-theme') === 'dark' ? 'dark' : 'light'; } catch { }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="What is GEO home"><span class="word"><b>w</b>hat</span><span class="word"><b>i</b>s</span><span class="word"><b>g</b>eo</span><span class="logo-dot">.</span></a>
+      <nav aria-label="Main navigation"><a href="/#guide">The guide</a><a href="/#getting-started">Get started</a></nav>
+      <div class="header-actions"><button class="theme-button" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19.5 15.5A8 8 0 0 1 8.5 4.5a8 8 0 1 0 11 11Z" stroke="currentColor" stroke-width="1.5"/></svg></button><a class="small-cta" href="/#updates">Stay in the loop <span aria-hidden="true">↗</span></a></div>
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <div class="footer-top"><a class="wordmark" href="/" aria-label="What is GEO home"><span class="word"><b>w</b>hat</span><span class="word"><b>i</b>s</span><span class="word"><b>g</b>eo</span><span class="logo-dot">.</span></a><a class="back-top" href="#">Back to top ↑</a></div>
+      <div class="footer-bottom"><p>© {new Date().getFullYear()} What is GEO</p><div><a href="/privacy/">Privacy</a><a href="/llms.txt">llms.txt</a><a href="/guide.md">Text version</a></div><p>Built by <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve ↗</a></p></div>
+    </footer>
+    <script src="../scripts/site.ts"></script>
+  </body>
+</html>

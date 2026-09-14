@@ -1,0 +1,7 @@
+---
+import Base from '../layouts/Base.astro';
+import { supportSections } from '../data/content';
+import { render } from '../lib/content';
+const content = supportSections.find(s=>s.title==='Privacy')!.markdown;
+---
+<Base title="Privacy | What is GEO" description="How What is GEO handles newsletter subscriptions, your email address, and website preferences."><main class="utility-page" id="main"><p class="eyebrow">What is GEO</p><h1>Privacy, plainly.</h1><div class="prose" set:html={render(content)} /><a class="pill" href="/">Back to the guide ↗</a></main></Base>

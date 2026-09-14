@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local Worker testing. Never commit the real file.
+SITE_URL=http://127.0.0.1:8787
+RESEND_API_KEY=
+RESEND_FROM=
+RESEND_SEGMENT_ID=
+RESEND_TOPIC_ID=
