@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && node tools/postbuild.mjs",
     "check": "astro check && tsc -p tsconfig.worker.json --noEmit",
-    "preview": "wrangler dev --port 8787",
+    "preview": "wrangler dev --port 8787 --host 127.0.0.1",
     "deploy": "npm run build && wrangler deploy",
+    "og": "node tools/render-og.mjs",
     "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {

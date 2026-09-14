@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { sections, ui, updated } from '../data/content';
+import { sections, ui, updated, updatedISO, publishedISO, site } from '../data/content';
 import { render, questions, sources, fullGuide } from '../lib/content';
 const hero = sections[0].markdown.split('\n\n');
 const definition = sections[1].markdown.split('\n\n')[0];
@@ -12,7 +12,13 @@ const stages = [
   { title: 'Select', glyph: '≋', text: 'It chooses specific passages from those candidates.' },
   { title: 'Answer', glyph: '↳', text: 'It synthesises a response, sometimes showing citations.' }
 ];
-const schema = { '@context': 'https://schema.org', '@type': 'Article', headline: 'What is GEO? A practical guide to Generative Engine Optimisation', description: 'A beginner’s guide to GEO, AI search, and making useful content easier to find and cite.', mainEntityOfPage: 'https://whatisgeo.app/', inLanguage: 'en-GB', datePublished: '2026-09-14', dateModified: '2026-09-14', author: { '@type': 'Organization', name: 'Adapt Progress Evolve', url: 'https://adaptprogressevolve.com/' }, publisher: { '@type': 'Organization', name: 'What is GEO', url: 'https://whatisgeo.app/' }, citation: sources.map(s=>s.url), wordCount: fullGuide().split(/\s+/).length };
+const publisher = { '@type': 'Organization', '@id': `${site.publisher.url}#organization`, name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt] };
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'WebSite', '@id': `${site.url}/#website`, url: `${site.url}/`, name: site.name, description: site.description, inLanguage: 'en-GB', publisher: { '@id': publisher['@id'] }, sameAs: [site.hilyt] },
+  { '@type': 'Article', '@id': `${site.url}/#article`, headline: 'What is GEO? A practical guide to Generative Engine Optimisation', description: 'A beginner’s guide to GEO, AI search, and making useful content easier to find and cite.', mainEntityOfPage: `${site.url}/`, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: 'en-GB', datePublished: publishedISO, dateModified: updatedISO, author: { '@id': publisher['@id'] }, publisher: { '@id': publisher['@id'] }, image: `${site.url}/og.png`, citation: sources.map(s=>s.url), wordCount: fullGuide().split(/\s+/).length },
+  { '@type': 'FAQPage', '@id': `${site.url}/#faq`, mainEntity: faq.map(q => ({ '@type': 'Question', name: q.question, acceptedAnswer: { '@type': 'Answer', text: q.answer.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') } })) },
+  publisher
+] };
 ---
 <Base title="What is GEO? A practical guide to Generative Engine Optimisation" description="Learn what GEO means, how AI answers find sources, and how to make your website useful, discoverable and easier to cite. A practical beginner's guide.">
   <main id="main">
@@ -26,7 +32,7 @@ const schema = { '@context': 'https://schema.org', '@type': 'Article', headline:
     </section>
     <div class="statement-band" aria-hidden="true"><span>Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing. <i>✳</i> Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing.</span></div>
     <section class="process" aria-labelledby="process-title"><div class="process-header"><div><p class="eyebrow">How AI answers happen</p><h2 id="process-title">From a question.<br />To <span style="color:var(--blue)">your expertise.</span></h2></div><p>When a system searches the live web, it roughly follows four stages.</p></div><div class="process-flow">{stages.map((s,i)=><article class="process-card"><span class="step">0{i+1}</span><span class="step-glyph" aria-hidden="true">{s.glyph}</span><h3>{s.title}</h3><p>{s.text}</p></article>)}</div><p class="process-foot">A simplified explanation. Not every AI answer uses live search, and not every source becomes a citation.</p></section>
-    <div class="guide-shell" id="guide"><aside class="toc"><p class="eyebrow">{ui.tocTitle}</p><ol>{chapters.map((s,i)=><li><a href={'#'+s.id}><span>{String(i+1).padStart(2,'0')}</span>{s.title}</a></li>)}</ol><p class="read-note">{Math.ceil(fullGuide().split(/\s+/).length / 200)} minute read<br />Updated {updated}<br /><a href="https://adaptprogressevolve.com/">By Adapt Progress Evolve ↗</a></p></aside>
+    <div class="guide-shell" id="guide"><aside class="toc"><p class="eyebrow">{ui.tocTitle}</p><ol>{chapters.map((s,i)=><li><a href={'#'+s.id}><span>{String(i+1).padStart(2,'0')}</span>{s.title}</a></li>)}</ol><p class="read-note">{Math.ceil(fullGuide().split(/\s+/).length / 200)} minute read<br />Updated {updated}<br /><a href={site.publisher.url}>By {site.publisher.name} ↗</a></p></aside>
       <div class="chapters">{chapters.map((s,i)=><section class="chapter" id={s.id} aria-labelledby={s.id+'-title'}><div class="chapter-meta"><b>{String(i+1).padStart(2,'0')} / {s.title}</b><a href={'#'+s.id} aria-label={'Link to '+s.title}>↗</a></div><h2 id={s.id+'-title'}>{s.title}</h2>{s.id==='what-is-geo' ? <><div class="definition-panel"><p>{definition}</p></div><div class="prose" set:html={render(s.markdown.split('\n\n').slice(1).join('\n\n'))} /></> : s.id==='questions' ? <div class="faq-list">{faq.map(q=><details><summary>{q.question}</summary><div class="prose" set:html={render(q.answer)} /></details>)}</div> : <div class="prose" set:html={render(s.markdown)} />}</section>)}
       <section class="sources" aria-labelledby="sources-title"><h3 id="sources-title">{ui.sourcesTitle}</h3><ol>{sources.map(s=><li><a href={s.url}>{s.name} ↗</a></li>)}</ol><p>Reviewed {updated}. Practical recommendations are distinguished from platform requirements and research findings.</p></section></div>
     </div>

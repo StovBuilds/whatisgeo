@@ -1,0 +1,34 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: bun install --frozen-lockfile
+      - name: Astro + Worker typecheck
+        run: bun run check
+      - name: Worker tests
+        run: bun run test
+      - name: Build
+        run: bun run build
+      - name: Built output is complete
+        run: |
+          for f in dist/index.html dist/privacy/index.html dist/404.html dist/_headers dist/robots.txt dist/sitemap.xml dist/llms.txt dist/llms-full.txt dist/guide.md dist/og.png; do test -f "$f" || { echo "missing $f"; exit 1; }; done
+          head -c 1 dist/llms.txt | grep -q '#'
+          ! grep -q __SCRIPT_HASHES__ dist/_headers
+      - name: Deploy dry run
+        run: bunx wrangler deploy --dry-run --outdir /tmp/wig-dry

@@ -3,8 +3,19 @@
   "name": "whatisgeo",
   "main": "worker/index.ts",
   "compatibility_date": "2026-09-14",
-  "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": ["/api/*"], "not_found_handling": "404-page" },
-  "vars": { "SITE_URL": "https://whatisgeo.app" },
+  "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": true, "not_found_handling": "404-page" },
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "whatisgeo.app", "custom_domain": true },
+    { "pattern": "www.whatisgeo.app", "custom_domain": true }
+  ],
+  "vars": {
+    "SITE_URL": "https://whatisgeo.app",
+    "RESEND_FROM": "What is GEO <hello@whatisgeo.app>",
+    "RESEND_SEGMENT_ID": "d9448ed2-fa92-4998-b275-d17f5cb1537d",
+    "RESEND_TOPIC_ID": "60b9c0ec-8e73-4063-ad0c-ea1fa4e15b4e"
+  },
   "ratelimits": [{ "name": "SIGNUP_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
   "durable_objects": { "bindings": [{ "name": "SIGNUPS", "class_name": "SignupMailbox" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SignupMailbox"] }]

@@ -2,9 +2,10 @@
 import '@fontsource-variable/manrope';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
+import { site } from '../data/content';
 interface Props { title: string; description: string; noindex?: boolean; }
 const { title, description, noindex = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname, 'https://whatisgeo.app');
+const canonical = new URL(Astro.url.pathname, site.url);
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -21,7 +22,14 @@ const canonical = new URL(Astro.url.pathname, 'https://whatisgeo.app');
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="What is GEO" />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={`${site.url}/og.png`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="What is GEO — a practical guide to Generative Engine Optimisation" />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={`${site.url}/og.png`} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#ffffff" />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <script is:inline>
@@ -38,7 +46,7 @@ const canonical = new URL(Astro.url.pathname, 'https://whatisgeo.app');
     <slot />
     <footer class="site-footer">
       <div class="footer-top"><a class="wordmark" href="/" aria-label="What is GEO home"><span class="word"><b>w</b>hat</span><span class="word"><b>i</b>s</span><span class="word"><b>g</b>eo</span><span class="logo-dot">.</span></a><a class="back-top" href="#">Back to top ↑</a></div>
-      <div class="footer-bottom"><p>© {new Date().getFullYear()} What is GEO</p><div><a href="/privacy/">Privacy</a><a href="/llms.txt">llms.txt</a><a href="/guide.md">Text version</a></div><p>Built by <a href="https://adaptprogressevolve.com/">Adapt Progress Evolve ↗</a></p></div>
+      <div class="footer-bottom"><p>© {new Date().getFullYear()} What is GEO</p><div><a href="/privacy/">Privacy</a><a href={`mailto:${site.contact}`}>Contact</a><a href="/llms.txt">llms.txt</a><a href="/guide.md">Text version</a></div><p>Built by <a href={site.publisher.url}>{site.publisher.name} ↗</a></p></div>
     </footer>
     <script src="../scripts/site.ts"></script>
   </body>

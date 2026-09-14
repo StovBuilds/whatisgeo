@@ -8,6 +8,14 @@ test('rejects malformed email and header injection',()=>{
 test('rejects oversized and non-object payloads',async()=>{
  for(const body of [JSON.stringify({email:'a'.repeat(3000)}),'null','[]'])await assert.rejects(()=>readPayload(new Request('https://whatisgeo.app/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body})));
 });
+test('non-canonical hosts redirect to the site origin; the canonical host serves assets',async()=>{
+ const env={SITE_URL:'https://whatisgeo.app',ASSETS:{fetch:async()=>new Response('asset')}} as unknown as Env;
+ for(const from of ['https://www.whatisgeo.app/privacy/?x=1','https://whatisgeo.jack.workers.dev/llms.txt']){
+  const response=await worker.fetch(new Request(from),env);
+  assert.equal(response.status,301);assert.equal(response.headers.get('location'),'https://whatisgeo.app'+new URL(from).pathname+new URL(from).search);
+ }
+ assert.equal(await (await worker.fetch(new Request('https://whatisgeo.app/'),env)).text(),'asset');
+});
 test('unconfigured signup returns unavailable and cross-site requests are rejected',async()=>{
  const env={SITE_URL:'https://whatisgeo.app'} as Env;
  const request=(origin:string)=>new Request('https://whatisgeo.app/api/subscribe',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{}'});

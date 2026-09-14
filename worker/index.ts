@@ -48,6 +48,11 @@ async function apiResponse(request: Request, response: Response) {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    // One canonical host. www / *.workers.dev / preview hosts 301 to SITE_URL so
+    // crawlers never index a duplicate; the worker runs first for every path
+    // (wrangler.jsonc run_worker_first) so static assets get the same treatment.
+    const canonical = new URL(env.SITE_URL);
+    if (url.host !== canonical.host && !['localhost','127.0.0.1'].includes(url.hostname)) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 301);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (url.pathname === '/api/status' && request.method === 'GET') return Response.json({ available: configured(env) }, { headers: { 'Cache-Control':'no-store' } });
     if (!['/api/subscribe','/api/confirm'].includes(url.pathname)) return json('not_found',404);
