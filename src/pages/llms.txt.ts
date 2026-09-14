@@ -35,6 +35,7 @@ ${sources.map(s => `- [${s.name}](${s.url})`).join('\n')}
 - [Adapt Progress Evolve](${site.publisher.url}): The UK software studio that publishes this guide.
 - [Adapt Progress Evolve on hilyt](${site.publisher.hilyt}): AI-readable profile of the publisher.
 - [What is GEO on hilyt](${site.hilyt}): AI-readable profile of this site.
+- [Source code](${site.source}): The site's code on GitHub (MIT); the guide text itself is © the publisher.
 
 ## Optional
 

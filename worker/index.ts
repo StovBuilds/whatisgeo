@@ -9,6 +9,33 @@ export interface Env {
   RESEND_TOPIC_ID?: string;
   SIGNUP_LIMITER?: { limit(options: { key: string }): Promise<{ success: boolean }> };
   SIGNUPS?: DurableObjectNamespace;
+  AIREAD_TOKEN?: string;
+  AIREAD_URL?: string;
+}
+// ── AI-crawler read log ──────────────────────────────────────────────────────
+// A guide about being read by AI systems should know which AI systems read it.
+// Requests whose user agent looks like an AI agent or a search crawler are
+// posted (path + user agent + country, never an IP) to the fleet's central
+// ai_reads meter, which makes every classification decision server-side.
+// Humans are never logged: the pre-filter below only lets bot-shaped UAs
+// through, and the meter drops anything it does not recognise as a bot.
+const AIREAD_SITE = 'whatisgeo';
+const AIREAD_UA_RE = /gpt|claude|anthropic|perplexity|openai|chatgpt|duckassist|mistral|cohere|bytespider|meta-external|applebot|amazonbot|amzn-|youbot|diffbot|ccbot|copilot|ai2bot|omgili|timpibot|iaskbot|googlebot|googleother|bingbot|duckduckbot|yandex|baiduspider|petalbot|seznam|qwant|sogou|coccoc/i;
+// Assets say nothing about intent; llms.txt / guide.md / sitemap.xml are the interesting surfaces, so they stay in.
+const AIREAD_SKIP = /^\/api\/|\.(css|js|mjs|map|json|png|jpe?g|gif|svg|webp|avif|ico|woff2?|ttf|eot|mp4|webm|pdf|zip)$/i;
+export function logAiRead(request: Request, env: Env, ctx?: { waitUntil(promise: Promise<unknown>): void }) {
+  try {
+    const ua = request.headers.get('user-agent') || '';
+    if (!env.AIREAD_TOKEN || !AIREAD_UA_RE.test(ua)) return false;
+    const path = new URL(request.url).pathname;
+    if (AIREAD_SKIP.test(path)) return false;
+    const headers: Record<string, string> = { 'content-type': 'application/json', 'x-ai-read-token': env.AIREAD_TOKEN };
+    const probe = request.headers.get('x-fleet-probe');
+    if (probe) headers['x-fleet-probe'] = probe; // lets the meter mark our own checks as self-traffic
+    const send = fetch(env.AIREAD_URL || 'https://api.jstov.uk/api/ai-reads/ingest', { method: 'POST', headers, body: JSON.stringify({ site: AIREAD_SITE, path, ua, country: request.headers.get('cf-ipcountry') || '' }), signal: AbortSignal.timeout(5000) }).catch(() => {});
+    ctx?.waitUntil(send);
+    return true;
+  } catch { return false; } // telemetry must never break a response
 }
 type SignupRecord = { email: string; tokenHash: string; expires: number; sent: number; sendCount: number; confirmed: boolean };
 const DAY = 86_400_000;
@@ -46,13 +73,14 @@ async function apiResponse(request: Request, response: Response) {
   return new Response(`<!doctype html><html lang="en-GB"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="robots" content="noindex"><title>Email updates | What is GEO</title><main style="font:20px/1.7 system-ui;max-width:650px;margin:15vh auto;padding:24px"><h1>Email updates</h1><p>${message}</p><a href="/#updates">Back to the guide</a></main></html>`, { status: response.status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control':'no-store', 'X-Robots-Tag':'noindex' } });
 }
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx?: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     // One canonical host. www / *.workers.dev / preview hosts 301 to SITE_URL so
     // crawlers never index a duplicate; the worker runs first for every path
     // (wrangler.jsonc run_worker_first) so static assets get the same treatment.
     const canonical = new URL(env.SITE_URL);
     if (url.host !== canonical.host && !['localhost','127.0.0.1'].includes(url.hostname)) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 301);
+    logAiRead(request, env, ctx);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (url.pathname === '/api/status' && request.method === 'GET') return Response.json({ available: configured(env) }, { headers: { 'Cache-Control':'no-store' } });
     if (!['/api/subscribe','/api/confirm'].includes(url.pathname)) return json('not_found',404);

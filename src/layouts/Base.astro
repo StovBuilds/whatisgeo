@@ -46,7 +46,7 @@ const canonical = new URL(Astro.url.pathname, site.url);
     <slot />
     <footer class="site-footer">
       <div class="footer-top"><a class="wordmark" href="/" aria-label="What is GEO home"><span class="word"><b>w</b>hat</span><span class="word"><b>i</b>s</span><span class="word"><b>g</b>eo</span><span class="logo-dot">.</span></a><a class="back-top" href="#">Back to top ↑</a></div>
-      <div class="footer-bottom"><p>© {new Date().getFullYear()} What is GEO</p><div><a href="/privacy/">Privacy</a><a href={`mailto:${site.contact}`}>Contact</a><a href="/llms.txt">llms.txt</a><a href="/guide.md">Text version</a></div><p>Built by <a href={site.publisher.url}>{site.publisher.name} ↗</a></p></div>
+      <div class="footer-bottom"><p>© {new Date().getFullYear()} What is GEO</p><div><a href="/privacy/">Privacy</a><a href={`mailto:${site.contact}`}>Contact</a><a href="/llms.txt">llms.txt</a><a href="/guide.md">Text version</a><a href={site.source}>Source</a></div><p>Built by <a href={site.publisher.url}>{site.publisher.name} ↗</a></p></div>
     </footer>
     <script src="../scripts/site.ts"></script>
   </body>

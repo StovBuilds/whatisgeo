@@ -1,12 +1,27 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker, { SignupMailbox, normaliseEmail, readPayload, hash, type Env } from '../worker/index.ts';
+import worker, { SignupMailbox, normaliseEmail, readPayload, hash, logAiRead, type Env } from '../worker/index.ts';
 test('rejects malformed email and header injection',()=>{
  assert.equal(normaliseEmail('  Owner+guide@Example.COM '),'owner+guide@example.com');
  for(const value of ['a\r\nbcc:x@y.com','not-email','a@localhost','.a@example.com','a..b@example.com','a@-example.com',null,42])assert.equal(normaliseEmail(value),null);
 });
 test('rejects oversized and non-object payloads',async()=>{
  for(const body of [JSON.stringify({email:'a'.repeat(3000)}),'null','[]'])await assert.rejects(()=>readPayload(new Request('https://whatisgeo.app/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body})));
+});
+test('AI-crawler reads are posted to the meter; humans, assets and /api are not',async(t)=>{
+ const posts:{url:string;headers:Record<string,string>;body:Record<string,string>}[]=[];
+ t.mock.method(globalThis,'fetch',async(input:RequestInfo|URL,init?:RequestInit)=>{posts.push({url:String(input),headers:init!.headers as Record<string,string>,body:JSON.parse(init!.body as string)});return new Response('{}');});
+ const env={SITE_URL:'https://whatisgeo.app',AIREAD_TOKEN:'tok'} as Env;const waited:Promise<unknown>[]=[];const ctx={waitUntil:(p:Promise<unknown>)=>{waited.push(p);}};
+ const req=(path:string,ua:string,extra:Record<string,string>={})=>new Request('https://whatisgeo.app'+path,{headers:{'user-agent':ua,'cf-ipcountry':'GB',...extra}});
+ assert.equal(logAiRead(req('/llms.txt','Mozilla/5.0 (compatible; GPTBot/1.0)',{'x-fleet-probe':'secret'}),env,ctx),true);
+ assert.equal(logAiRead(req('/','Mozilla/5.0 (Macintosh) Chrome/140'),env,ctx),false);
+ assert.equal(logAiRead(req('/og.png','ClaudeBot/1.0'),env,ctx),false);
+ assert.equal(logAiRead(req('/api/status','ClaudeBot/1.0'),env,ctx),false);
+ assert.equal(logAiRead(req('/','ClaudeBot/1.0'),{SITE_URL:'https://whatisgeo.app'} as Env,ctx),false);
+ await Promise.all(waited);
+ assert.equal(posts.length,1);assert.equal(posts[0].url,'https://api.jstov.uk/api/ai-reads/ingest');
+ assert.equal(posts[0].headers['x-ai-read-token'],'tok');assert.equal(posts[0].headers['x-fleet-probe'],'secret');
+ assert.deepEqual(posts[0].body,{site:'whatisgeo',path:'/llms.txt',ua:'Mozilla/5.0 (compatible; GPTBot/1.0)',country:'GB'});
 });
 test('non-canonical hosts redirect to the site origin; the canonical host serves assets',async()=>{
  const env={SITE_URL:'https://whatisgeo.app',ASSETS:{fetch:async()=>new Response('asset')}} as unknown as Env;
