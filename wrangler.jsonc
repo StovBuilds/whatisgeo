@@ -16,7 +16,11 @@
     "RESEND_SEGMENT_ID": "d9448ed2-fa92-4998-b275-d17f5cb1537d",
     "RESEND_TOPIC_ID": "60b9c0ec-8e73-4063-ad0c-ea1fa4e15b4e"
   },
-  "ratelimits": [{ "name": "SIGNUP_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
+  "ratelimits": [
+    { "name": "SIGNUP_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "EVENTS_LIMITER", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
+  ],
+  "d1_databases": [{ "binding": "EVENTS", "database_name": "whatisgeo-events", "database_id": "bdcaf969-4238-454e-8038-e576df7c4c3e", "migrations_dir": "migrations" }],
   "durable_objects": { "bindings": [{ "name": "SIGNUPS", "class_name": "SignupMailbox" }] },
   "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SignupMailbox"] }]
 }

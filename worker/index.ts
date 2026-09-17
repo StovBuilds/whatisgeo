@@ -1,6 +1,7 @@
 import { ui } from '../src/data/content';
+import { ingest, exportData, type EventsEnv } from './events';
 
-export interface Env {
+export interface Env extends EventsEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
   SITE_URL: string;
   RESEND_API_KEY?: string;
@@ -83,6 +84,9 @@ export default {
     logAiRead(request, env, ctx);
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (url.pathname === '/api/status' && request.method === 'GET') return Response.json({ available: configured(env) }, { headers: { 'Cache-Control':'no-store' } });
+    // First-party analytics (worker/events.ts): the browser posts batches; the fleet dashboard reads aggregates.
+    if (url.pathname === '/api/e') return request.method === 'POST' ? ingest(request, env) : new Response(null, { status: 405, headers: { Allow: 'POST' } });
+    if (url.pathname === '/api/export-data') return request.method === 'GET' ? exportData(request, env) : new Response(null, { status: 405, headers: { Allow: 'GET' } });
     if (!['/api/subscribe','/api/confirm'].includes(url.pathname)) return json('not_found',404);
     if (request.method !== 'POST') return new Response(null,{status:405,headers:{Allow:'POST'}});
     const origin = request.headers.get('origin');
