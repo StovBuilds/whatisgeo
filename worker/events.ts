@@ -56,6 +56,25 @@ function assistantFor(referrer: string, utm: string): string | null {
   return null;
 }
 
+// Optional explicit window: ?from=<ISO>&to=<ISO> (to defaults to now) replaces the rolling days=N window.
+// ts is stored as new Date().toISOString(), so the bounds are compared as the same ISO strings.
+const MAX_RANGE_MS = 366 * 86_400_000;
+const FAR_FUTURE = '9999-12-31T23:59:59.999Z'; // rolling mode has no upper bound (identical to the old `ts>=since`)
+function resolveWindow(url: URL, days: number): { error: string } | { days: number; since: string; until: string; range: { from: string; to: string } | null; hourly: boolean } {
+  const now = Date.now();
+  const fromRaw = url.searchParams.get('from');
+  if (!fromRaw) return { days, since: new Date(now - days * 86_400_000).toISOString(), until: FAR_FUTURE, range: null, hourly: false };
+  const toRaw = url.searchParams.get('to');
+  const f = new Date(fromRaw).getTime();
+  const t = toRaw ? new Date(toRaw).getTime() : now;
+  if (!Number.isFinite(f)) return { error: 'Invalid from: expected an ISO 8601 datetime.' };
+  if (!Number.isFinite(t)) return { error: 'Invalid to: expected an ISO 8601 datetime.' };
+  if (f >= t) return { error: 'from must be before to.' };
+  if (t - f > MAX_RANGE_MS) return { error: 'Range too long: at most 366 days.' };
+  const from = new Date(f).toISOString(), to = new Date(t).toISOString();
+  return { days: Math.max(1, Math.ceil((t - f) / 86_400_000)), since: from, until: to, range: { from, to }, hourly: t - f <= 7 * 86_400_000 };
+}
+
 export async function exportData(request: Request, env: EventsEnv): Promise<Response> {
   if (!env.EXPORT_API_KEY) return json({ ok: false, error: 'not_configured' }, 404);
   const key = request.headers.get('x-api-key') ?? request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
@@ -65,7 +84,9 @@ export async function exportData(request: Request, env: EventsEnv): Promise<Resp
   const action = url.searchParams.get('action') ?? 'summary';
   const days = Math.min(365, Math.max(1, Number(url.searchParams.get('days') ?? 30) || 30));
   if (action !== 'analytics' && action !== 'summary') return json({ ok: false, error: `Unknown action '${action}'. Use analytics | summary.` }, 400);
-  const since = new Date(Date.now() - days * 86_400_000).toISOString();
+  const win = resolveWindow(url, days);
+  if ('error' in win) return json({ ok: false, error: win.error }, 400);
+  const { since, until } = win;
   const db = env.EVENTS;
   const q = async <T = Record<string, unknown>>(sql: string, ...binds: unknown[]) => (await db.prepare(sql).bind(...binds).all<T>()).results;
   // "Engaged" = a session a person plausibly sat in, as opposed to a headless
@@ -73,37 +94,38 @@ export async function exportData(request: Request, env: EventsEnv): Promise<Resp
   // batch: a second pageview, a real interaction (scroll marks and page_leave
   // are not one), >=5 s visible at page_leave, or events spread >=10 s apart.
   // Same definition as every other site's export (estate-wide 2026-09-17).
-  const ENGAGED = `SELECT session_id, substr(MIN(ts),1,10) AS date FROM site_events WHERE ts>=? AND session_id<>'' GROUP BY session_id
+  const ENGAGED = `SELECT session_id, substr(MIN(ts),1,10) AS date FROM site_events WHERE ts>=?1 AND ts<?2 AND session_id<>'' GROUP BY session_id
       HAVING SUM(type='pageview')>=2 OR SUM(type NOT IN ('pageview','scroll','page_leave','theme'))>0
           OR MAX(CASE WHEN type='page_leave' THEN json_extract(props,'$.seconds') END)>=5
           OR (julianday(MAX(ts))-julianday(MIN(ts)))*86400>=10`;
   const [totals, daily, topPaths, referrers, utms, devices, countries, eventCounts, pages, outbound, scroll, leave, aiRefs, signups, ctas, engaged, engagedDaily] = await Promise.all([
-    q(`SELECT SUM(type='pageview') AS pageviews, COUNT(DISTINCT CASE WHEN session_id<>'' THEN session_id END) AS sessions, COUNT(*) AS events FROM site_events WHERE ts>=?`, since),
-    q(`SELECT substr(ts,1,10) AS date, SUM(type='pageview') AS pageviews, COUNT(DISTINCT CASE WHEN session_id<>'' THEN session_id END) AS sessions FROM site_events WHERE ts>=? GROUP BY date ORDER BY date`, since),
-    q(`SELECT path, COUNT(*) AS pageviews, COUNT(DISTINCT session_id) AS sessions FROM site_events WHERE ts>=? AND type='pageview' GROUP BY path ORDER BY pageviews DESC LIMIT 50`, since),
-    q(`SELECT referrer, COUNT(*) AS pageviews FROM site_events WHERE ts>=? AND type='pageview' AND referrer<>'' GROUP BY referrer ORDER BY pageviews DESC LIMIT 30`, since),
-    q(`SELECT utm_source AS source, COUNT(*) AS pageviews FROM site_events WHERE ts>=? AND type='pageview' AND utm_source<>'' GROUP BY utm_source ORDER BY pageviews DESC LIMIT 20`, since),
-    q(`SELECT device, COUNT(*) AS pageviews FROM site_events WHERE ts>=? AND type='pageview' GROUP BY device ORDER BY pageviews DESC`, since),
-    q(`SELECT country, COUNT(*) AS pageviews FROM site_events WHERE ts>=? AND type='pageview' AND country<>'' GROUP BY country ORDER BY pageviews DESC LIMIT 30`, since),
-    q(`SELECT type, COUNT(*) AS count FROM site_events WHERE ts>=? GROUP BY type ORDER BY count DESC`, since),
+    q(`SELECT SUM(type='pageview') AS pageviews, COUNT(DISTINCT CASE WHEN session_id<>'' THEN session_id END) AS sessions, COUNT(*) AS events FROM site_events WHERE ts>=?1 AND ts<?2`, since, until),
+    q(`SELECT substr(ts,1,10) AS date, SUM(type='pageview') AS pageviews, COUNT(DISTINCT CASE WHEN session_id<>'' THEN session_id END) AS sessions FROM site_events WHERE ts>=?1 AND ts<?2 GROUP BY date ORDER BY date`, since, until),
+    q(`SELECT path, COUNT(*) AS pageviews, COUNT(DISTINCT session_id) AS sessions FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' GROUP BY path ORDER BY pageviews DESC LIMIT 50`, since, until),
+    q(`SELECT referrer, COUNT(*) AS pageviews FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' AND referrer<>'' GROUP BY referrer ORDER BY pageviews DESC LIMIT 30`, since, until),
+    q(`SELECT utm_source AS source, COUNT(*) AS pageviews FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' AND utm_source<>'' GROUP BY utm_source ORDER BY pageviews DESC LIMIT 20`, since, until),
+    q(`SELECT device, COUNT(*) AS pageviews FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' GROUP BY device ORDER BY pageviews DESC`, since, until),
+    q(`SELECT country, COUNT(*) AS pageviews FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' AND country<>'' GROUP BY country ORDER BY pageviews DESC LIMIT 30`, since, until),
+    q(`SELECT type, COUNT(*) AS count FROM site_events WHERE ts>=?1 AND ts<?2 GROUP BY type ORDER BY count DESC`, since, until),
     // The guide is one long page: how many sessions read it to the end is the number that matters.
     q(`SELECT p.path, COUNT(*) AS pageviews, COUNT(DISTINCT p.session_id) AS sessions,
-         (SELECT COUNT(DISTINCT s.session_id) FROM site_events s WHERE s.type='scroll' AND s.path=p.path AND s.ts>=? AND json_extract(s.props,'$.depth')>=100) AS read_completes
-       FROM site_events p WHERE p.ts>=? AND p.type='pageview' AND json_extract(p.props,'$.kind')='guide' GROUP BY p.path ORDER BY pageviews DESC LIMIT 100`, since, since),
-    q(`SELECT json_extract(props,'$.host') AS host, json_extract(props,'$.url') AS url, COUNT(*) AS clicks FROM site_events WHERE ts>=? AND type='outbound_click' GROUP BY host, url ORDER BY clicks DESC LIMIT 50`, since),
-    q(`SELECT json_extract(props,'$.depth') AS depth, COUNT(*) AS count FROM site_events WHERE ts>=? AND type='scroll' GROUP BY depth ORDER BY depth`, since),
-    q(`SELECT COUNT(*) AS n, AVG(json_extract(props,'$.seconds')) AS avg_seconds, AVG(json_extract(props,'$.max_depth')) AS avg_max_depth FROM site_events WHERE ts>=? AND type='page_leave'`, since),
-    q<{ ts: string; path: string; referrer: string; utm_source: string }>(`SELECT ts, path, referrer, utm_source FROM site_events WHERE ts>=? AND type='pageview' AND (referrer<>'' OR utm_source<>'') ORDER BY ts DESC LIMIT 500`, since),
-    q(`SELECT json_extract(props,'$.outcome') AS outcome, COUNT(*) AS count FROM site_events WHERE ts>=? AND type='signup' GROUP BY outcome ORDER BY count DESC`, since),
-    q(`SELECT json_extract(props,'$.id') AS id, COUNT(*) AS clicks, COUNT(DISTINCT session_id) AS sessions FROM site_events WHERE ts>=? AND type='cta_click' GROUP BY id ORDER BY clicks DESC LIMIT 30`, since),
-    q(`SELECT COUNT(*) AS n FROM (${ENGAGED})`, since),
-    q<{ date: string; engaged_sessions: number }>(`SELECT date, COUNT(*) AS engaged_sessions FROM (${ENGAGED}) GROUP BY date ORDER BY date`, since),
+         (SELECT COUNT(DISTINCT s.session_id) FROM site_events s WHERE s.type='scroll' AND s.path=p.path AND s.ts>=?1 AND s.ts<?2 AND json_extract(s.props,'$.depth')>=100) AS read_completes
+       FROM site_events p WHERE p.ts>=?1 AND p.ts<?2 AND p.type='pageview' AND json_extract(p.props,'$.kind')='guide' GROUP BY p.path ORDER BY pageviews DESC LIMIT 100`, since, until),
+    q(`SELECT json_extract(props,'$.host') AS host, json_extract(props,'$.url') AS url, COUNT(*) AS clicks FROM site_events WHERE ts>=?1 AND ts<?2 AND type='outbound_click' GROUP BY host, url ORDER BY clicks DESC LIMIT 50`, since, until),
+    q(`SELECT json_extract(props,'$.depth') AS depth, COUNT(*) AS count FROM site_events WHERE ts>=?1 AND ts<?2 AND type='scroll' GROUP BY depth ORDER BY depth`, since, until),
+    q(`SELECT COUNT(*) AS n, AVG(json_extract(props,'$.seconds')) AS avg_seconds, AVG(json_extract(props,'$.max_depth')) AS avg_max_depth FROM site_events WHERE ts>=?1 AND ts<?2 AND type='page_leave'`, since, until),
+    q<{ ts: string; path: string; referrer: string; utm_source: string }>(`SELECT ts, path, referrer, utm_source FROM site_events WHERE ts>=?1 AND ts<?2 AND type='pageview' AND (referrer<>'' OR utm_source<>'') ORDER BY ts DESC LIMIT 500`, since, until),
+    q(`SELECT json_extract(props,'$.outcome') AS outcome, COUNT(*) AS count FROM site_events WHERE ts>=?1 AND ts<?2 AND type='signup' GROUP BY outcome ORDER BY count DESC`, since, until),
+    q(`SELECT json_extract(props,'$.id') AS id, COUNT(*) AS clicks, COUNT(DISTINCT session_id) AS sessions FROM site_events WHERE ts>=?1 AND ts<?2 AND type='cta_click' GROUP BY id ORDER BY clicks DESC LIMIT 30`, since, until),
+    q(`SELECT COUNT(*) AS n FROM (${ENGAGED})`, since, until),
+    q<{ date: string; engaged_sessions: number }>(`SELECT date, COUNT(*) AS engaged_sessions FROM (${ENGAGED}) GROUP BY date ORDER BY date`, since, until),
   ]);
+  const hourly = win.hourly ? (await q<{ h: string; pageviews: number; sessions: number }>(`SELECT substr(ts,1,13) AS h, SUM(type='pageview') AS pageviews, COUNT(DISTINCT CASE WHEN session_id<>'' THEN session_id END) AS sessions FROM site_events WHERE ts>=?1 AND ts<?2 GROUP BY h ORDER BY h`, since, until)).map(r => ({ hour: `${r.h}:00:00Z`, pageviews: Number(r.pageviews ?? 0), sessions: Number(r.sessions ?? 0) })) : null;
   const ai_referrals = aiRefs.map(r => ({ assistant: assistantFor(r.referrer, r.utm_source), ts: r.ts, path: r.path, referrer: r.referrer, utm_source: r.utm_source })).filter(r => r.assistant).slice(0, 200);
   const t = totals[0] ?? {};
   const engagedByDate = new Map(engagedDaily.map(r => [r.date, Number(r.engaged_sessions ?? 0)]));
   const analytics = {
-    days, generated_at: new Date().toISOString(),
+    days: win.days, generated_at: new Date().toISOString(), ...(win.range ? { range: win.range } : {}), ...(hourly ? { hourly } : {}),
     totals: { pageviews: Number(t.pageviews ?? 0), sessions: Number(t.sessions ?? 0), events: Number(t.events ?? 0), engaged_sessions: Number((engaged[0] ?? {}).n ?? 0) },
     daily: daily.map(d => ({ ...d, engaged_sessions: engagedByDate.get(String(d.date)) ?? 0 })), top_paths: topPaths, top_referrers: referrers, utm_sources: utms, devices, countries, event_counts: eventCounts,
     ai_referrals, blog_posts: pages,
@@ -113,5 +135,5 @@ export async function exportData(request: Request, env: EventsEnv): Promise<Resp
     signups, cta_clicks: ctas,
   };
   if (action === 'analytics') return json({ ok: true, site: 'whatisgeo', action, analytics });
-  return json({ ok: true, site: 'whatisgeo', action, days, analytics, posts: [], subscribers: null });
+  return json({ ok: true, site: 'whatisgeo', action, days: win.days, analytics, posts: [], subscribers: null });
 }
