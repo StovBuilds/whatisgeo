@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+# Cancel a run when a newer push to the same branch/PR supersedes it
+# (GH Actions minutes audit, 2026-10-14).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
