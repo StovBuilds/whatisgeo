@@ -34,3 +34,8 @@ test('an H1 in the body is refused', () => assert.ok(validateGuide('x', good, ne
 test('an em dash in the body is refused', () => assert.ok(validateGuide('x', good, new Set(), `A ${String.fromCharCode(0x2014)} B`).length > 0));
 test('a dangling related slug is refused', () => assert.ok(validateGuide('x', { ...good, related: ['missing'] }, new Set(['x'])).length > 0));
 test('a summary over the limit is refused', () => assert.ok(validateGuide('x', { ...good, summary: 'a'.repeat(221) }).length > 0));
+test('comments are stripped, including unclosed ones', () => {
+  assert.equal(stripComments('a<!-- x -->\nb'), 'ab');
+  assert.equal(stripComments('a<!-- x --><!-- y -->b'), 'ab');
+  assert.equal(stripComments('keep <!-- never closed'), 'keep ');
+});

@@ -103,9 +103,16 @@ export function validateGuide(slug: string, raw: Record<string, unknown>, slugs:
   return e;
 }
 
-/** Remove HTML comments (provenance notes) from markdown, repeating until none remain, then drop any unclosed opener. */
+/** Remove HTML comments (provenance notes) from markdown. An unclosed `<!--` drops the rest of the text. */
 export const stripComments = (md: string) => {
-  let prev: string;
-  do { prev = md; md = md.replace(/<!--[\s\S]*?-->\n?/g, ''); } while (md !== prev);
-  return md.replace(/<!--/g, '');
+  let out = '', i = 0;
+  for (;;) {
+    const start = md.indexOf('<!--', i);
+    if (start < 0) return out + md.slice(i);
+    out += md.slice(i, start);
+    const end = md.indexOf('-->', start + 4);
+    if (end < 0) return out;
+    i = end + 3;
+    if (md[i] === '\n') i++;
+  }
 };
