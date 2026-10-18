@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import { sections, ui, updated, updatedISO, publishedISO, site } from '../data/content';
 import { render, questions, sources, fullGuide } from '../lib/content';
+import { guidesIn, categoriesWithGuides } from '../lib/guides';
+const guideCats = categoriesWithGuides();
 const hero = sections[0].markdown.split('\n\n');
 const definition = sections[1].markdown.split('\n\n')[0];
 const chapters = sections.filter(s => s.id !== 'hero' && s.id !== 'updates');
@@ -36,6 +38,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
       <div class="chapters">{chapters.map((s,i)=><section class="chapter" id={s.id} aria-labelledby={s.id+'-title'}><div class="chapter-meta"><b>{String(i+1).padStart(2,'0')} / {s.title}</b><a href={'#'+s.id} aria-label={'Link to '+s.title}>↗</a></div><h2 id={s.id+'-title'}>{s.title}</h2>{s.id==='what-is-geo' ? <><div class="definition-panel"><p>{definition}</p></div><div class="prose" set:html={render(s.markdown.split('\n\n').slice(1).join('\n\n'))} /></> : s.id==='questions' ? <div class="faq-list">{faq.map(q=><details><summary>{q.question}</summary><div class="prose" set:html={render(q.answer)} /></details>)}</div> : <div class="prose" set:html={render(s.markdown)} />}</section>)}
       <section class="sources" aria-labelledby="sources-title"><h3 id="sources-title">{ui.sourcesTitle}</h3><ol>{sources.map(s=><li><a href={s.url}>{s.name} ↗</a></li>)}</ol><p>Reviewed {updated}. Practical recommendations are distinguished from platform requirements and research findings.</p></section></div>
     </div>
+    {guideCats.length > 0 && <section class="home-guides" aria-labelledby="more-title"><div class="process-header"><div><p class="eyebrow">Go deeper</p><h2 id="more-title">One question.<br />One clear answer.</h2></div><p>Shorter guides on the questions people ask most about AI search. <a href="/guides/">See every guide ↗</a></p></div><div class="home-guide-grid">{guideCats.map(c => <div><p class="chapter-meta"><b>{c.title}</b></p><ul>{guidesIn(c.id).slice(0, 6).map(g => <li><a href={g.url}>{g.fm.title}</a></li>)}</ul></div>)}</div></section>}
     <section class="newsletter" id="updates" aria-labelledby="signup-title"><div><p class="eyebrow">Stay in the loop</p><h2 id="signup-title">{ui.signupTitle}</h2><p>{ui.signupBody}</p></div><form class="signup-form" action="/api/subscribe" method="post"><label for="signup-email">{ui.emailLabel}</label><div class="input-row"><input id="signup-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder={ui.emailPlaceholder} required /><button type="submit">{ui.signupButton} ↗</button></div><label class="consent-row"><input name="consent" type="checkbox" value="yes" required /><span>{ui.consent}</span></label><div class="honeypot" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" tabindex="-1" autocomplete="off" /></div><p class="privacy-note"><a href="/privacy/">{ui.privacyLink}</a> · Email confirmation required.</p><div class="form-message" role="status" aria-live="polite" tabindex="-1"></div><noscript><p>Submitting opens the signup response page.</p></noscript></form></section>
   </main>
   <div class="scroll-progress" aria-hidden="true"></div>

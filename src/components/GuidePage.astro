@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/content';
+import { PRODUCTS } from '../data/products';
+import { render } from '../lib/content';
+import { guideBySlug, categoryOf, type Guide } from '../lib/guides';
+interface Props { entry: Guide }
+const { entry: g } = Astro.props;
+const cat = categoryOf(g.fm.category);
+const h2s = g.headings.filter(h => h.depth === 2);
+const words = g.raw.split(/\s+/).length;
+const related = (g.fm.related ?? []).map(s => guideBySlug(s)!).filter(Boolean);
+const fmtDate = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const url = `${site.url}${g.url}`;
+const org = { '@id': `${site.publisher.url}#organization` };
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'Article', '@id': `${url}#article`, headline: g.fm.title, description: g.fm.summary, mainEntityOfPage: url, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: 'en-GB', datePublished: g.fm.published, dateModified: g.fm.updated, author: org, publisher: org, image: `${site.url}/og.png`, citation: g.fm.sources.map(s => s.url), wordCount: words },
+  { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: g.fm.faq.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') } })) },
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'What is GEO', item: `${site.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'Guides', item: `${site.url}/guides/` },
+    { '@type': 'ListItem', position: 3, name: g.fm.title, item: url } ] },
+  { '@type': 'Organization', '@id': org['@id'], name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt] }
+] };
+---
+<Base title={g.fm.seoTitle ?? `${g.fm.title} | What is GEO`} description={g.fm.summary} markdown={g.md}>
+  <main id="main">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+    <header class="guide-head">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">What is GEO</a><span aria-hidden="true">/</span><a href="/guides/">Guides</a><span aria-hidden="true">/</span><a href={`/guides/#${cat.id}`}>{cat.title}</a></nav>
+      <h1>{g.fm.title}</h1>
+      <div class="definition-panel"><p class="eyebrow">The short answer</p><p>{g.fm.summary}</p></div>
+      <p class="guide-meta">Updated {fmtDate(g.fm.updated)} · {Math.max(1, Math.ceil(words / 200))} minute read · By <a href={site.publisher.url}>{site.publisher.name}</a> · <a href={g.md}>Text version</a></p>
+    </header>
+    <div class="guide-shell guide-body">
+      <aside class="toc">{h2s.length > 1 && <><p class="eyebrow">On this page</p><ol>{h2s.map((h, i) => <li><a href={'#' + h.slug}><span>{String(i + 1).padStart(2, '0')}</span>{h.text}</a></li>)}<li><a href="#questions"><span>{String(h2s.length + 1).padStart(2, '0')}</span>Questions</a></li></ol></>}<p class="read-note"><a href="/">Start with the full GEO guide ↗</a></p></aside>
+      <div class="chapters">
+        <div class="prose guide-prose"><g.Content /></div>
+        {g.fm.ours?.length ? <section class="ours" aria-labelledby="ours-title"><p class="eyebrow" id="ours-title">From the same studio</p><p class="ours-note">Made by {site.publisher.name}, which publishes this guide. Listed because it fits the question; nothing here depends on it.</p><ul>{g.fm.ours.map(o => <li><a href={PRODUCTS[o.product].url}>{PRODUCTS[o.product].name} ↗</a><span>{o.why}</span></li>)}</ul></section> : null}
+        <section class="chapter guide-faq" id="questions" aria-labelledby="questions-title"><div class="chapter-meta"><b>Questions people ask</b></div><h2 id="questions-title">Questions people ask</h2><div class="faq-list">{g.fm.faq.map(f => <details><summary>{f.q}</summary><div class="prose" set:html={render(f.a)} /></details>)}</div></section>
+        <section class="sources" aria-labelledby="sources-title"><h3 id="sources-title">Sources</h3><ol>{g.fm.sources.map(s => <li><a href={s.url}>{s.label} ↗</a></li>)}</ol><p>Reviewed {fmtDate(g.fm.updated)}. General information about how AI search works, not a promise of placement in any AI answer.</p></section>
+        {related.length > 0 && <nav class="related" aria-labelledby="related-title"><p class="eyebrow" id="related-title">Read next</p><ul>{related.map(r => <li><a href={r.url}><b>{r.fm.title}</b><span>{r.fm.summary}</span></a></li>)}</ul></nav>}
+      </div>
+    </div>
+  </main>
+</Base>
