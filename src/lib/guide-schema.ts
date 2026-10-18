@@ -103,4 +103,9 @@ export function validateGuide(slug: string, raw: Record<string, unknown>, slugs:
   return e;
 }
 
-export const stripComments = (md: string) => md.replace(/<!--[\s\S]*?-->\n?/g, '');
+/** Remove HTML comments (provenance notes) from markdown, repeating until none remain, then drop any unclosed opener. */
+export const stripComments = (md: string) => {
+  let prev: string;
+  do { prev = md; md = md.replace(/<!--[\s\S]*?-->\n?/g, ''); } while (md !== prev);
+  return md.replace(/<!--/g, '');
+};
