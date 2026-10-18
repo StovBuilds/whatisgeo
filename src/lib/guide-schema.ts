@@ -97,7 +97,8 @@ export function validateGuide(slug: string, raw: Record<string, unknown>, slugs:
   if (fm.status !== 'draft' && fm.status !== 'published') e.push('status must be draft | published');
   if (fm.order !== undefined && typeof fm.order !== 'number') e.push('order must be a number');
   if (body) {
-    if (/^#\s/m.test(body)) e.push('body must not contain an H1 (the title is the H1)');
+    // Fenced code (an example llms.txt, a robots.txt) may start lines with '#'; only prose headings count.
+    if (/^#\s/m.test(body.replace(/^(```|~~~)[\s\S]*?^\1/gm, ''))) e.push('body must not contain an H1 (the title is the H1)');
     if (DASH.test(body) || DASH.test(String(fm.summary ?? '')) || DASH.test(String(fm.title ?? ''))) e.push('em or en dash in the copy (house style: none)');
   }
   return e;
