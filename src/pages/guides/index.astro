@@ -1,0 +1,20 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/content';
+import { guidesIn, categoriesWithGuides, guides } from '../../lib/guides';
+const cats = categoriesWithGuides();
+const schema = { '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': `${site.url}/guides/#page`, url: `${site.url}/guides/`, name: 'GEO guides', inLanguage: 'en-GB', isPartOf: { '@id': `${site.url}/#website` },
+  mainEntity: { '@type': 'ItemList', itemListElement: guides.map((g, i) => ({ '@type': 'ListItem', position: i + 1, url: `${site.url}${g.url}`, name: g.fm.title })) } };
+---
+<Base title="GEO guides: AI search, AEO, llms.txt and more | What is GEO" description="Plain-English, source-linked guides to Generative Engine Optimisation, answer engine optimisation, Google AI Overviews, ChatGPT visibility and llms.txt.">
+  <main id="main" class="guides-index">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+    <header class="guide-head"><nav class="crumbs" aria-label="Breadcrumb"><a href="/">What is GEO</a><span aria-hidden="true">/</span><span>Guides</span></nav><h1>Every guide, one question each.</h1><p class="guide-lede">Each page answers one question about AI search directly, then shows its sources. Start with <a href="/">the full GEO guide</a> if you are new to this.</p></header>
+    {cats.length === 0 ? <p class="guide-lede pad">The first guides are on their way.</p> : cats.map(c => (
+      <section class="guide-group" id={c.id} aria-labelledby={c.id + '-title'}>
+        <div class="chapter-meta"><b>{c.title}</b><span>{guidesIn(c.id).length} guide{guidesIn(c.id).length === 1 ? '' : 's'}</span></div>
+        <h2 id={c.id + '-title'}>{c.title}</h2><p class="group-blurb">{c.blurb}</p>
+        <ul class="guide-cards">{guidesIn(c.id).map(g => <li><a href={g.url}><b>{g.fm.title}</b><span>{g.fm.summary}</span></a></li>)}</ul>
+      </section>))}
+  </main>
+</Base>
