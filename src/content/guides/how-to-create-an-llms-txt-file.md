@@ -37,7 +37,7 @@ faq:
   - q: "How do I create an llms.txt file?"
     a: "Write a Markdown file with an H1 title, an optional blockquote summary and H2 sections listing links to your key pages, then publish it so it loads at yourdomain.com/llms.txt. Check first whether your platform already generates one, as Shopify does by default."
   - q: "What is the llms.txt format?"
-    a: "According to llmstxt.org, it is Markdown in a fixed order: an H1 with the site name (the only required part), a blockquote summary, optional detail without headings, then H2 sections of links written as [name](url) with an optional colon and note. An H2 called Optional is a convention for secondary links."
+    a: "According to llmstxt.org, it is Markdown in a fixed order: an H1 with the site name (the only required part), a blockquote summary, optional detail without headings, then H2 sections of links written as `[name](url)` with an optional colon and note. An H2 called Optional is a convention for secondary links."
   - q: "Are llms.txt files worth it?"
     a: "The file is cheap to make and low risk, but none of the crawler documentation we checked from Google, OpenAI, Anthropic or Perplexity says it is used for answers, and Webflow calls its effects on AI-driven search unclear. Treat it as a small extra, not a strategy."
   - q: "Is llms.txt still used?"
