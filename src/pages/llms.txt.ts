@@ -8,6 +8,15 @@ const chapters = sections.filter(s => s.id !== 'hero' && s.id !== 'updates');
 // First sentence, or as many as it takes to reach ~40 characters so a terse "No." answer still says something.
 const firstSentence = (text: string) => { const parts = text.replace(/\s+/g, ' ').trim().split(/(?<=[.!?])\s/); let out = ''; for (const p of parts) { out = out ? `${out} ${p}` : p; if (out.length >= 40) break; } return out; };
 const chapterNote = (s: { id: string; markdown: string }) => s.id === 'questions' ? 'Ten plain answers about GEO cost, timelines, guarantees, llms.txt and the training/search split.' : firstSentence(s.markdown.replace(/^###? .*$/gm, '').replace(/\|.*\|/g, ''));
+// Short factual notes on each cited source, taken from how the guide itself describes it.
+const sourceNotes: Record<string, string> = {
+  'https://developers.google.com/search/docs/appearance/ai-features': "Google's guidance on AI features in Search, which the guide uses for the point that a page must be indexed and eligible for a search snippet to be a supporting link in AI Overviews or AI Mode.",
+  'https://arxiv.org/abs/2311.09735': 'the KDD 2024 research paper that the guide cites for its finding that adding citations, quotations and statistics could improve visibility in benchmark tests, with results varying by domain and topic.',
+  'https://developers.openai.com/api/docs/bots': "OpenAI's crawler documentation, which the guide uses for the split between OAI-SearchBot (search retrieval), GPTBot (training data collection) and ChatGPT-User (visits triggered by a user's request).",
+  'https://docs.perplexity.ai/docs/resources/perplexity-crawlers': "Perplexity's crawler documentation, which the guide uses for the point that PerplexityBot exists to surface and link sites within answers rather than to train a foundation model.",
+  'https://llmstxt.org/': 'the proposal for an optional llms.txt file, which the guide describes as experimental and not a proven ranking factor.',
+};
+
 export function GET() {
   const body = `# ${site.name}
 
@@ -34,7 +43,7 @@ ${questions().map(q => `- [${q.question}](${site.url}/#questions): ${firstSenten
 
 ## Sources the guide cites
 
-${sources.map(s => `- [${s.name}](${s.url})`).join('\n')}
+${sources.map(s => `- [${s.name}](${s.url})${sourceNotes[s.url] ? `: ${sourceNotes[s.url]}` : ''}`).join('\n')}
 
 ## Publisher
 
@@ -46,7 +55,7 @@ ${sources.map(s => `- [${s.name}](${s.url})`).join('\n')}
 ## Optional
 
 - [Privacy](${site.url}/privacy/): Newsletter data and website preferences.
-- [Sitemap](${site.url}/sitemap.xml)
+- [Sitemap](${site.url}/sitemap.xml): XML sitemap listing the home page, the guides index, every guide and the privacy page, with last-modified dates.
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }
