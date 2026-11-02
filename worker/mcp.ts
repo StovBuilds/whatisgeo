@@ -14,10 +14,11 @@ export interface McpEnv {
   SITE_URL: string;
   EVENTS?: D1Database;
   DB?: D1Database;
+  SITE_EVENTS?: D1Database;
 }
 
-interface Page { path: string; url: string; section: string; title: string; description: string; updated: string | null; headings: string[]; markdown: string | null; fields: Record<string, string>; text: string }
-interface Index { version: number; built: string; site: { title: string; description: string; origin: string; endpoint: string }; pages: Page[] }
+interface Page { path: string; url: string; section: string; title: string; description: string; updated: string | null; headings: string[]; markdown: string | null; html?: string | null; fields: Record<string, string>; text: string }
+interface Index { version: number; built: string; postings: Record<string, number[]>; site: { title: string; description: string; origin: string; endpoint: string }; pages: Page[] }
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'content-type, accept, mcp-protocol-version, mcp-session-id', 'Access-Control-Expose-Headers': 'mcp-session-id' };
 const PROTOCOLS = ['2025-06-18', '2025-03-26', '2024-11-05'];
@@ -35,55 +36,47 @@ function loadIndex(env: McpEnv, request: Request): Promise<Index> {
 }
 
 // ── search ────────────────────────────────────────────────────────────────────
+// Tokeniser: must match tools/build-mcp-index.mjs.
 const STOP = new Set('a an and are as at be by can could do does for from how i if in into is it its me my of on or should that the this to use using was what when where which who why will with you your'.split(' '));
 const words = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').match(/[a-z0-9]+/g) ?? [];
 const stem = (w: string) => w.length > 4 ? w.replace(/(ies|es|s|ing|ed)$/, '') : w;
 const terms = (q: string) => [...new Set(words(q).filter(w => !STOP.has(w)).map(stem))];
 
-// Tokens per page, computed once per isolate alongside the index.
-interface Tok { fields: [Set<string>, number][]; body: Map<string, number> }
-const toks = new WeakMap<Page, Tok>();
-function tok(p: Page): Tok {
-  let t = toks.get(p);
-  if (!t) {
-    const body = new Map<string, number>();
-    for (const w of words(p.text)) { const k = stem(w); body.set(k, (body.get(k) ?? 0) + 1); }
-    const set = (s: string) => new Set(words(s).map(stem));
-    t = { fields: [[set(p.title), 8], [set(p.description), 4], [set(p.headings.join(' ')), 3], [set(Object.values(p.fields).join(' ')), 2]], body };
-    toks.set(p, t);
-  }
-  return t;
-}
-// Rarer words count for more: "cv" should outweigh "chatgpt" on a site about ChatGPT.
-const dfs = new WeakMap<Page[], Map<string, number>>();
-function idf(pages: Page[], q: string): number {
-  let df = dfs.get(pages);
-  if (!df) {
-    df = new Map();
-    for (const p of pages) { const t = tok(p); for (const k of new Set([...t.body.keys(), ...t.fields.flatMap(([f]) => [...f])])) df.set(k, (df.get(k) ?? 0) + 1); }
-    dfs.set(pages, df);
-  }
-  return Math.log(1 + pages.length / (df.get(q) ?? 1));
-}
-function score(p: Page, qs: string[], phrase: string, all: Page[]): number {
-  const t = tok(p);
-  let total = 0, matched = 0;
+// Scores come precomputed from the build (postings: term → [page index, score, …]); rarer
+// words count for more, so "cv" outweighs "chatgpt" on a site about ChatGPT.
+function search(ix: Index, qs: string[], phrase: string, allowed: Set<number> | null): { i: number; s: number }[] {
+  const total = new Map<number, number>(), matched = new Map<number, number>();
   for (const q of qs) {
-    let s = 0;
-    for (const [f, w] of t.fields) if (f.has(q)) s += w;
-    s += Math.min(t.body.get(q) ?? 0, 6) * 0.5;
-    if (s) matched++;
-    total += s * idf(all, q);
+    const post = Object.hasOwn(ix.postings, q) ? ix.postings[q] : null; // "constructor" is a word, not a prototype key
+    if (!post) continue;
+    const idf = Math.log(1 + ix.pages.length / (post.length / 2));
+    for (let j = 0; j < post.length; j += 2) {
+      const i = post[j];
+      if (allowed && !allowed.has(i)) continue;
+      total.set(i, (total.get(i) ?? 0) + post[j + 1] * idf);
+      matched.set(i, (matched.get(i) ?? 0) + 1);
+    }
   }
-  if (!matched) return 0;
-  if (phrase && p.title.toLowerCase().includes(phrase)) total += 10;
-  return total * (0.4 + 0.6 * matched / qs.length); // pages matching every term rank first
+  return [...total].map(([i, s]) => ({ i, s: (s + (phrase && ix.pages[i].title.toLowerCase().includes(phrase) ? 10 : 0)) * (0.4 + 0.6 * matched.get(i)! / qs.length) })); // pages matching every term rank first
 }
 function snippet(text: string, qs: string[]): string {
   const lower = text.toLowerCase();
   const at = qs.map(q => lower.search(new RegExp(`\\b${q}`))).filter(i => i >= 0).sort((a, b) => a - b)[0] ?? 0;
   const start = Math.max(0, at - 100);
   return (start ? '…' : '') + text.slice(start, start + 280).trim() + (start + 280 < text.length ? '…' : '');
+}
+// Pages with no Markdown twin: the readable text of <main> (the index keeps only a capped copy).
+const ENT: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', mdash: '—', ndash: '–', hellip: '…', middot: '·', pound: '£' };
+const decode = (s: string) => s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e: string) => e[0] === '#' ? String.fromCodePoint(e[1].toLowerCase() === 'x' ? parseInt(e.slice(2), 16) : +e.slice(1)) : ENT[e.toLowerCase()] ?? m);
+function htmlText(html: string): string {
+  const main = html.match(/<main[\s\S]*?<\/main>/i)?.[0] || html.match(/<body[\s\S]*?<\/body>/i)?.[0] || html;
+  return decode(main
+    .replace(/<(script|style|nav|footer|header|svg)[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<h([1-3])[^>]*>/gi, (_, n: string) => `\n\n${'#'.repeat(+n)} `)
+    .replace(/<\/(p|li|h[1-6]|tr|div|section|article)>/gi, '\n')
+    .replace(/<li[^>]*>/gi, '- ')
+    .replace(/<[^>]+>/g, ' '))
+    .replace(/[ \t]+/g, ' ').replace(/ *\n */g, '\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 const summary = (p: Page) => ({ title: p.title, url: p.url, section: p.section, description: p.description, updated: p.updated, ...(Object.keys(p.fields).length ? { fields: p.fields } : {}) });
 
@@ -126,7 +119,8 @@ async function call(name: string, args: Record<string, unknown>, ix: Index, env:
     const qs = terms(query);
     if (!qs.length) return fail('query needs at least one word that is not a stop word.');
     const limit = Math.min(Math.max(Number(args.limit) || 10, 1), 25);
-    const hits = pool.map(p => ({ p, s: score(p, qs, query.toLowerCase(), ix.pages) })).filter(h => h.s > 0).sort((a, b) => b.s - a.s).slice(0, limit);
+    const allowed = section ? new Set(ix.pages.flatMap((p, i) => p.section === section ? [i] : [])) : null;
+    const hits = search(ix, qs, query.toLowerCase(), allowed).sort((a, b) => b.s - a.s).slice(0, limit).map(h => ({ p: ix.pages[h.i] }));
     return ok({ query, count: hits.length, results: hits.map(({ p }) => ({ ...summary(p), snippet: snippet(p.text, qs) })) });
   }
   if (name === 'get_page') {
@@ -136,9 +130,10 @@ async function call(name: string, args: Record<string, unknown>, ix: Index, env:
     const page = ix.pages.find(p => norm(p.path) === norm(path));
     if (!page) return fail(`No published page at ${path}. Use search_site or list_pages to find one.`);
     let markdown = page.text;
-    if (page.markdown) {
-      const r = await env.ASSETS.fetch(new Request(new URL(page.markdown, request.url)));
-      if (r.ok) markdown = await r.text();
+    const asset = page.markdown ?? page.html;
+    if (asset) {
+      const r = await env.ASSETS.fetch(new Request(new URL(asset, request.url)));
+      if (r.ok) markdown = page.markdown ? await r.text() : htmlText(await r.text()) || page.text;
     }
     const truncated = markdown.length > MAX_MARKDOWN;
     return ok({ ...summary(page), markdown_url: page.markdown ? `${ix.site.origin}${page.markdown}` : null, markdown: truncated ? markdown.slice(0, MAX_MARKDOWN) : markdown, truncated });
@@ -158,7 +153,7 @@ const CLIENTS: [RegExp, string][] = [[/claude|anthropic/i, 'claude'], [/openai|c
 const FLEET_IPS = ['65.21.52.116', '2a01:4f9:c014:41c3'];
 const isFleet = (r: Request) => !!r.headers.get('x-fleet-probe') || FLEET_IPS.some(p => { const ip = r.headers.get('CF-Connecting-IP') || ''; return ip === p || ip.startsWith(p + ':'); });
 function logCall(env: McpEnv, request: Request, ctx: Ctx, tool: string, isError: boolean) {
-  const db = env.EVENTS ?? env.DB;
+  const db = env.EVENTS ?? env.DB ?? env.SITE_EVENTS;
   if (!db || isFleet(request)) return;
   const ua = request.headers.get('user-agent') || '';
   const client = CLIENTS.find(([re]) => re.test(ua))?.[1] ?? 'other';

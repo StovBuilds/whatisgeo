@@ -15,7 +15,7 @@ writeFileSync(join(dist, 'sitemap.xml'), `<urlset><url><loc>${O}/</loc></url><ur
 writeFileSync(join(dist, 'llms.txt'), '# Example Site\n\n> Answers about using AI.\n');
 writeFileSync(join(dist, 'index.md'), '# Example Site\n\nAnswers about using AI at work.\n');
 mkdirSync(join(dist, 'questions'));
-writeFileSync(join(dist, 'questions', 'write-my-cv.md'), '---\ntitle: "Can you use AI to write my CV?"\nverdict: yes-with-care\nupdated: 2026-10-04\n---\n\n# Can you use AI to write my CV?\n\nYes, with care. Every job and date must be real.\n\n## How to do it well\n\nTailor it to the advert.\n');
+writeFileSync(join(dist, 'questions', 'write-my-cv.md'), '---\ntitle: "Can you use AI to write my CV?"\nverdict: yes-with-care\nupdated: 2026-10-04\n---\n\n# Can you use AI to write my CV?\n\nYes, with care. Every job and date must be real. The constructor of a CV is you.\n\n## How to do it well\n\nTailor it to the advert.\n');
 writeFileSync(join(dist, 'questions', 'draft-only.md'), '# Not in the sitemap\n\nSecret draft about CVs.\n');
 mkdirSync(join(dist, 'about'));
 writeFileSync(join(dist, 'about', 'index.html'), '<html><head><title>About us</title><meta name="description" content="Who runs the site."></head><body><nav>menu</nav><main><h1>About us</h1><p>Run by a small UK company.</p></main></body></html>');
@@ -50,6 +50,12 @@ test('search finds sitemap pages only', async () => {
   const r = await tool('search_site', { query: 'can I use AI for my CV' });
   assert.equal(r.structuredContent.results[0].url, `${O}/questions/write-my-cv/`);
   assert.ok(!JSON.stringify(r).includes('Secret draft'));
+});
+
+test('words that are Object.prototype keys are ordinary search terms', async () => {
+  const r = await tool('search_site', { query: 'constructor' });
+  assert.equal(r.structuredContent.results[0].url, `${O}/questions/write-my-cv/`);
+  assert.equal((await tool('search_site', { query: 'tostring hasownproperty' })).structuredContent.count, 0);
 });
 
 test('get_page returns the Markdown twin with its fields, and refuses other sites', async () => {

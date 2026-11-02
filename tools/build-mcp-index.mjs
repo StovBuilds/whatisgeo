@@ -36,14 +36,16 @@ function frontmatter(md) {
   }
   return { fields, body: md.slice(m[0].length) };
 }
-const plain = s => s
+const ENT = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', mdash: '—', ndash: '–', hellip: '…', middot: '·', pound: '£', euro: '€', copy: '©' };
+const decode = s => s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, e) => e[0] === '#' ? String.fromCodePoint(e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : +e.slice(1)) : ENT[e.toLowerCase()] ?? m);
+const plain = s => decode(s
   .replace(/```[\s\S]*?```/g, ' ')
   .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
   .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
   .replace(/<[^>]+>/g, ' ')
   .replace(/^\s*[#>|*-]+\s*/gm, '')
   .replace(/[*_`]+/g, '')
-  .replace(/\s+/g, ' ')
+  .replace(/\s+/g, ' '))
   .trim();
 function fromHtml(html) {
   const main = html.match(/<main[\s\S]*?<\/main>/i)?.[0] || html.match(/<body[\s\S]*?<\/body>/i)?.[0] || html;
@@ -51,7 +53,7 @@ function fromHtml(html) {
   const headings = [...t.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/gi)].map(m => plain(m[1]));
   const desc = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i)?.[1] || '';
   const ttl = html.match(/<title>([^<]*)<\/title>/i)?.[1] || '';
-  return { title: ttl, description: desc, headings, text: plain(t.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&rsquo;/g, "'").replace(/&quot;/g, '"')) };
+  return { title: decode(ttl).trim(), description: decode(desc).trim(), headings, text: plain(t) };
 }
 
 const pages = [];
@@ -75,12 +77,29 @@ for (const url of urls) {
   pages.push({
     path, url, section: slug.split('/')[0] && slug.includes('/') ? slug.split('/')[0] : (slug ? 'pages' : 'home'),
     title: page.title || title, description: page.description, updated: page.fields.updated || page.fields.published || null,
-    headings: page.headings.slice(0, 40), markdown: page.markdown, fields: page.fields,
-    text: page.text.slice(0, 40_000),
+    headings: page.headings.slice(0, 40), markdown: page.markdown, html: page.markdown ? null : `/${htmlRel}`, fields: page.fields,
+    text: page.text,
   });
 }
+// Search postings, built here so the worker never tokenises a page: term → [page, score, …].
+// Tokeniser and weights must match worker/mcp.ts (words, stem, field weights 8/4/3/2, body 0.5 × min(tf, 6)).
+const STOP = new Set('a an and are as at be by can could do does for from how i if in into is it its me my of on or should that the this to use using was what when where which who why will with you your'.split(' '));
+const words = t => t.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').match(/[a-z0-9]+/g) ?? [];
+const stem = w => w.length > 4 ? w.replace(/(ies|es|s|ing|ed)$/, '') : w;
+const postings = Object.create(null); // words like "constructor" must not hit Object.prototype
+pages.forEach((p, i) => {
+  const score = new Map();
+  const add = (k, v) => { if (!STOP.has(k)) score.set(k, (score.get(k) ?? 0) + v); };
+  for (const [f, w] of [[p.title, 8], [p.description, 4], [p.headings.join(' '), 3], [Object.values(p.fields).join(' '), 2]]) for (const k of new Set(words(f).map(stem))) add(k, w);
+  const tf = new Map(); for (const w of words(p.text)) { const k = stem(w); tf.set(k, (tf.get(k) ?? 0) + 1); }
+  for (const [k, n] of tf) add(k, Math.min(n, 6) * 0.5);
+  for (const [k, v] of score) (postings[k] ??= []).push(i, v);
+});
+// Body text is kept only for snippets (and as get_page's last resort): ~1 MB in all.
+const perPage = Math.max(1_500, Math.min(40_000, Math.floor(1_000_000 / Math.max(pages.length, 1))));
+for (const p of pages) p.text = p.text.slice(0, perPage);
 
-const index = { version: 1, built: new Date().toISOString(), site: { title, description, origin, endpoint: `${origin}/mcp` }, pages };
+const index = { version: 2, postings, built: new Date().toISOString(), site: { title, description, origin, endpoint: `${origin}/mcp` }, pages };
 writeFileSync(join(dist, 'mcp-index.json'), JSON.stringify(index));
 
 const card = {
