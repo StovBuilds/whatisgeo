@@ -1,5 +1,6 @@
 import { ui } from '../src/data/content';
 import { ingest, exportData, type EventsEnv } from './events';
+import { mcp } from './mcp';
 
 export interface Env extends EventsEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
@@ -82,6 +83,8 @@ export default {
     const canonical = new URL(env.SITE_URL);
     if (url.host !== canonical.host && !['localhost','127.0.0.1'].includes(url.hostname)) return Response.redirect(`${canonical.origin}${url.pathname}${url.search}`, 301);
     logAiRead(request, env, ctx);
+    // Read-only MCP server over the published pages (worker/mcp.ts); never indexed.
+    if (url.pathname === '/mcp' || url.pathname === '/mcp/') { const r = await mcp(request, env, ctx); const out = new Response(r.body, r); out.headers.set('X-Robots-Tag', 'noindex'); return out; }
     if (!url.pathname.startsWith('/api/')) return env.ASSETS.fetch(request);
     if (url.pathname === '/api/status' && request.method === 'GET') return Response.json({ available: configured(env) }, { headers: { 'Cache-Control':'no-store' } });
     // First-party analytics (worker/events.ts): the browser posts batches; the fleet dashboard reads aggregates.
