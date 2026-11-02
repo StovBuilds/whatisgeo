@@ -47,7 +47,7 @@ export type GuideFm = {
 export const SUMMARY_MAX = 220;
 export const SEO_TITLE_MAX = 60;
 /** Paths the site already uses at the root; a guide slug may not shadow them. */
-export const RESERVED = new Set(['guide', 'guides', 'privacy', 'confirm', 'llms', 'llms-full', 'sitemap', 'api', '404', 'og', 'favicon', 'robots', 'index']);
+export const RESERVED = new Set(['guide', 'guides', 'privacy', 'mcp-server', 'confirm', 'llms', 'llms-full', 'sitemap', 'api', '404', 'og', 'favicon', 'robots', 'index']);
 const KEYS = new Set(['title', 'seoTitle', 'summary', 'category', 'ours', 'related', 'sources', 'faq', 'published', 'updated', 'status', 'order']);
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

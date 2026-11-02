@@ -55,7 +55,7 @@ ${sources.map(s => `- [${s.name}](${s.url})${sourceNotes[s.url] ? `: ${sourceNot
 ## Optional
 
 - [Privacy](${site.url}/privacy/): Newsletter data and website preferences.
-- [Sitemap](${site.url}/sitemap.xml): XML sitemap listing the home page, the guides index, every guide and the privacy page, with last-modified dates.
+- [Sitemap](${site.url}/sitemap.xml): XML sitemap listing the home page, the guides index, every guide, the privacy page and the MCP server page, with last-modified dates.
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

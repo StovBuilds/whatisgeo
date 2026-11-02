@@ -1,0 +1,9 @@
+---
+// MCP server help page. Copy: src/content/pages/mcp-server.md (shared with /mcp-server.md).
+// Not listed in llms.txt by hand: tools/build-mcp-index.mjs appends its "AI agents" lines to dist.
+import Base from '../layouts/Base.astro';
+import { sitePage } from '../lib/pages';
+const page = sitePage('mcp-server');
+const { Content } = page;
+---
+<Base title={page.fm.title} description={page.fm.description} markdown={page.md}><main class="utility-page" id="main"><p class="eyebrow">For AI assistants</p><h1>{page.fm.title}</h1><div class="prose"><Content /></div><a class="pill" href="/">Back to the guide ↗</a></main></Base>

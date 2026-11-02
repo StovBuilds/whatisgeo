@@ -11,14 +11,17 @@ import { mcp } from '../worker/mcp';
 
 const dist = mkdtempSync(join(tmpdir(), 'mcp-dist-'));
 const O = 'https://example.test';
-writeFileSync(join(dist, 'sitemap.xml'), `<urlset><url><loc>${O}/</loc></url><url><loc>${O}/questions/write-my-cv/</loc></url><url><loc>${O}/about/</loc></url></urlset>`);
+writeFileSync(join(dist, 'sitemap.xml'), `<urlset><url><loc>${O}/</loc></url><url><loc>${O}/questions/write-my-cv/</loc></url><url><loc>${O}/about/</loc><lastmod>2026-09-30</lastmod></url><url><loc>${O}/mcp-server/</loc></url></urlset>`);
 writeFileSync(join(dist, 'llms.txt'), '# Example Site\n\n> Answers about using AI.\n');
+writeFileSync(join(dist, 'llms-full.txt'), '# Example Site\n\nEvery page in full.\n');
 writeFileSync(join(dist, 'index.md'), '# Example Site\n\nAnswers about using AI at work.\n');
 mkdirSync(join(dist, 'questions'));
 writeFileSync(join(dist, 'questions', 'write-my-cv.md'), '---\ntitle: "Can you use AI to write my CV?"\nverdict: yes-with-care\nupdated: 2026-10-04\n---\n\n# Can you use AI to write my CV?\n\nYes, with care. Every job and date must be real. The constructor of a CV is you.\n\n## How to do it well\n\nTailor it to the advert.\n');
 writeFileSync(join(dist, 'questions', 'draft-only.md'), '# Not in the sitemap\n\nSecret draft about CVs.\n');
 mkdirSync(join(dist, 'about'));
 writeFileSync(join(dist, 'about', 'index.html'), '<html><head><title>About us</title><meta name="description" content="Who runs the site."></head><body><nav>menu</nav><main><h1>About us</h1><p>Run by a small UK company.</p></main></body></html>');
+mkdirSync(join(dist, 'mcp-server'));
+writeFileSync(join(dist, 'mcp-server', 'index.html'), '<html><head><title>Connect the MCP server</title></head><body><main><h1>Connect the MCP server</h1><p>Paste the address into Claude.</p></main></body></html>');
 execFileSync('node', [fileURLToPath(new URL('../tools/build-mcp-index.mjs', import.meta.url)), dist]);
 
 const env = {
@@ -33,9 +36,27 @@ const tool = async (name: string, args: unknown) => (await rpc('tools/call', { n
 
 test('build writes the index, the discovery card and the llms.txt line', () => {
   const ix = JSON.parse(readFileSync(join(dist, 'mcp-index.json'), 'utf8'));
-  assert.deepEqual(ix.pages.map((p: { path: string }) => p.path), ['/', '/questions/write-my-cv/', '/about/']);
+  assert.deepEqual(ix.pages.map((p: { path: string }) => p.path), ['/', '/questions/write-my-cv/', '/about/', '/mcp-server/']);
   assert.equal(JSON.parse(readFileSync(join(dist, '.well-known', 'mcp.json'), 'utf8')).endpoint, `${O}/mcp`);
-  assert.match(readFileSync(join(dist, 'llms.txt'), 'utf8'), /\[MCP server\]\(https:\/\/example\.test\/mcp\)/);
+  for (const f of ['llms.txt', 'llms-full.txt']) {
+    const t = readFileSync(join(dist, f), 'utf8');
+    assert.match(t, /\[MCP server\]\(https:\/\/example\.test\/mcp\)/);
+    assert.match(t, /\[Connect the MCP server\]\(https:\/\/example\.test\/mcp-server\/\)/);
+    assert.match(t, /\[MCP discovery card\]\(https:\/\/example\.test\/\.well-known\/mcp\.json\)/);
+  }
+});
+
+test('a rebuild does not add the AI agents lines twice, and a link to the help page alone does not count', () => {
+  writeFileSync(join(dist, 'llms-full.txt'), '# Example Site\n\nSee https://example.test/mcp-server/ for setup.\n');
+  execFileSync('node', [fileURLToPath(new URL('../tools/build-mcp-index.mjs', import.meta.url)), dist]);
+  execFileSync('node', [fileURLToPath(new URL('../tools/build-mcp-index.mjs', import.meta.url)), dist]);
+  for (const f of ['llms.txt', 'llms-full.txt']) assert.equal(readFileSync(join(dist, f), 'utf8').split('## AI agents').length, 2, f);
+});
+
+test('pages without a date of their own take the sitemap lastmod', () => {
+  const ix = JSON.parse(readFileSync(join(dist, 'mcp-index.json'), 'utf8'));
+  assert.equal(ix.pages.find((p: { path: string }) => p.path === '/about/').updated, '2026-09-30');
+  assert.equal(ix.pages.find((p: { path: string }) => p.path === '/questions/write-my-cv/').updated, '2026-10-04');
 });
 
 test('initialize and tools/list describe a read-only server', async () => {
