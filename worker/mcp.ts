@@ -5,7 +5,7 @@
 //   GET  /mcp   a JSON card describing the server (also at /.well-known/mcp.json)
 //   POST /mcp   JSON-RPC: initialize, tools/list, tools/call (search_site, get_page, list_pages)
 // Each tools/call is logged to site_events as type 'mcp_call' with the tool name and a coarse
-// client label (never the user agent, IP or the query text).
+// client label (never the user agent, IP or the query text); fleet traffic is skipped.
 // Shared across the fleet: the source of truth is guide-site-starter; copy, don't fork.
 
 type Ctx = { waitUntil(promise: Promise<unknown>): void } | undefined;
@@ -154,9 +154,12 @@ async function call(name: string, args: Record<string, unknown>, ix: Index, env:
 
 // ── usage log (site_events, no UA/IP/query stored) ────────────────────────────
 const CLIENTS: [RegExp, string][] = [[/claude|anthropic/i, 'claude'], [/openai|chatgpt/i, 'openai'], [/cursor/i, 'cursor'], [/gemini|google/i, 'google'], [/perplexity/i, 'perplexity'], [/copilot|vscode|microsoft/i, 'microsoft'], [/mcp-remote|inspector/i, 'mcp-tooling']];
+// Our own probes and tests are not usage (same VPS addresses as worker/events.ts's FLEET_IPS).
+const FLEET_IPS = ['65.21.52.116', '2a01:4f9:c014:41c3'];
+const isFleet = (r: Request) => !!r.headers.get('x-fleet-probe') || FLEET_IPS.some(p => { const ip = r.headers.get('CF-Connecting-IP') || ''; return ip === p || ip.startsWith(p + ':'); });
 function logCall(env: McpEnv, request: Request, ctx: Ctx, tool: string, isError: boolean) {
   const db = env.EVENTS ?? env.DB;
-  if (!db) return;
+  if (!db || isFleet(request)) return;
   const ua = request.headers.get('user-agent') || '';
   const client = CLIENTS.find(([re]) => re.test(ua))?.[1] ?? 'other';
   const write = db.prepare('INSERT INTO site_events (ts,type,path,country,props) VALUES (?,?,?,?,?)')
