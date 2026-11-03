@@ -2,7 +2,7 @@
 # __SCRIPT_HASHES__ with sha256 hashes of the page's inline scripts (the theme
 # bootstrap) so the CSP needs no 'unsafe-inline' for scripts.
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' __SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' __SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.jstov.uk; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
