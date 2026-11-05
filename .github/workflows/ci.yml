@@ -29,6 +29,8 @@ jobs:
         run: bun run check
       - name: Worker tests
         run: bun run test
+      - name: IndexNow script syntax
+        run: node --check tools/indexnow.mjs
       - name: Build
         run: bun run build
       - name: Built output is complete
