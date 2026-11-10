@@ -98,7 +98,7 @@ Insights appear only when there are enough conversations or interactions to meet
 
 ## Using the insights for GEO
 
-GEO is the work of making a business easy for AI assistants to find, understand and cite (the home guide's [principles](/#principles) cover the approach). For the wider method, see [how to rank in ChatGPT](/how-to-rank-in-chatgpt/); for how ChatGPT finds and cites pages, see [ChatGPT search](/chatgpt-search/). The suggestions below are our recommendations for reading these numbers, not OpenAI guidance.
+GEO is the work of making a business easy for AI assistants to find, understand and cite (the guide's [principles](/guide/#principles) cover the approach). For the wider method, see [how to rank in ChatGPT](/how-to-rank-in-chatgpt/); for how ChatGPT finds and cites pages, see [ChatGPT search](/chatgpt-search/). The suggestions below are our recommendations for reading these numbers, not OpenAI guidance.
 
 **Start with discovery topics.** They are the closest thing to a view of why your site gets cited. Ask two questions of each: is this what you want to be known for, and do your pages say enough about it? A topic you care about that your site covers thinly is the clearest thing to fix, because your own pages are what you control.
 
@@ -106,7 +106,7 @@ GEO is the work of making a business easy for AI assistants to find, understand 
 
 **Read mentions and clicks together, and over time.** Each view is a rolling 28 days, so compare one period with the next. If mentions rise and clicks do not, people see your site referenced but do not follow the link; look at the page it points to. If clicks rise, check what that page does with the visit.
 
-**Keep your website as the source of truth.** Clear pages that answer buyers' questions, with facts that agree everywhere they appear, are what the profile and the citations rest on. To track this with a method rather than by feel, [how to measure AI visibility](/how-to-measure-ai-visibility/) sets out one you can run yourself, and the home guide's [measurement section](/#measurement) has the short version.
+**Keep your website as the source of truth.** Clear pages that answer buyers' questions, with facts that agree everywhere they appear, are what the profile and the citations rest on. To track this with a method rather than by feel, [how to measure AI visibility](/how-to-measure-ai-visibility/) sets out one you can run yourself, and the guide's [measurement section](/guide/#measurement) has the short version.
 
 OpenAI says plainly that claiming does not guarantee higher placement or sales. Treat the insights as a record of what happened, not a forecast.
 
