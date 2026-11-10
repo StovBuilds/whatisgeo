@@ -45,12 +45,12 @@ faq:
   - q: "Does content written with Surfer AI rank, or get cited in ChatGPT?"
     a: "No tool can guarantee either. Google says appropriate use of AI is not against its guidelines, but you should fact-check AI content, and mass-producing pages with no added value counts as spam. For AI Overviews and AI Mode, Google says no special optimisation is required."
 published: 2026-10-26
-updated: 2026-10-26
+updated: 2026-11-10
 status: "published"
 ---
 Surfer sells two different kinds of AI product under one brand, so each needs its own verdict. The writing and scoring tools help you produce and tune pages. The AI Tracker reports how often AI assistants mention you. Neither can guarantee rankings or citations, and Google's own documentation explains why.
 
-Throughout this page we keep three kinds of claim apart: what Surfer says about its own product, what Google documents, and what independent research found. Prices and plan details come from Surfer's pricing page and help centre, read on 25 October 2026.
+Throughout this page we keep three kinds of claim apart: what Surfer says about its own product, what Google documents, and what independent research found. Prices and plan details come from Surfer's pricing page and help centre, read on 25 October 2026. Surfer shows prices in a currency chosen for the visitor: read from Europe on 10 November 2026, the page showed the same figures in euros.
 
 ## Is Surfer SEO an AI tool?
 

@@ -43,7 +43,7 @@ faq:
   - q: "Is Yoast SEO AI+ worth it, and how do I check its brand tracking numbers?"
     a: "That depends on whether you need weekly brand monitoring. On 30 October 2026 AI+ cost $358.80 a year excluding VAT and covered up to five questions per brand, analysed weekly across ChatGPT, Gemini, Claude and Perplexity. To check its findings, ask the same questions yourself and read the actual answers."
 published: 2026-10-30
-updated: 2026-10-30
+updated: 2026-11-10
 status: "published"
 ---
 Yoast's AI features do three different jobs. Some help you write: titles, meta descriptions and summaries. Some control what AI crawlers and agents can read on your site: the bot blocker, llms.txt and schema output. One, in the separate Yoast SEO AI+ plan, reports how AI assistants mention your brand. Everything below about the products comes from Yoast's own product, feature and release pages and its WordPress.org listing, read on 30 October 2026. Where we give advice, we say it is ours.
@@ -59,7 +59,7 @@ Yoast's AI features do three different jobs. Some help you write: titles, meta d
 | Schema.org output | Structured data; Premium adds "significantly more schema types" and schema aggregation for NLWeb | Free, with more in Premium | Markup |
 | AI Brand Insights | Weekly report on how ChatGPT, Gemini, Claude and Perplexity mention your brand | Yoast SEO AI+ | Measurement |
 
-On 30 October 2026 Yoast's product pages showed Yoast SEO Premium at $118.80 a year and Yoast SEO AI+ at $358.80 a year, both excluding VAT. The AI+ page says it includes Yoast WooCommerce SEO and the Premium features. Prices change, so check on the day you buy.
+On 30 October 2026 Yoast's product pages showed Yoast SEO Premium at $118.80 a year and Yoast SEO AI+ at $358.80 a year, both excluding VAT. The AI+ page says it includes Yoast WooCommerce SEO and the Premium features. Yoast's pages have a currency switcher (USD, EUR or GBP). Read from Europe on 10 November 2026, the Premium and AI+ pages showed the same figures in euros, €118.80 and €358.80 a year ex VAT, and the AI+ page's structured data lists the price as USD 358.80. Prices change, so check on the day you buy.
 
 The WordPress.org listing says "All AI tools included, no hidden fees." Read that in context. The same listing says the AI tools come with Premium, with "no separate AI subscription, no extra login, and no credit top-up to buy". So you pay nothing on top of a paid plan, but the AI writing tools themselves are Premium features.
 

@@ -19,6 +19,8 @@ sources:
     url: "https://docs.perplexity.ai/guides/bots"
   - label: "Anthropic: Does Anthropic crawl data from the web, and how can site owners block the crawler?"
     url: "https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler"
+  - label: "Aggarwal et al., GEO: Generative Engine Optimization, full text (arXiv HTML, v3)"
+    url: "https://arxiv.org/html/2311.09735v3"
 faq:
   - q: "Which AI optimisation software improves visibility the most?"
     a: "Nobody can honestly name one. We know of no independent study that compares products by the visibility they added to the same sites under the same conditions. Test any tool on your own site with a fixed prompt set, a repeated baseline and an untouched control."
@@ -31,7 +33,7 @@ faq:
   - q: "What are the best AI visibility analytics for search optimisation?"
     a: "Look for tools that show you the raw prompts and answers, run each prompt more than once, list the cited sources and let you export the data. We do not name a winner, because there is no independent method to rank them."
 published: 2026-10-25
-updated: 2026-10-25
+updated: 2026-11-10
 status: "published"
 ---
 Software can help you see your AI visibility and can speed up the work of changing it. What it cannot show you is proof that the software itself caused an improvement. This page explains where tools help, what the evidence for any change actually rests on, and how to test any product yourself, ours included. None of it requires buying anything.

@@ -9,7 +9,7 @@ ours:
     why: "If you draft with AI and want copy that already sounds like you before any rewrite pass, ScriptGrain drafts in your own measured voice for you to fact-check and edit."
 related: ["is-ai-content-good-for-seo","how-to-write-content-for-ai-search","ai-seo-tools"]
 sources:
-  - label: "Surfer: Free AI Humanizer (tool page and FAQ, checked 21 October 2026)"
+  - label: "Surfer: Free AI Humanizer (tool page and FAQ, checked 10 November 2026)"
     url: "https://surferseo.com/ai-humanizer/"
   - label: "Google Search Central: Google Search's guidance on using generative AI content on your website"
     url: "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content"
@@ -33,7 +33,7 @@ faq:
   - q: "What should I do instead of using a humanizer?"
     a: "Edit for substance: fact-check every claim, answer the query properly, add first-hand detail and have a named person stand behind the page. If the prose still reads stiff after that, a humanizer can serve as a final polish, followed by another accuracy check."
 published: 2026-10-21
-updated: 2026-10-21
+updated: 2026-11-10
 status: "published"
 ---
 Surfer's humanizer is free to try within a word limit, and Surfer markets it partly on getting past AI detectors. Nothing Google publishes treats a detector score as a ranking signal, so a humanised page succeeds or fails on the same things as any other page: whether it is accurate, original and useful.
@@ -52,7 +52,7 @@ On cost, the same page says (checked 21 October 2026):
 
 A notice on the page says the tool supports English only for now, although the FAQ further down mentions multiple languages. If language matters to you, test it before relying on it.
 
-Surfer's marketing goes further than its FAQ. The page says the tool lets text "bypass AI detection tools like Turnitin, Copyleaks and GPTZero" and that it "improves search engine visibility". Those are Surfer's claims about its own product, and we have not seen independent testing behind them. Surfer's FAQ is more cautious. It says a humanizer's ability to evade detectors depends on how sophisticated both tools are, and that "more advanced" detectors might still pick the text up.
+Surfer's marketing goes further than its FAQ. The page says the tool lets text "bypass AI detection tools like Turnitin, Copyleaks and GPTZero" and that natural, human-like text is "the kind of content readers, AI search engines and Google trust". Those are Surfer's claims about its own product, and we have not seen independent testing behind them. Surfer's FAQ is more cautious. It says a humanizer's ability to evade detectors depends on how sophisticated both tools are, and that "more advanced" detectors might still pick the text up.
 
 Surfer also offers an [AI content detector](/surfer-seo-ai-content-detector/). One tool scores text; the other rewrites it so it scores differently.
 

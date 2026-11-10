@@ -43,7 +43,7 @@ faq:
   - q: "Do I need Surfer SEO as well as Jasper?"
     a: "Not necessarily. Jasper documents its own optimisation agents and a Semrush integration, so check whether those cover what you need before paying for a second tool."
 published: 2026-10-31
-updated: 2026-10-31
+updated: 2026-11-10
 status: "published"
 ---
 Jasper helps with the writing side of SEO, and on its Business plan it also reports on how AI assistants mention your brand. Whether any of that becomes rankings or citations depends on the pages you publish, and Google judges those the same way whoever or whatever wrote them. This page keeps three kinds of claim apart: what Jasper says about its own features (vendor claims, read on 31 October 2026), what Google documents, and our own recommendations.
@@ -108,7 +108,7 @@ This checklist is our recommendation. It follows from what Google documents; Jas
 4. **Check every claim.** Include the title, meta description and any generated schema, as Google asks.
 5. **Cap bulk work at what you can review by hand.** If you use Grid to generate or refresh many pages, each one still has to add value. Google calls it scaled content abuse when many pages are generated mainly to manipulate rankings without helping users.
 6. **Do not chase Jasper's scores for their own sake.** A higher readiness or fact density score is only worth having if the facts are true and sourced.
-7. **Be open about how the page was made.** Google suggests AI disclosures where readers would reasonably ask "How was this created?", and warns against made-up author profiles.
+7. **Be open about how the page was made.** Google suggests AI disclosures where readers would reasonably ask "How was this created?", and its guidance on helpful, people-first content says fabricating creator profiles, "such as by using AI-generated headshots, made-up names, or false credentials", is a form of deception.
 
 Notice what is missing: any trick. The safe route is the boring one. Make something useful, then use the tool to make it faster.
 
