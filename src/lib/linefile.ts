@@ -100,17 +100,17 @@ function row(n: number | string, body: string, kind: string, marker = '', extra 
   const id = typeof n === 'number' ? ` id="L${n}"` : '';
   return `<${tag} class="lf-l"${id} data-kind="${kind}"${extra}>${num(n)}${mark(marker)}<${inner} class="lf-t"${innerAttrs}>${body}</${inner}></${tag}>`;
 }
-/** Text of an HTML fragment, for labels (always passed through esc() as well). Any stray < or > left after removing
- * tags is dropped, so the result can never contain markup. */
-const plain = (h: string) => h.replace(/<[^>]*>/g, '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
+/** A Markdown snippet as plain label text (links keep their words; marks dropped). Always passed through esc(). */
+const plainMd = (md: string) => md.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[`*_]/g, '').replace(/\s+/g, ' ').trim();
 
 function table(rows: string[], label: string | undefined, opts: RenderOpts) {
   const cells = (r: string) => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
-  const head = cells(rows[0]).map(c => inline(c, opts));
+  const rawHead = cells(rows[0]);
+  const head = rawHead.map(c => inline(c, opts));
   const th = head.map(h => `<th class="ds-data-table__th" scope="col">${h || '<span class="ds-sr-only">Row</span>'}</th>`).join('');
   const body = rows.slice(2).map(r => {
     const cs = cells(r);
-    return `<tr class="ds-data-table__row"><th class="ds-data-table__td ds-data-table__primary" scope="row">${inline(cs[0], opts)}</th>${cs.slice(1).map((c, i) => `<td class="ds-data-table__td" data-label="${esc(plain(head[i + 1] ?? ''))}">${inline(c, opts)}</td>`).join('')}</tr>`;
+    return `<tr class="ds-data-table__row"><th class="ds-data-table__td ds-data-table__primary" scope="row">${inline(cs[0], opts)}</th>${cs.slice(1).map((c, i) => `<td class="ds-data-table__td" data-label="${esc(plainMd(rawHead[i + 1] ?? ''))}">${inline(c, opts)}</td>`).join('')}</tr>`;
   }).join('');
   return `<div class="ds-data-table lf-table"><div class="ds-data-table__scroll"><table class="ds-data-table__table"${label ? ` aria-label="${esc(label)}"` : ''}><thead class="ds-data-table__head"><tr class="ds-data-table__row">${th}</tr></thead><tbody>${body}</tbody></table></div></div>`;
 }
@@ -161,7 +161,7 @@ export function renderLines(lines: string[], start: number, end: number, opts: R
     if (h) {
       const depth = h[1].length, id = opts.headingId?.(h[2], depth, n);
       if (depth > 1) inMeta = false;
-      lastHeading = plain(inline(h[2]));
+      lastHeading = plainMd(h[2]);
       out.push(row(n, inline(h[2], opts), `h${depth}`, h[1], '', 'div', `h${depth}`, id ? ` id="${esc(id)}"` : ''));
       n++; continue;
     }
