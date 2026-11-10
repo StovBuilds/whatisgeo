@@ -1,0 +1,209 @@
+/* ============================================================================
+   suggestion-chips — Suggestion / example chip row              (taxonomy §I · common · S0)
+   Root: .ds-suggestion-chips — a <div role="group" aria-label> (or <ul>) holding ONE optional non-interactive
+     __label chip ("Try asking ↵") and N __chip <button>s. Pressing a chip INSERTS its text into the composer
+     (it never submits). The row hides while an attached list is open (J2 rule 4) — the composer sets it.
+   Parts: __label (leading heading chip, inert) · __chip (<button>) · __icon (16 stroke glyph) · __emoji (native
+          emoji lane, [data-emoji] policy) · __text · __rule (origin: the mono label's hairline) · __question
+          (origin: the 26px first-person question) · __cta (origin: the full-width outline pill — compose
+          .ds-button-secondary[data-variant="outlined-mono-caps-pill"] or use the local part) · __empty (dashed footprint)
+   Axes:  data-align="start|center"          start under an app composer (house) · centred under a hero (perplexity)
+          data-state="hidden|empty|loading"  hidden while the attached list is open · no suggestions yet · fetching
+   Variants: jstov (unmarked — icon-led, start-aligned, 32 h, hairline one grade above perplexity's) ·
+     perplexity-label-chip-plus-question-chips · origin-question-of-the-day-card ·
+     sana-divided-prompt-rows (a hairline-divided LIST of full-width prompt rows, app mark + muted verb phrase + bold object)
+   Private knobs: --_h --_gap --_radius --_edge --_fill --_ink
+   Tokens only (tools/lint-tokens.mjs).
+   ========================================================================== */
+
+.ds-suggestion-chips svg[fill="none"] { fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+
+.ds-suggestion-chips {
+  --_h:      var(--ds-control-h-sm);            /* 32 — one rung under the composer's 36 (rule 1)      */
+  --_gap:    var(--ds-space-2);                 /* 8 (perplexity)                                      */
+  --_radius: var(--ds-radius-pill);
+  --_edge:   var(--ds-border);                  /* perplexity's ≈1.06:1 hairline is the weakness; --ds-border reads */
+  --_fill:   var(--ds-surface);
+  --_ink:    var(--ds-ink-2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--_gap);
+  min-width: 0;
+  max-width: 100%;
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-lh-list);
+}
+.ds-suggestion-chips[data-align="center"] { justify-content: center; }
+.ds-suggestion-chips[data-align="start"]  { justify-content: flex-start; }
+.ds-suggestion-chips[data-state="hidden"] { display: none; }
+
+/* -- the inert label chip: a row heading, not an action ------------------------------------------ */
+.ds-suggestion-chips__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1-5);
+  min-height: var(--_h);
+  padding-inline: var(--ds-space-1);
+  color: var(--ds-ink-muted);
+  font-weight: var(--ds-weight-medium);
+  white-space: nowrap;
+}
+.ds-suggestion-chips__label svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); }
+
+/* -- the chip: a button that inserts a prompt ---------------------------------------------------- */
+.ds-suggestion-chips__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1-5);
+  min-height: var(--_h);
+  max-width: 100%;
+  min-width: 0;
+  padding-inline: var(--ds-space-3);
+  border: var(--ds-border-width) solid var(--_edge);
+  border-radius: var(--_radius);
+  background: var(--_fill);
+  color: var(--_ink);
+  font: inherit;
+  font-size: var(--ds-text-sm);
+  text-align: start;
+  cursor: pointer;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard), border-color var(--ds-dur-fast) var(--ds-ease-standard), color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-suggestion-chips__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-suggestion-chips__icon { flex: none; display: inline-grid; place-items: center; inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); color: var(--ds-ink-muted); }
+.ds-suggestion-chips__icon svg { inline-size: 100%; block-size: 100%; }
+.ds-suggestion-chips__emoji { flex: none; font-size: var(--ds-text-md); line-height: 1; }
+
+.ds-suggestion-chips__chip:hover,
+.ds-suggestion-chips__chip[data-state="hover"] { background: var(--ds-hover-bg); border-color: var(--ds-border-strong); color: var(--ds-ink); }
+.ds-suggestion-chips__chip:hover .ds-suggestion-chips__icon { color: var(--ds-ink); }
+.ds-suggestion-chips__chip:active,
+.ds-suggestion-chips__chip[data-state="pressed"] { background: var(--ds-surface-2); }
+.ds-suggestion-chips__chip:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+.ds-suggestion-chips__chip:disabled,
+.ds-suggestion-chips__chip[aria-disabled="true"] { background: var(--ds-surface-3); border-color: var(--ds-rule); color: var(--ds-ink-faint); cursor: not-allowed; }
+.ds-suggestion-chips__chip:disabled .ds-suggestion-chips__icon { color: var(--ds-ink-faint); }
+/* a chip that is fetching its prompt: skeleton text, keeps its footprint */
+.ds-suggestion-chips__chip[aria-busy="true"] { pointer-events: none; color: transparent; }
+.ds-suggestion-chips__chip[aria-busy="true"] .ds-suggestion-chips__text { border-radius: var(--ds-radius-xs); background: var(--ds-skeleton); min-inline-size: 8em; }
+.ds-suggestion-chips__chip[aria-busy="true"] .ds-suggestion-chips__icon { color: var(--ds-ink-faint); }
+
+/* -- empty: a dashed footprint the size of one chip row, never blank (X-04) -------------------- */
+.ds-suggestion-chips__empty {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--_h);
+  padding-inline: var(--ds-space-3);
+  border: var(--ds-border-width) dashed var(--ds-border);
+  border-radius: var(--_radius);
+  color: var(--ds-ink-muted);
+  font-size: var(--ds-text-sm);
+}
+
+/* =========================================================================
+   VARIANTS
+   ========================================================================= */
+
+/* perplexity-label-chip-plus-question-chips — "⇥ Try searching" label chip + emoji-led question chips, ground fill,
+   hairline, 34 h, full radius, centred, wrapping to two rows [perplexity-asking-a-question-00-04] [-05-09] */
+.ds-suggestion-chips[data-variant="perplexity-label-chip-plus-question-chips"] {
+  --_fill: var(--ds-ground);
+  --_edge: var(--ds-rule);                      /* as captured: near-invisible hairline; the emoji does the "object" work */
+  --_ink: var(--ds-ink-2);
+  justify-content: center;
+}
+.ds-suggestion-chips[data-variant="perplexity-label-chip-plus-question-chips"] .ds-suggestion-chips__chip { padding-inline: var(--ds-space-3); }
+
+/* origin-question-of-the-day-card — mono caps label + rule → 26px first-person question → full-width outline
+   "✦ ASK SIDEKICK" pill (64 h in the card) [origin-connecting-an-account-00-04] [origin-connecting-an-account-05-06] */
+.ds-suggestion-chips[data-variant="origin-question-of-the-day-card"] {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--ds-space-4);
+  padding: var(--ds-card-pad);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-card-bg);
+  border: var(--ds-border-width) solid var(--ds-card-border);
+  box-shadow: var(--ds-card-shadow);
+}
+.ds-suggestion-chips[data-variant="origin-question-of-the-day-card"] .ds-suggestion-chips__label {
+  min-height: 0;
+  padding: 0 0 var(--ds-space-3);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-regular);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+.ds-suggestion-chips__question {
+  margin: 0;
+  font-size: var(--ds-text-xl);
+  font-weight: var(--ds-weight-regular);
+  line-height: var(--ds-lh-heading);
+  color: var(--ds-ink);
+  text-wrap: balance;
+}
+.ds-suggestion-chips[data-variant="origin-question-of-the-day-card"] .ds-suggestion-chips__chip {
+  --_h: var(--ds-control-h-lg);
+  justify-content: center;
+  gap: var(--ds-space-2);
+  inline-size: 100%;
+  border-color: var(--ds-border-strong);
+  color: var(--ds-ink);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-sm);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.ds-suggestion-chips[data-variant="origin-question-of-the-day-card"] .ds-suggestion-chips__chip .ds-suggestion-chips__icon { color: var(--ds-ink); }
+
+/* sana-divided-prompt-rows — not chips at all: a column of full-width prompt ROWS under the composer, each divided
+   by a hairline (top rule on every row, none at the bottom), an app / object mark in a 16 px lane, then a muted
+   verb phrase with the OBJECT in medium ink ("Recap my <b>Teams</b> messages"); the last row is a quieter "···
+   Connect your apps →" row. No label chip — the rows are self-evident. Hover tints the row, never lifts.
+   [mobbin-sana-suggestion-chips] */
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] {
+  --_h: calc(var(--ds-control-h-lg) + var(--ds-space-3));
+  --_edge: var(--ds-rule);
+  --_fill: transparent;
+  --_ink: var(--ds-ink-muted);
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 0;
+}
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip {
+  gap: var(--ds-space-3);
+  inline-size: 100%;
+  padding-inline: var(--ds-space-3);
+  border-width: var(--ds-border-width) 0 0;
+  border-radius: 0;
+  font-size: var(--ds-text-md);
+}
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__text b { font-weight: var(--ds-weight-medium); color: var(--ds-ink-2); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__icon[data-hue="1"] { color: var(--ds-data-1); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__icon[data-hue="2"] { color: var(--ds-data-2); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__icon[data-hue="3"] { color: var(--ds-data-3); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__icon[data-hue="4"] { color: var(--ds-data-4); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__icon[data-hue="5"] { color: var(--ds-data-5); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip:is(:hover, [data-state="hover"]) { border-color: var(--ds-rule); background: var(--ds-hover-bg); color: var(--ds-ink-2); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip:is(:hover, [data-state="hover"]) .ds-suggestion-chips__text b { color: var(--ds-ink); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip:is(:focus-visible, [data-state="focus"]) { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: calc(-1 * var(--ds-ring-width)); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip:disabled { border-color: var(--ds-rule); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip:disabled .ds-suggestion-chips__text b { color: var(--ds-ink-faint); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip[aria-busy="true"] .ds-suggestion-chips__text { min-inline-size: 16em; block-size: var(--ds-text-sm); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__chip[data-kind="more"] { font-size: var(--ds-text-sm); }
+.ds-suggestion-chips__arrow { flex: none; display: inline-block; inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); transition: transform var(--ds-dur-fast) var(--ds-ease-out); }
+.ds-suggestion-chips__chip:is(:hover, [data-state="hover"]) .ds-suggestion-chips__arrow { transform: translateX(2px); }
+.ds-suggestion-chips[data-variant="sana-divided-prompt-rows"] .ds-suggestion-chips__empty { border-radius: var(--ds-radius-sm); min-height: var(--_h); }
+
+/* =========================================================================
+   SIZE — chips read the ladder one rung under their composer
+   ========================================================================= */
+.ds-suggestion-chips[data-size="sm"] { --_h: var(--ds-space-7); font-size: var(--ds-text-xs); }
+.ds-suggestion-chips[data-size="sm"] .ds-suggestion-chips__chip { font-size: var(--ds-text-xs); padding-inline: var(--ds-space-2-5); }
+.ds-suggestion-chips[data-size="lg"] { --_h: var(--ds-control-h); }
+.ds-suggestion-chips[data-size="lg"] .ds-suggestion-chips__chip { font-size: var(--ds-text-md); padding-inline: var(--ds-space-4); }

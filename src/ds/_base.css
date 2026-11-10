@@ -1,0 +1,306 @@
+/* ============================================================================
+   JSTOV design system — components/_base.css
+   The shared layer every component file assumes. Loads AFTER tokens/base.css
+   (+ an optional theme) and BEFORE any components/<id>/<id>.css.
+
+   Contents
+     1. Reset (minimal)                    5. Universal focus ring
+     2. Body ground / ink / font           6. Hairline grades
+     3. Type lanes (.ds-display … .ds-mono) 7. Layout helpers (.ds-stack/.ds-row/.ds-grid/.ds-container)
+     4. Control-height + data-size hooks   8. .ds-demo wrapper, .ds-sr-only, reduced motion
+
+   Only --ds-* tokens for colour, radius, shadow, family, control height and
+   spacing (tools/lint-tokens.mjs enforces it). This file is the ONE component
+   file allowed to (re)declare --ds-size-* hooks.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. RESET — the minimum that makes components predictable
+   ------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; tab-size: 4; }
+body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ul, ol, pre, fieldset, legend { margin: 0; }
+ul, ol { padding: 0; }
+ul[class], ol[class] { list-style: none; }
+fieldset { padding: 0; border: 0; min-width: 0; }
+legend { padding: 0; }
+img, svg, video, canvas, picture { display: block; max-width: 100%; height: auto; }
+svg { fill: currentColor; }
+button, input, select, textarea, optgroup {
+  font: inherit;            /* controls inherit family, size, weight, lh    */
+  color: inherit;
+  letter-spacing: inherit;
+  margin: 0;
+}
+button, [role="button"], summary { cursor: pointer; }
+button:disabled, [aria-disabled="true"] { cursor: not-allowed; }
+textarea { resize: vertical; }
+a { color: var(--ds-ink-link); text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: .15em; }
+a:hover { text-decoration-color: currentColor; }
+hr { border: 0; height: 0; }
+table { border-collapse: collapse; border-spacing: 0; }
+:where(th) { text-align: inherit; font-weight: inherit; }
+code, kbd, samp, pre { font-family: var(--ds-font-mono); font-size: .93em; }
+::placeholder { color: var(--ds-ink-muted); opacity: 1; }
+::selection { background: var(--ds-accent-tint); color: var(--ds-ink); }
+[hidden] { display: none !important; }
+
+/* ---------------------------------------------------------------------------
+   2. BODY — ground, ink, family, line-height, numerals
+   ------------------------------------------------------------------------- */
+body {
+  background: var(--ds-ground);
+  color: var(--ds-ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-lh-body);
+  font-weight: var(--ds-weight-regular);
+  font-variant-numeric: var(--ds-numeric);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  overflow-x: clip;   /* the mobile rule: a page never scrolls sideways */
+}
+/* a themed island paints its own ground so the theme boundary is visible */
+[data-theme]:not(:root), [data-mode]:not(:root) { background: var(--ds-ground); color: var(--ds-ink); }
+
+/* ---------------------------------------------------------------------------
+   3. TYPE LANES — hierarchy by weight + ink at one or two sizes (T1);
+      display and metadata are the only lanes that change family.
+   ------------------------------------------------------------------------- */
+.ds-display {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-display);
+  font-weight: var(--ds-display-weight);
+  letter-spacing: var(--ds-display-tracking);
+  line-height: var(--ds-lh-tight);
+  text-wrap: balance;
+}
+.ds-h1, .ds-h2, .ds-h3, .ds-h4 {
+  font-weight: var(--ds-heading-weight);
+  letter-spacing: var(--ds-heading-tracking);
+  line-height: var(--ds-lh-heading);
+  color: var(--ds-ink);
+  text-wrap: balance;
+}
+.ds-h1 { font-size: var(--ds-text-2xl); }   /* 24 @14 · 27 @16 — the "title" jump   */
+.ds-h2 { font-size: var(--ds-text-xl); }    /* 20 · 23                               */
+.ds-h3 { font-size: var(--ds-text-lg); }    /* 16 · 18                               */
+.ds-h4 { font-size: var(--ds-text-md); }    /* body size, semibold — a group title  */
+.ds-h1 { letter-spacing: var(--ds-display-tracking); }
+
+.ds-body    { font-size: var(--ds-text-md); line-height: var(--ds-lh-body); font-weight: var(--ds-weight-regular); }
+.ds-body-sm { font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); }
+.ds-body-lg { font-size: var(--ds-text-lg); line-height: var(--ds-lh-prose); }
+
+/* label lane: family + case + tracking are theme knobs */
+.ds-label {
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: var(--ds-label-tracking);
+  text-transform: var(--ds-label-case);
+  color: var(--ds-ink-muted);
+}
+/* marketing eyebrow: ALWAYS uppercase mono-ish, regardless of data-labels (house rule) */
+.ds-eyebrow {
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ds-ink-muted);
+}
+/* mono lane: metadata, IDs, timestamps, code, tabular numbers */
+.ds-mono {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-ink-code);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.ds-numeric { font-variant-numeric: tabular-nums; }
+
+/* prose: the reading measure; body-alt family (serif in paper) */
+.ds-prose {
+  font-family: var(--ds-font-body-alt);
+  font-size: var(--ds-text-lg);
+  line-height: var(--ds-lh-prose);
+  max-width: var(--ds-measure);
+  color: var(--ds-ink-2);
+}
+.ds-prose > * + * { margin-block-start: 1em; }
+.ds-prose :is(h1, h2, h3, h4) { font-family: var(--ds-font-sans); color: var(--ds-ink); line-height: var(--ds-lh-heading); }
+.ds-prose a { color: var(--ds-ink-link); }
+.ds-prose :is(ul, ol) { padding-inline-start: 1.4em; }
+.ds-prose ul { list-style: disc; }
+.ds-prose ol { list-style: decimal; }
+.ds-quote { font-family: var(--ds-font-body-alt); font-style: italic; font-size: var(--ds-text-lg); line-height: var(--ds-lh-prose); }
+
+/* two-tone heading / lead: first clause ink, tail muted — inside ONE element.
+   <h2 class="ds-h1 ds-two-tone">Ship the plan. <span class="ds-muted">Then measure it.</span></h2> */
+.ds-two-tone { color: var(--ds-ink); }
+.ds-two-tone .ds-muted { color: var(--ds-ink-muted); font-weight: inherit; }
+
+/* ink utilities */
+.ds-ink       { color: var(--ds-ink); }
+.ds-ink-2     { color: var(--ds-ink-2); }
+.ds-muted     { color: var(--ds-ink-muted); }     /* readable secondary */
+.ds-faint     { color: var(--ds-ink-faint); }     /* decorative only — never content */
+.ds-strong    { font-weight: var(--ds-weight-semibold); }
+.ds-medium    { font-weight: var(--ds-weight-medium); }
+.ds-truncate  { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-tnum      { font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------------------
+   4. CONTROL HEIGHT + data-size HOOKS
+      Components read --ds-size-h / --ds-size-text / --ds-size-pad-x instead
+      of --ds-control-h so data-size on the element (or an ancestor toolbar)
+      steps the whole family together: sm = h−4 · md = h · lg = h+8.
+   ------------------------------------------------------------------------- */
+[data-size="sm"] { --ds-size-h: var(--ds-control-h-sm); --ds-size-text: var(--ds-text-sm); --ds-size-pad-x: calc(var(--ds-control-pad-x) - 2px); }
+[data-size="md"] { --ds-size-h: var(--ds-control-h);    --ds-size-text: var(--ds-text-md); --ds-size-pad-x: var(--ds-control-pad-x); }
+[data-size="lg"] { --ds-size-h: var(--ds-control-h-lg); --ds-size-text: var(--ds-text-lg); --ds-size-pad-x: calc(var(--ds-control-pad-x) + 4px); }
+
+/* the generic control box every input / button / select / chip starts from */
+.ds-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: var(--ds-size-h);
+  padding-inline: var(--ds-size-pad-x);
+  font-size: var(--ds-size-text);
+  line-height: var(--ds-lh-list);
+  border-radius: var(--ds-radius-sm);
+  border: var(--ds-border-width) solid var(--ds-border);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  text-transform: var(--ds-control-case);
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              border-color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-control:hover { border-color: var(--ds-border-strong); }
+.ds-control:disabled, .ds-control[aria-disabled="true"] { color: var(--ds-ink-faint); background: var(--ds-surface-3); border-color: var(--ds-rule); }
+
+/* ---------------------------------------------------------------------------
+   5. UNIVERSAL FOCUS RING — --ds-ring at --ds-ring-width, offset, everywhere.
+      No reference showed one (0 of 51); the contract defines it.
+   ------------------------------------------------------------------------- */
+:focus-visible {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+  border-radius: inherit;
+}
+:focus:not(:focus-visible) { outline: none; }
+/* inputs draw the ring INSIDE their box (offset 0) so toolbars stay aligned */
+:is(input, textarea, select, .ds-control):focus-visible { outline-offset: calc(-1 * var(--ds-border-width)); }
+/* ring-outset: draw the highlight OUTSIDE the box when the theme asks (Jasper) */
+[data-ring="outset"]:focus-visible { outline-offset: var(--ds-ring-outset); }
+
+/* ---------------------------------------------------------------------------
+   6. HAIRLINES — three grades. <hr class="ds-hairline"> or as a block edge.
+   ------------------------------------------------------------------------- */
+.ds-hairline          { border-block-start: var(--ds-border-width) solid var(--ds-rule); }
+.ds-hairline--soft    { border-block-start-color: var(--ds-rule-soft); }
+.ds-hairline--strong  { border-block-start-color: var(--ds-rule-strong); }
+.ds-hairline--dashed  { border-block-start-style: dashed; }   /* empty slot / optional */
+.ds-hairline--dotted  { border-block-start-style: dotted; }   /* editable inline setting */
+hr.ds-hairline        { width: 100%; }
+.ds-hairline-v        { border-inline-start: var(--ds-border-width) solid var(--ds-rule); align-self: stretch; }
+
+/* ---------------------------------------------------------------------------
+   7. LAYOUT HELPERS — gaps from the space scale; override per instance with
+      style="--_gap: var(--ds-space-8)" (private --_ props are allowed inline).
+   ------------------------------------------------------------------------- */
+.ds-stack { display: flex; flex-direction: column; gap: var(--_gap, var(--ds-space-4)); }
+.ds-row   { display: flex; flex-wrap: wrap; align-items: center; gap: var(--_gap, var(--ds-space-2)); }
+.ds-row--between { justify-content: space-between; }
+.ds-row--end     { justify-content: flex-end; }
+.ds-row--nowrap  { flex-wrap: nowrap; }
+.ds-grid  {
+  display: grid;
+  gap: var(--_gap, var(--ds-card-gap));
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--_min, 240px), 100%), 1fr));
+}
+.ds-grid[data-cols="2"] { --_min: 320px; }
+.ds-grid[data-cols="3"] { --_min: 240px; }
+.ds-grid[data-cols="4"] { --_min: 200px; }
+.ds-spacer { flex: 1 1 auto; }
+
+.ds-container {
+  width: 100%;
+  max-width: var(--ds-container-max);
+  margin-inline: auto;
+  padding-inline: var(--ds-gutter-page);
+}
+.ds-container--narrow { max-width: var(--ds-container-narrow); }
+.ds-container--prose  { max-width: var(--ds-container-prose); }
+
+/* app content column (C-03): centred, max-width ALWAYS set (--ds-container-content, theme-tunable), page gutters */
+.ds-content { width: 100%; max-width: var(--ds-container-content); margin-inline: auto; padding-inline: var(--ds-gutter-page); }
+
+/* card surface derived from data-depth (tint / hairline / shadow / tint-hairline) */
+.ds-surface {
+  background: var(--ds-card-bg);
+  border: var(--ds-border-width) solid var(--ds-card-border);
+  box-shadow: var(--ds-card-shadow);
+  border-radius: var(--ds-radius-md);
+}
+.ds-well { background: var(--ds-surface-2); border-radius: var(--ds-radius-md); }   /* inset tint */
+
+/* ---------------------------------------------------------------------------
+   8. DEMO WRAPPER, SR-ONLY, REDUCED MOTION
+   ------------------------------------------------------------------------- */
+/* <section class="ds-demo" data-component="button" data-variant="vercel-ink" data-title="…">
+   The showcase generator concatenates these; the title is drawn from data-title. */
+.ds-demo {
+  padding: var(--ds-space-6) var(--ds-gutter-page);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  min-width: 0;
+}
+.ds-demo::before {
+  content: attr(data-component) " · " attr(data-variant) " — " attr(data-title);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  color: var(--ds-ink-muted);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.ds-demo[data-title=""]::before, .ds-demo:not([data-title])::before { content: attr(data-component) " · " attr(data-variant); }
+.ds-demo > * { min-width: 0; }
+.ds-demo__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-3); }
+.ds-demo__note { font-size: var(--ds-text-sm); color: var(--ds-ink-muted); max-width: var(--ds-measure); }
+
+.ds-sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- section rhythm (2026-09-20, from the Cloudflare recreation) ----------------------------------
+   Every recipe pads --ds-section-gap on both sides, so two adjacent PLAIN sections would stack two gaps
+   (the recreation ran 13 % taller than the page). Plain-after-plain drops its top padding: the gap between
+   two sections is one --ds-section-gap. Bands (a data-mode or data-band island paints its own ground) keep
+   both paddings, and a plain section after a band keeps its top padding, so content never touches a band edge. */
+.ds-sec:not([data-mode]):not([data-band]) + .ds-sec:not([data-mode]):not([data-band]) { padding-block-start: 0; }
+
+/* ---- .ds-accent-word — the last word (or a term) in the accent, inside a heading or a paragraph.
+   Five recipes defined this scoped; promoted to a base utility (2026-09-20). Rationed like any accent. */
+.ds-accent-word { color: var(--ds-accent); }

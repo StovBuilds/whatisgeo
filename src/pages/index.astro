@@ -1,10 +1,14 @@
 ---
+// Design-system CSS first (src/ds, vendored by `loop.mjs sync`), then the layout's global.css, then the hero glue:
+// the site's own rules keep winning on equal specificity.
+import '../ds/index.css';
 import Base from '../layouts/Base.astro';
+import '../styles/stage.css';
+import StageHero from '../components/StageHero.astro';
 import { sections, ui, updated, updatedISO, publishedISO, site } from '../data/content';
 import { render, questions, sources, fullGuide } from '../lib/content';
 import { guidesIn, categoriesWithGuides } from '../lib/guides';
 const guideCats = categoriesWithGuides();
-const hero = sections[0].markdown.split('\n\n');
 const definition = sections[1].markdown.split('\n\n')[0];
 const chapters = sections.filter(s => s.id !== 'hero' && s.id !== 'updates');
 const faq = questions();
@@ -25,14 +29,8 @@ const schema = { '@context': 'https://schema.org', '@graph': [
 <Base title="What is GEO? A practical guide to Generative Engine Optimisation" description="Learn what GEO means, how AI answers find sources, and how to make your website useful, discoverable and easier to cite. A practical beginner's guide.">
   <main id="main">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-meta"><p class="eyebrow">{ui.eyebrow}</p><span class="edition">Independent thinking. Clear answers.</span></div>
-      <h1 id="hero-title">Become a source<br />AI can <span class="accent">actually cite.</span></h1>
-      <div class="hero-bottom"><div><p class="hero-intro">{hero[1]}</p><div class="hero-links"><a class="pill" href="#guide">Understand GEO</a><a class="text-link" href="#updates">{ui.signupButton}</a></div></div>
-      <div class="answer-preview"><div class="preview-label"><span>A useful answer</span><span>01 / GEO</span></div><p>“Generative Engine Optimisation is the practice of making your content <mark>visible and accurately represented</mark> in AI answers.”</p><a class="citation-tag" href="#what-is-geo"><b>1</b> whatisgeo.app ↗</a><div class="preview-caption">An illustration of a citation. Not a live AI result.</div></div></div>
-      <div class="hero-note"><span>For business owners, marketers & curious minds</span><span>Scroll to understand</span></div>
-    </section>
-    <div class="statement-band" aria-hidden="true"><span>Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing. <i>✳</i> Be clear. <i>✳</i> Be useful. <i>✳</i> Be worth citing.</span></div>
+    <StageHero />
+    <div class="statement-band"><p>Be clear. <i aria-hidden="true">✳</i> Be useful. <i aria-hidden="true">✳</i> Be worth citing.</p></div>
     <section class="process" aria-labelledby="process-title"><div class="process-header"><div><p class="eyebrow">How AI answers happen</p><h2 id="process-title">From a question.<br />To <span style="color:var(--blue)">your expertise.</span></h2></div><p>When a system searches the live web, it roughly follows four stages.</p></div><div class="process-flow">{stages.map((s,i)=><article class="process-card"><span class="step">0{i+1}</span><span class="step-glyph" aria-hidden="true">{s.glyph}</span><h3>{s.title}</h3><p>{s.text}</p></article>)}</div><p class="process-foot">A simplified explanation. Not every AI answer uses live search, and not every source becomes a citation.</p></section>
     <div class="guide-shell" id="guide"><aside class="toc"><p class="eyebrow">{ui.tocTitle}</p><ol>{chapters.map((s,i)=><li><a href={'#'+s.id}><span>{String(i+1).padStart(2,'0')}</span>{s.title}</a></li>)}</ol><p class="read-note">{Math.ceil(fullGuide().split(/\s+/).length / 200)} minute read<br />Updated {updated}<br /><a href={site.publisher.url}>By {site.publisher.name} ↗</a></p></aside>
       <div class="chapters">{chapters.map((s,i)=><section class="chapter" id={s.id} aria-labelledby={s.id+'-title'}><div class="chapter-meta"><b>{String(i+1).padStart(2,'0')} / {s.title}</b><a href={'#'+s.id} aria-label={'Link to '+s.title}>↗</a></div><h2 id={s.id+'-title'}>{s.title}</h2>{s.id==='what-is-geo' ? <><div class="definition-panel"><p>{definition}</p></div><div class="prose" set:html={render(s.markdown.split('\n\n').slice(1).join('\n\n'))} /></> : s.id==='questions' ? <div class="faq-list">{faq.map(q=><details><summary>{q.question}</summary><div class="prose" set:html={render(q.answer)} /></details>)}</div> : <div class="prose" set:html={render(s.markdown)} />}</section>)}

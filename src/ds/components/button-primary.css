@@ -1,0 +1,226 @@
+/* ============================================================================
+   components/button-primary/button-primary.css — Primary button (core · S1)
+   Root `.ds-button-primary` is the <button> (or <a role="button">) itself.
+   THE one filled control in a view (R3 / button-hierarchy-rule). The fill
+   source is the variant axis: unmarked/jstov paints --ds-primary-fill (ink in
+   ledger/paper/noir, accent in workbench/seeded — the theme decides);
+   `filled-ink` forces the inverse surface; `filled-accent` forces the accent.
+   Tokens only (tools/lint-tokens.mjs). Private knobs: --_h --_pad-x --_radius
+   --_w --_lift --_gap --_icon.
+   ========================================================================== */
+
+.ds-button-primary {
+  --_h:      var(--ds-size-h);                                  /* 36 · 32 sm · 44 lg · ×density   */
+  --_pad-x:  calc(var(--ds-size-pad-x) + var(--ds-space-1));    /* 16 · 14 sm · 20 lg — 4 more than an input so the label breathes */
+  --_radius: var(--ds-radius-button);                           /* sm (6×scale) or pill via data-buttons */
+  --_w:      auto;                                              /* instance width: style="--_w: 100%"    */
+  --_gap:    var(--ds-space-2);                                 /* icon ↔ label                            */
+  --_icon:   var(--ds-icon-size);                               /* 16                                      */
+  --_lift:   0 0 0 0 transparent;                               /* rest: no lift; navattic-tactile → --ds-shadow-lift */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_gap);
+  width: var(--_w);
+  max-width: 100%;
+  min-width: 0;
+  min-height: var(--_h);
+  padding-inline: var(--_pad-x);
+  padding-block: 0;
+  font-family: inherit;
+  font-size: var(--ds-size-text);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: 0;
+  text-transform: var(--ds-control-case);        /* never uppercase by a label policy (R8) */
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--ds-ink-on-primary);
+  background: var(--ds-primary-fill);
+  border: var(--ds-border-width) solid var(--ds-primary-border);
+  border-radius: var(--_radius);
+  /* 1px inner top highlight (transparent in base; workbench sets it) + optional lift */
+  box-shadow: inset 0 var(--ds-border-width) 0 0 var(--ds-primary-highlight), var(--_lift, var(--ds-shadow-lift));
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              border-color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard),
+              color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+
+/* ---- parts ---------------------------------------------------------------- */
+.ds-button-primary__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ds-button-primary__icon {
+  flex: none;
+  display: inline-flex;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+.ds-button-primary__icon svg {
+  width: 100%; height: 100%;
+  fill: none; stroke: currentColor;               /* _base.css sets svg{fill:currentColor} — restate */
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* trailing arrow/chevron nudges outward so the optical margin matches the leading side */
+.ds-button-primary__icon[data-slot="trailing"] { margin-inline-end: calc(-1 * var(--ds-space-0-5)); }
+.ds-button-primary__icon[data-slot="leading"]  { margin-inline-start: calc(-1 * var(--ds-space-0-5)); }
+
+/* ---- states ------------------------------------------------------------------ */
+.ds-button-primary:hover,
+.ds-button-primary[data-state="hover"] { background: var(--ds-primary-fill-hover); }
+.ds-button-primary:active,
+.ds-button-primary[data-state="pressed"] {
+  background: var(--ds-primary-fill-hover);
+  --_lift: 0 0 0 0 transparent;                  /* pressed = sits down: lift gone, highlight gone */
+  box-shadow: inset 0 var(--ds-border-width) 0 0 transparent, var(--_lift, var(--ds-shadow-lift));
+}
+/* focus: the universal ring from _base.css, redrawn here at +2px so it clears the fill */
+.ds-button-primary:focus-visible,
+.ds-button-primary[data-state="focus"] {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+}
+/* disabled: faint ink on surface-3, rule border, no lift/highlight, still visible */
+.ds-button-primary:disabled,
+.ds-button-primary[aria-disabled="true"] {
+  color: var(--ds-ink-faint);
+  background: var(--ds-surface-3);
+  border-color: var(--ds-rule);
+  box-shadow: inset 0 0 0 0 transparent, var(--_lift, var(--ds-shadow-lift));
+  --_lift: 0 0 0 0 transparent;
+  cursor: not-allowed;
+}
+/* loading: keep the footprint, hide the content, centre a spinner in currentColor */
+.ds-button-primary[aria-busy="true"] { pointer-events: none; }
+.ds-button-primary[aria-busy="true"] > * { visibility: hidden; }
+.ds-button-primary[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--_icon);
+  height: var(--_icon);
+  border: 2px solid transparent;
+  border-block-start-color: currentColor;
+  border-inline-end-color: currentColor;
+  border-radius: var(--ds-radius-pill);
+  animation: ds-button-primary-spin calc(var(--ds-dur-slow) * 3) linear infinite;
+}
+@keyframes ds-button-primary-spin { to { transform: rotate(360deg); } }
+
+/* ---- sizes: data-size on the root or an ancestor toolbar ------------------- */
+.ds-button-primary[data-size] { --_h: var(--ds-size-h); --_pad-x: calc(var(--ds-size-pad-x) + var(--ds-space-1)); }
+.ds-button-primary[data-size="sm"] { --_icon: var(--ds-icon-size); }
+.ds-button-primary[data-size="lg"] { --_icon: var(--ds-icon-size-row); }
+
+/* ============================================================================
+   VARIANTS — each designer's approach by name. Unmarked root = jstov (house):
+   --ds-primary-fill (ink by default, theme-switchable to accent), 36 tall,
+   radius-button, one per view, no lift.
+   ========================================================================== */
+
+/* filled-ink — near-black neutral fill so the accent stays free for state and data
+   [braintrust-web-13] [v0-web-8] [hsajlzjwgaajrfp] [descript-editing-profile-00-03]
+   [origin-connecting-an-account-00-04] [clickup-web-147] [contra-web-39] [vercel-page]
+   [attio-2-1-830x8225] [intercom-3-830x8816] [fibery-3-830x6495] [navattic-web-88].
+   Forces the inverse surface even in an accent-primary theme (workbench). */
+.ds-button-primary[data-variant="filled-ink"] {
+  color: var(--ds-ink-inverse);
+  background: var(--ds-surface-inverse);
+  border-color: transparent;
+}
+.ds-button-primary[data-variant="filled-ink"]:hover,
+.ds-button-primary[data-variant="filled-ink"][data-state="hover"],
+.ds-button-primary[data-variant="filled-ink"]:active {
+  background: color-mix(in srgb, var(--ds-surface-inverse) 86%, var(--ds-ink-inverse));
+}
+
+/* filled-accent — brand-hue fill, white label [luma-creating-an-event-24-27]
+   [manychat-web-126] [manychat-web-42] [retool-web-25] [grammarly-web-158-acordian]
+   [confluence-web-23] [jasper-web-19] [perplexity-asking-a-question-05-09] [sequence-section].
+   Legal only under data-accent-scope="action" | "all" (R12). */
+.ds-button-primary[data-variant="filled-accent"] {
+  color: var(--ds-ink-on-accent);
+  background: var(--ds-accent);
+  border-color: transparent;
+}
+.ds-button-primary[data-variant="filled-accent"]:hover,
+.ds-button-primary[data-variant="filled-accent"][data-state="hover"],
+.ds-button-primary[data-variant="filled-accent"]:active { background: var(--ds-accent-hover); }
+
+/* full-width-terminal — spans the form column, 52 tall, 2.5× the form gap above it,
+   no cancel beside it [luma-creating-an-event-24-27] [clickup-web-147]
+   [origin-connecting-an-account-00-04]; jasper centres it content-width instead. */
+.ds-button-primary[data-variant="full-width-terminal"] {
+  --_w: 100%;
+  --_h: calc(var(--ds-control-h-lg) + var(--ds-space-2));     /* 44 + 8 = 52 */
+  --_pad-x: var(--ds-space-6);
+  --_icon: var(--ds-icon-size-row);
+  font-size: var(--ds-text-lg);
+  font-weight: var(--ds-weight-semibold);
+  margin-block-start: calc(var(--ds-field-pitch) * 2.5);      /* 40 at 16 pitch: the CTA's clearance */
+}
+.ds-button-primary[data-variant="full-width-terminal"][data-align="center"] {
+  --_w: auto;
+  min-width: calc(var(--_h) * 4);                             /* jasper: content-width, centred by the parent */
+}
+
+/* over-wide — the label needs ~70px; the box is 4× its height (147 at 36) so width
+   itself signals primacy [manychat-web-82] [manychat-web-109] */
+.ds-button-primary[data-variant="over-wide"] { min-width: calc(var(--_h) * 4); }
+
+/* navattic-tactile — fill + 1px darker border + 1px inner top highlight + 1px lift
+   [navattic-web-174] [sequence-section adds a 2px tinted halo on the pill].
+   --ds-primary-border / --ds-primary-highlight are theme-owned; base leaves them
+   transparent, so on a neutral page this variant differs only by the lift. */
+.ds-button-primary[data-variant="navattic-tactile"] {
+  --_lift: var(--ds-shadow-lift);
+  border-color: color-mix(in srgb, var(--ds-primary-fill) 70%, var(--ds-ink));
+  box-shadow: inset 0 var(--ds-border-width) 0 0 color-mix(in srgb, var(--ds-ink-on-primary) 18%, transparent),
+              var(--_lift, var(--ds-shadow-lift));
+}
+.ds-button-primary[data-variant="navattic-tactile"]:active {
+  box-shadow: inset 0 var(--ds-border-width) 0 0 transparent, var(--ds-shadow-lift);
+  --_lift: 0 0 0 0 transparent;
+}
+
+/* synara-solid-pill — 40px black pill, 15–16px medium label, trailing icon [hsvu79cweaarswf] */
+.ds-button-primary[data-variant="synara-solid-pill"] {
+  --_h: calc(var(--ds-control-h) + var(--ds-space-1));        /* 36 + 4 = 40 */
+  --_pad-x: var(--ds-space-5);
+  --_radius: var(--ds-radius-pill);
+  font-size: var(--ds-text-lg);
+}
+
+/* perplexity-circular-submit — a disc the height of the control; the enabled state is
+   the page's ONLY saturated fill, disabled = tint disc + faint glyph
+   [perplexity-asking-a-question-00-04] */
+.ds-button-primary[data-variant="perplexity-circular-submit"] {
+  --_pad-x: 0;
+  --_radius: var(--ds-radius-pill);
+  --_w: var(--_h);
+  aspect-ratio: 1;
+  color: var(--ds-ink-on-accent);
+  background: var(--ds-accent);
+  border-color: transparent;
+}
+.ds-button-primary[data-variant="perplexity-circular-submit"]:hover { background: var(--ds-accent-hover); }
+.ds-button-primary[data-variant="perplexity-circular-submit"]:disabled {
+  color: var(--ds-ink-faint);
+  background: var(--ds-surface-2);
+  border-color: transparent;
+}
+
+/* grid-snapped-fixed-width — 144×32, r4, 13px semibold; Retool buttons snap to the
+   app grid instead of hugging the label [retool-web-25] */
+.ds-button-primary[data-variant="grid-snapped-fixed-width"] {
+  --_h: var(--ds-control-h-sm);
+  --_w: calc(var(--ds-control-h-sm) * 4.5);                   /* 144 at 32 */
+  --_radius: var(--ds-radius-xs);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-semibold);
+}

@@ -1,0 +1,312 @@
+/* ============================================================================
+   components/segmented-control/segmented-control.css
+   N mutually-exclusive options in one track; exactly one is selected. Two
+   markups share the styles:
+     radio form   <fieldset class="ds-segmented-control"> <label class="…__item">
+                  <input class="…__input" type="radio"> <span class="…__label">
+     tablist form <div class="ds-segmented-control" role="tablist">
+                  <button class="…__item" role="tab" aria-selected="true">
+   In the radio form the <input> is absolutely positioned to fill the item and
+   IS the pill (paint + focus ring); the label text sits above it.
+
+   Private knobs:
+     --_inset       track padding = track − pill (4px in luma/hsaj)
+     --_radius      track radius · --_pill-radius pill radius (one ladder step below)
+     --_track / --_track-border / --_pill / --_pill-ink / --_ink
+   ========================================================================== */
+
+.ds-segmented-control {
+  --_inset: var(--ds-space-1);
+  --_radius: var(--ds-radius-md);
+  --_pill-radius: var(--ds-radius-sm);
+  --_track: var(--ds-surface-2);
+  --_track-border: transparent;
+  --_pill: var(--ds-selected-bg);          /* follows data-selection (tint · accent · invert) */
+  --_pill-ink: var(--ds-selected-ink);
+  --_ink: var(--ds-ink-muted);
+  --_gap: 0px;
+
+  display: inline-flex;
+  align-items: stretch;
+  gap: var(--_gap);
+  padding: var(--_inset);
+  min-height: var(--ds-size-h);
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;                         /* mobile rule: the track scrolls, the page never does */
+  scrollbar-width: none;
+  border-radius: var(--_radius);
+  background: var(--_track);
+  border: var(--ds-border-width) solid var(--_track-border);
+  font-size: var(--ds-size-text);
+  line-height: var(--ds-lh-list);
+  color: var(--_ink);
+}
+.ds-segmented-control::-webkit-scrollbar { display: none; }
+/* equal-width cells — "this is a 2-way switch, not a tab strip" [clickup-web-147, hsajlzkwuaagtdc] */
+.ds-segmented-control[data-fill="equal"] { display: flex; width: 100%; }
+.ds-segmented-control[data-fill="equal"] .ds-segmented-control__item { flex: 1 1 0; }
+
+/* ---- item ---------------------------------------------------------------- */
+.ds-segmented-control__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 0;
+  min-height: calc(var(--ds-size-h) - 2 * var(--_inset) - 2 * var(--ds-border-width));
+  padding-block: 0;
+  padding-inline: var(--ds-size-pad-x);
+  border-radius: var(--_pill-radius);
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: var(--ds-weight-medium);
+  text-transform: var(--ds-control-case);
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-segmented-control__label {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+.ds-segmented-control__label svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); flex: none; }
+.ds-segmented-control svg[fill="none"] { fill: none; }   /* _base.css paints svg fill:currentColor; honour fill="none" */
+/* the radio: fills the item, paints the pill, carries the ring */
+.ds-segmented-control__input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  border-radius: inherit;
+  border: 0;
+  background: transparent;
+  cursor: inherit;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+
+/* ---- states -------------------------------------------------------------- */
+/* selected — pill paints --_pill; item ink + weight follow the selection tokens */
+.ds-segmented-control__input:checked,
+.ds-segmented-control__item[aria-selected="true"],
+.ds-segmented-control__item[aria-checked="true"] { background: var(--_pill); }
+.ds-segmented-control__item:has(.ds-segmented-control__input:checked),
+.ds-segmented-control__item[aria-selected="true"],
+.ds-segmented-control__item[aria-checked="true"] { color: var(--_pill-ink); font-weight: var(--ds-selected-weight); }
+/* hover — unselected ink → ink, one tint step behind it (follows data-hover) */
+.ds-segmented-control__item:hover:not(:has(.ds-segmented-control__input:checked)):not([aria-selected="true"]):not([aria-checked="true"]):not(:disabled),
+.ds-segmented-control__item[data-state="hover"]:not(:has(.ds-segmented-control__input:checked)) { color: var(--ds-ink); }
+.ds-segmented-control__input:hover:not(:checked):not(:disabled),
+.ds-segmented-control__item[data-state="hover"] .ds-segmented-control__input:not(:checked) { background: var(--ds-hover-bg); }
+.ds-segmented-control__item[role="tab"]:hover:not([aria-selected="true"]):not(:disabled) { background: var(--ds-hover-bg); }
+/* focus-visible — the universal ring, hugging the pill inside the 4px inset */
+.ds-segmented-control__input:focus-visible,
+.ds-segmented-control__item[role="tab"]:focus-visible {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: 0;
+}
+/* disabled — one item, or the whole fieldset */
+.ds-segmented-control__input:disabled,
+.ds-segmented-control__item:disabled { cursor: not-allowed; }
+.ds-segmented-control__item:has(.ds-segmented-control__input:disabled),
+.ds-segmented-control__item:disabled { color: var(--ds-ink-faint); cursor: not-allowed; }
+.ds-segmented-control:disabled,
+.ds-segmented-control[aria-disabled="true"] { --_track: var(--ds-surface-3); --_pill: var(--ds-surface); --_pill-ink: var(--ds-ink-faint); --_ink: var(--ds-ink-faint); cursor: not-allowed; }
+.ds-segmented-control:disabled .ds-segmented-control__item,
+.ds-segmented-control[aria-disabled="true"] .ds-segmented-control__item { cursor: not-allowed; color: var(--ds-ink-faint); }
+/* loading — the selection is being applied: pill pulses in its own frame, control inert */
+.ds-segmented-control[aria-busy="true"] { pointer-events: none; }
+.ds-segmented-control[aria-busy="true"] .ds-segmented-control__input:checked,
+.ds-segmented-control[aria-busy="true"] .ds-segmented-control__item[aria-selected="true"] {
+  animation: ds-segmented-control-pulse calc(var(--ds-dur-slow) * 4) var(--ds-ease-standard) infinite alternate;
+}
+@keyframes ds-segmented-control-pulse { from { opacity: 1; } to { opacity: .45; } }
+
+/* ---- data-selection geometry — only the line styles change shape ---------- */
+/* underline / bar: no track, hairline baseline, 2px selected line; equal cells
+   read as a switch [clickup-web-147 "Required views | Default View Templates"] */
+[data-selection="underline"] .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]),
+[data-selection="bar"]       .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]),
+.ds-segmented-control[data-selection="underline"],
+.ds-segmented-control[data-selection="bar"] {
+  --_track: transparent;
+  --_radius: 0px;
+  --_pill-radius: 0px;
+  --_inset: 0px;
+  border: 0;
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}
+[data-selection="underline"] .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__input,
+[data-selection="bar"]       .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__input,
+.ds-segmented-control[data-selection="underline"] .ds-segmented-control__input,
+.ds-segmented-control[data-selection="bar"] .ds-segmented-control__input,
+[data-selection="underline"] .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__item[role="tab"],
+.ds-segmented-control[data-selection="underline"] .ds-segmented-control__item[role="tab"] {
+  border-block-end: 2px solid transparent;
+  margin-block-end: -1px;
+}
+[data-selection="underline"] .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__input:checked,
+[data-selection="bar"]       .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__input:checked,
+.ds-segmented-control[data-selection="underline"] .ds-segmented-control__input:checked,
+.ds-segmented-control[data-selection="bar"] .ds-segmented-control__input:checked,
+[data-selection="underline"] .ds-segmented-control:is(:not([data-variant]), [data-variant="jstov"]) .ds-segmented-control__item[aria-selected="true"],
+.ds-segmented-control[data-selection="underline"] .ds-segmented-control__item[aria-selected="true"] {
+  border-block-end-color: var(--ds-selected-line);
+}
+
+/* ============================================================================
+   VARIANTS
+   ========================================================================== */
+
+/* luma — 220×44 track r8; selected = WHITE pill with a 1px lift shadow, never
+   accent; unselected muted. Fidelity: this is the corpus' one "elevated
+   selection" (R4 exception, do not default to it) [luma-creating-an-event-00-03] */
+.ds-segmented-control[data-variant="luma-lifted-white-pill"] {
+  --_pill: var(--ds-surface);
+  --_pill-ink: var(--ds-ink);
+  min-height: var(--ds-control-h-lg);
+}
+.ds-segmented-control[data-variant="luma-lifted-white-pill"] .ds-segmented-control__input:checked,
+.ds-segmented-control[data-variant="luma-lifted-white-pill"] .ds-segmented-control__item[aria-selected="true"] { box-shadow: var(--ds-shadow-lift); }
+.ds-segmented-control[data-variant="luma-lifted-white-pill"] .ds-segmented-control__item { min-height: calc(var(--ds-control-h-lg) - 2 * var(--_inset)); font-size: var(--ds-text-md); }
+
+/* cloudflare — a WHITE track with a hairline edge (--ds-surface + --ds-rule, r12 = --ds-radius-md at the
+   theme's scale) and an INVERTED selected pill (--ds-surface-inverse / --ds-ink-inverse, r9), 36 px tabs
+   at 14/500 — Cloudflare's macOS / Windows / Linux OS switch. Reached before 2026-09-20 as
+   data-selection="invert" + two inline knobs (l-feat-03); one attribute now. The pill reads the inverse
+   pair directly so the variant is the same under any page-level data-selection. [try-cloudflare .os-tabs] */
+.ds-segmented-control[data-variant="cloudflare-white-track-inverted-pill"] {
+  --_track: var(--ds-surface);
+  --_track-border: var(--ds-rule);
+  --_pill: var(--ds-surface-inverse);
+  --_pill-ink: var(--ds-ink-inverse);
+  --_ink: var(--ds-ink-2);
+}
+
+/* hsaj — 202×42 track r10, white pill ~80×34 r8 inset 4, no border, no
+   shadow; 16/500 text, 18px tab padding [hsajlzkwuaagtdc] */
+.ds-segmented-control[data-variant="hsaj-tint-track-white-pill"] {
+  --_pill: var(--ds-surface);
+  --_pill-ink: var(--ds-ink);
+  --_radius: var(--ds-radius-md);
+  --_pill-radius: var(--ds-radius-sm);
+  min-height: var(--ds-control-h-lg);
+  font-size: var(--ds-text-lg);
+}
+.ds-segmented-control[data-variant="hsaj-tint-track-white-pill"] .ds-segmented-control__item {
+  min-height: calc(var(--ds-control-h-lg) - 2 * var(--_inset));
+  padding-inline: calc(var(--ds-space-4) + var(--ds-space-0-5));
+}
+
+/* fibery — no track; each option is a bordered pill; selected = DARKER fill
+   ("pressed into the paper"), unselected lighter [fibery-3-830x6495] */
+.ds-segmented-control[data-variant="fibery-pressed-selection"] {
+  --_track: transparent;
+  --_inset: 0px;
+  --_gap: var(--ds-space-1);
+  --_pill: var(--ds-surface-selected);
+  --_pill-ink: var(--ds-ink);
+  --_ink: var(--ds-ink-2);
+  --_pill-radius: var(--ds-radius-pill);
+  --_radius: var(--ds-radius-pill);
+  border: 0;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+.ds-segmented-control[data-variant="fibery-pressed-selection"] .ds-segmented-control__item {
+  min-height: var(--ds-size-h);
+  border: var(--ds-border-width) solid var(--ds-border);
+  background: var(--ds-surface);
+}
+.ds-segmented-control[data-variant="fibery-pressed-selection"] .ds-segmented-control__input { inset: calc(-1 * var(--ds-border-width)); }
+.ds-segmented-control[data-variant="fibery-pressed-selection"] .ds-segmented-control__item:has(.ds-segmented-control__input:checked),
+.ds-segmented-control[data-variant="fibery-pressed-selection"] .ds-segmented-control__item[aria-selected="true"] { border-color: var(--ds-border-strong); }
+
+/* rox — 132×42 pill, hairline, recessed fill; three ICON-ONLY options on 44px
+   centres; selected = a puck the FULL track height (no inset) with a tint fill
+   and a 4px ring; icon flips muted → ink [rox-section] */
+.ds-segmented-control[data-variant="rox-icon-only-three-state"] {
+  --_track: var(--ds-surface-2);
+  --_track-border: var(--ds-rule);
+  --_radius: var(--ds-radius-pill);
+  --_pill-radius: var(--ds-radius-pill);
+  --_inset: 0px;
+  --_pill: var(--ds-surface-selected);
+  --_pill-ink: var(--ds-ink);
+  min-height: var(--ds-control-h-lg);
+}
+.ds-segmented-control[data-variant="rox-icon-only-three-state"] .ds-segmented-control__item {
+  min-height: calc(var(--ds-control-h-lg) - 2 * var(--ds-border-width));
+  inline-size: calc(var(--ds-control-h-lg) - 2 * var(--ds-border-width));
+  padding: 0;
+}
+.ds-segmented-control[data-variant="rox-icon-only-three-state"] .ds-segmented-control__input:checked,
+.ds-segmented-control[data-variant="rox-icon-only-three-state"] .ds-segmented-control__item[aria-checked="true"] { border: 4px solid var(--ds-surface-3); }
+.ds-segmented-control[data-variant="rox-icon-only-three-state"] .ds-segmented-control__label svg { inline-size: var(--ds-icon-size-row); block-size: var(--ds-icon-size-row); }
+
+/* vercel — 32px hairline pill, three icon-only options, selected = tinted
+   circle with ink icon, 2px inset [vercel-page] */
+.ds-segmented-control[data-variant="vercel-three-segment-theme"] {
+  --_track: var(--ds-surface);
+  --_track-border: var(--ds-border);
+  --_radius: var(--ds-radius-pill);
+  --_pill-radius: var(--ds-radius-pill);
+  --_inset: var(--ds-space-0-5);
+  --_pill: var(--ds-surface-selected);
+  --_pill-ink: var(--ds-ink);
+  min-height: var(--ds-control-h-sm);
+}
+.ds-segmented-control[data-variant="vercel-three-segment-theme"] .ds-segmented-control__item {
+  min-height: calc(var(--ds-control-h-sm) - 2 * var(--_inset) - 2 * var(--ds-border-width));
+  inline-size: calc(var(--ds-control-h-sm) - 2 * var(--_inset) - 2 * var(--ds-border-width));
+  padding: 0;
+}
+
+/* navattic — scope pill 71×27 in a content filter bar: tinted pill track,
+   white pill, small text; 27 is off-ladder → nearest rung is sm [navattic-web-88] */
+.ds-segmented-control[data-variant="navattic-88-scope-segment"] {
+  --_radius: var(--ds-radius-pill);
+  --_pill-radius: var(--ds-radius-pill);
+  --_inset: var(--ds-space-0-5);
+  --_pill: var(--ds-surface);
+  --_pill-ink: var(--ds-ink);
+  min-height: var(--ds-control-h-sm);
+  font-size: var(--ds-text-sm);
+}
+.ds-segmented-control[data-variant="navattic-88-scope-segment"] .ds-segmented-control__item {
+  min-height: calc(var(--ds-control-h-sm) - 2 * var(--_inset));
+  padding-inline: var(--ds-space-3);
+}
+.ds-segmented-control[data-variant="navattic-88-scope-segment"] .ds-segmented-control__input:checked,
+.ds-segmented-control[data-variant="navattic-88-scope-segment"] .ds-segmented-control__item[aria-selected="true"] { box-shadow: var(--ds-shadow-lift); }
+
+/* retool — no track; active = accent-100 pill (62×24, r6, 12px semibold),
+   inactive plain text, 24px gap; sits in a card header [retool-web-25] */
+.ds-segmented-control[data-variant="retool-tint-pill-tab"] {
+  --_track: transparent;
+  --_inset: 0px;
+  --_gap: var(--ds-space-6);
+  --_pill: var(--ds-accent-tint);
+  --_pill-ink: var(--ds-accent-ink);
+  --_ink: var(--ds-ink-2);
+  --_pill-radius: var(--ds-radius-sm);
+  min-height: auto;
+  border: 0;
+  font-size: var(--ds-text-xs);
+}
+.ds-segmented-control[data-variant="retool-tint-pill-tab"] .ds-segmented-control__item {
+  min-height: var(--ds-space-6);
+  padding-inline: var(--ds-space-2);
+  font-weight: var(--ds-weight-semibold);
+}
+.ds-segmented-control[data-variant="retool-tint-pill-tab"] .ds-segmented-control__item:has(.ds-segmented-control__input:checked),
+.ds-segmented-control[data-variant="retool-tint-pill-tab"] .ds-segmented-control__item[aria-selected="true"] { font-weight: var(--ds-weight-semibold); }

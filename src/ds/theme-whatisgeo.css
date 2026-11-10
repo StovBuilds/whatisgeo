@@ -1,0 +1,137 @@
+/* ============================================================================
+   Theme: whatisgeo — whatisgeo.app, "a field guide to AI search" (2026-11-10).
+                                                              data-theme="whatisgeo"
+   Built from the LIVE site's own tokens (whatisgeo.app/_astro/Base.*.css, read
+   2026-11-10), never derived shades. Where the live site has no distinct value
+   for a DS role (hover, pressed, ink-2, faint, the status tints) the role reuses
+   one of the live values instead of inventing a shade:
+     live --bg #fff / --ink #18191b / --muted #62646a / --line #dedfe3 /
+     --surface #f3f4f6 / --blue #354afa / --purple #7846c6 / --orange #bf481f /
+     --lavender #eeebff        (dark: #121316 #f4f3f0 #b0b0bb #34363e #1d1f25
+                                #91a0ff #be9af7 #ff9b73 #292338)
+   Fonts: Manrope (display, live weight 600, tracking -.02em) + Inter (body).
+   The live site has no monospace face; mono falls back to the system stack.
+
+   Colour roles:
+     ink               the primary fill (the live black pill "Understand GEO");
+                       its hover turns blue, as the live .pill:hover does
+     blue (--ds-accent) links, citation numbers, the threads; lavender is its tint
+     purple / orange   the wordmark's other two letters; orange doubles as the
+                       warning (a gap in the source), purple as data-2
+
+   PAGE ATTRIBUTES this theme expects:
+     data-theme="whatisgeo" data-depth="flat" data-selection="tint" data-buttons="pill"
+     data-labels="sentence" data-controls="sentence" data-accent-scope="action"
+     data-hover="tint" data-density="default" data-texture="none" data-ornament="none"
+   ========================================================================== */
+
+[data-theme="whatisgeo"],
+[data-theme="whatisgeo"] [data-mode="light"] {
+  --ds-ground:            #ffffff;
+  --ds-ground-2:          #f3f4f6;
+  --ds-surface:           #ffffff;
+  --ds-surface-2:         #f3f4f6;
+  --ds-surface-3:         #dedfe3;
+  --ds-surface-raised:    #ffffff;
+  --ds-surface-hover:     #f3f4f6;
+  --ds-surface-pressed:   #dedfe3;
+  --ds-surface-selected:  #eeebff;
+  --ds-surface-inverse:   #18191b;
+  --ds-ink:               #18191b;
+  --ds-ink-2:             #18191b;
+  --ds-ink-muted:         #62646a;
+  --ds-ink-faint:         #62646a;
+  --ds-ink-inverse:       #ffffff;
+  --ds-ink-on-primary:    #ffffff;
+  --ds-ink-on-accent:     #ffffff;
+  --ds-ink-code:          #18191b;
+  --ds-rule-soft:         #dedfe3;
+  --ds-rule:              #dedfe3;
+  --ds-rule-strong:       #62646a;
+  --ds-border:            #dedfe3;
+  --ds-border-strong:     #62646a;
+  --ds-primary-fill:        #18191b;
+  --ds-primary-fill-hover:  #354afa;
+  --ds-accent:              #354afa;
+  --ds-accent-hover:        #18191b;
+  --ds-accent-ink:          #354afa;
+  --ds-ink-link:            #18191b;
+  --ds-ring:                #354afa;
+  --ds-accent-tint:         #eeebff;
+  --ds-accent-soft:         #eeebff;
+  --ds-accent-2:            #7846c6;
+  --ds-accent-2-ink:        #7846c6;
+  --ds-accent-2-tint:       #eeebff;
+  --ds-warning: #bf481f;  --ds-warning-tint: #f3f4f6;  --ds-warning-ink: #bf481f;
+  --ds-data-1: #354afa;  --ds-data-1-tint: #eeebff;  --ds-data-1-ink: #354afa;
+  --ds-data-2: #7846c6;  --ds-data-2-tint: #eeebff;  --ds-data-2-ink: #7846c6;
+  --ds-data-3: #bf481f;  --ds-data-3-tint: #f3f4f6;  --ds-data-3-ink: #bf481f;
+  --ds-shadow-card:   0 0 0 1px #dedfe3;
+  --ds-shadow-float:  0 0 0 1px #dedfe3, 8px 8px 0 #f3f4f6;
+  --ds-shadow-modal:  0 0 0 1px #dedfe3, 8px 8px 0 #f3f4f6;
+
+  --ds-radius-scale:  .5;
+  --ds-font-sans:     "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ds-font-display:  "Manrope Variable", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --ds-font-label:    var(--ds-font-sans);
+  --ds-font-mono:     ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --ds-text-base:     16px;
+  --ds-display-weight:   600;
+  --ds-display-tracking: -0.02em;
+  --ds-heading-weight:   600;
+  --ds-heading-tracking: -0.02em;
+  --ds-density-scale:    1;
+  --ds-container-max:    1310px;
+  --ds-card-bg:        var(--ds-surface);
+  --ds-card-border:    var(--ds-rule);
+  --ds-card-shadow:    none;
+}
+
+/* -- island fallbacks: hosts re-derive the link and ring from the accent; restate them */
+:where([data-theme="whatisgeo"]) :is([data-mode], [data-density], [data-depth], [data-selection], [data-buttons],
+      [data-labels], [data-controls], [data-accent-scope], [data-hover], [data-band="tint"]) {
+  --ds-ink-link: var(--ds-ink);
+  --ds-ring:     var(--ds-accent);
+  --ds-card-border: var(--ds-rule);
+}
+
+[data-theme="whatisgeo"][data-mode="dark"],
+[data-theme="whatisgeo"] [data-mode="dark"],
+[data-theme="whatisgeo"] [data-band="dark"] {
+  --ds-ground: #121316; --ds-ground-2: #1d1f25; --ds-surface: #1d1f25; --ds-surface-2: #1d1f25; --ds-surface-3: #34363e;
+  --ds-surface-raised: #1d1f25; --ds-surface-hover: #1d1f25; --ds-surface-pressed: #34363e; --ds-surface-selected: #292338; --ds-surface-inverse: #f4f3f0;
+  --ds-ink: #f4f3f0; --ds-ink-2: #f4f3f0; --ds-ink-muted: #b0b0bb; --ds-ink-faint: #b0b0bb; --ds-ink-inverse: #121316;
+  --ds-ink-on-primary: #121316; --ds-ink-on-accent: #121316; --ds-ink-code: #f4f3f0;
+  --ds-rule-soft: #34363e; --ds-rule: #34363e; --ds-rule-strong: #b0b0bb; --ds-border: #34363e; --ds-border-strong: #b0b0bb;
+  --ds-primary-fill: #f4f3f0; --ds-primary-fill-hover: #91a0ff;
+  --ds-accent: #91a0ff; --ds-accent-hover: #f4f3f0; --ds-accent-ink: #91a0ff; --ds-ink-link: #f4f3f0; --ds-ring: #91a0ff; --ds-accent-tint: #292338; --ds-accent-soft: #292338;
+  --ds-accent-2: #be9af7; --ds-accent-2-ink: #be9af7; --ds-accent-2-tint: #292338;
+  --ds-warning: #ff9b73; --ds-warning-tint: #1d1f25; --ds-warning-ink: #ff9b73;
+  --ds-data-1: #91a0ff; --ds-data-1-tint: #292338; --ds-data-1-ink: #91a0ff;
+  --ds-data-2: #be9af7; --ds-data-2-tint: #292338; --ds-data-2-ink: #be9af7;
+  --ds-data-3: #ff9b73; --ds-data-3-tint: #1d1f25; --ds-data-3-ink: #ff9b73;
+  --ds-shadow-card: 0 0 0 1px #34363e;
+  --ds-shadow-float: 0 0 0 1px #34363e, 8px 8px 0 #1d1f25;
+  --ds-shadow-modal: 0 0 0 1px #34363e, 8px 8px 0 #1d1f25;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="whatisgeo"]:not([data-mode="light"]),
+  :root:not([data-mode="light"]) [data-theme="whatisgeo"]:not([data-mode="light"]) {
+    --ds-ground: #121316; --ds-ground-2: #1d1f25; --ds-surface: #1d1f25; --ds-surface-2: #1d1f25; --ds-surface-3: #34363e;
+    --ds-surface-raised: #1d1f25; --ds-surface-hover: #1d1f25; --ds-surface-pressed: #34363e; --ds-surface-selected: #292338; --ds-surface-inverse: #f4f3f0;
+    --ds-ink: #f4f3f0; --ds-ink-2: #f4f3f0; --ds-ink-muted: #b0b0bb; --ds-ink-faint: #b0b0bb; --ds-ink-inverse: #121316;
+    --ds-ink-on-primary: #121316; --ds-ink-on-accent: #121316; --ds-ink-code: #f4f3f0;
+    --ds-rule-soft: #34363e; --ds-rule: #34363e; --ds-rule-strong: #b0b0bb; --ds-border: #34363e; --ds-border-strong: #b0b0bb;
+    --ds-primary-fill: #f4f3f0; --ds-primary-fill-hover: #91a0ff;
+    --ds-accent: #91a0ff; --ds-accent-hover: #f4f3f0; --ds-accent-ink: #91a0ff; --ds-ink-link: #f4f3f0; --ds-ring: #91a0ff; --ds-accent-tint: #292338; --ds-accent-soft: #292338;
+    --ds-accent-2: #be9af7; --ds-accent-2-ink: #be9af7; --ds-accent-2-tint: #292338;
+    --ds-warning: #ff9b73; --ds-warning-tint: #1d1f25; --ds-warning-ink: #ff9b73;
+    --ds-data-1: #91a0ff; --ds-data-1-tint: #292338; --ds-data-1-ink: #91a0ff;
+    --ds-data-2: #be9af7; --ds-data-2-tint: #292338; --ds-data-2-ink: #be9af7;
+    --ds-data-3: #ff9b73; --ds-data-3-tint: #1d1f25; --ds-data-3-ink: #ff9b73;
+    --ds-shadow-card: 0 0 0 1px #34363e;
+    --ds-shadow-float: 0 0 0 1px #34363e, 8px 8px 0 #1d1f25;
+    --ds-shadow-modal: 0 0 0 1px #34363e, 8px 8px 0 #1d1f25;
+  }
+}

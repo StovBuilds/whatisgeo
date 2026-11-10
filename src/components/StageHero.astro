@@ -1,0 +1,77 @@
+---
+// The home hero: "Become a source AI can actually cite", acted out. A question from the guide types itself, the
+// answer streams in, and a thread draws from each footnote to the exact line of /guide.md it was copied from. The
+// wall either side IS that file (every non-blank line, real line numbers). Design: design-system concepts/hero-stage,
+// worked up for this site in _work/hero-reuse (option stage-whatisgeo), Jack's go 2026-11-10.
+// Data + honesty rules: src/data/stage.ts. Motion: src/scripts/stage.ts. Layout glue: src/styles/stage.css.
+// prefers-reduced-motion (and no JS) = the finished still: the first answer, its footnotes and its sources.
+import { ui } from '../data/content';
+import { resolveAnswers, wall, guideLines } from '../lib/stage';
+import { excerpt } from '../lib/excerpt';
+const lines = guideLines();
+const answers = resolveAnswers(lines);
+const w = wall(lines);
+const first = answers[0];
+const used: number[] = [];
+const said: Record<number, string> = {};
+for (const [t, n] of first.parts) if (n > 0 && !used.includes(n)) { used.push(n); said[n] = t; }
+const data = JSON.stringify({ split: w.split, answers }).replace(/</g, '\\u003c');
+---
+<section class="x-stage" aria-labelledby="hero-title" id="stage" data-src="with" style={`--x-rows: ${w.rows}`}>
+  <script is:inline>(function(){var d=document.documentElement;if(navigator.webdriver&&!/[?&]motion/.test(location.search))return;if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;d.classList.add('x-js');setTimeout(function(){var s=document.getElementById('stage');if(s&&!s.hasAttribute('data-live'))d.classList.remove('x-js');},4000);})();</script>
+  <script is:inline type="application/json" id="stage-data" set:html={data} />
+  <div class="x-wall" data-side="l" aria-hidden="true">
+    <ol class="x-wall__lines">{w.left.map((l, r) => <li data-n={l.n} style={`--r: ${r}`} data-h={l.heading ? '' : undefined}><span>{l.text}</span></li>)}</ol>
+  </div>
+
+  <svg class="x-threads" data-x="threads" aria-hidden="true" focusable="false"></svg>
+
+  <div class="x-stage__centre">
+    <header class="x-stage__top">
+      <div class="x-stage__title">
+        <p class="x-kicker">{ui.eyebrow}</p>
+        <h1 class="x-h1" id="hero-title">Become a source AI can <span class="x-tone">actually cite.</span></h1>
+      </div>
+      <fieldset class="ds-segmented-control x-src-switch" data-size="sm"><legend class="ds-sr-only">Answer with or without a page to cite</legend>
+        <label class="ds-segmented-control__item"><input class="ds-segmented-control__input" type="radio" name="x-src" value="with" checked /><span class="ds-segmented-control__label">With a source</span></label>
+        <label class="ds-segmented-control__item"><input class="ds-segmented-control__input" type="radio" name="x-src" value="without" /><span class="ds-segmented-control__label">Without</span></label>
+      </fieldset>
+    </header>
+
+    <div class="x-ask" role="region" aria-label="A question about GEO, answered only from this site's guide">
+      <p class="x-ask__label"><span class="x-qmark" aria-hidden="true">?</span>Someone asks an assistant</p>
+      <p class="x-q"><span data-x="q">{first.q}</span><span class="x-caret" aria-hidden="true"></span></p>
+
+      <div class="x-a" data-x="answer" aria-live="polite">
+        <p class="x-a__meta"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="2.5"/><path d="M5 6h6M5 8.5h6M5 11h3.5"/></svg>Built only from this guide<a href="/guide.md">whatisgeo.app/guide.md</a><i>an illustration, not a live AI result</i></p>
+        <div class="x-a__prose" data-x="prose"><p>{first.parts.map(([t, n]) => <><span class="x-sent" data-line={n}>{t}</span><a class="ds-citation-sources-cite" href="#stage" data-line={n} aria-label={`Source ${used.indexOf(n) + 1}: guide.md line ${n}`}><span class="ds-citation-sources-cite__num">{used.indexOf(n) + 1}</span></a></>)}</p></div>
+        <p class="x-a__note" data-x="note" hidden></p>
+        <ol class="x-srcs" data-x="srcs" aria-label="The guide lines this answer read">{used.map((n, k) => <li data-line={n} data-on><b>{k + 1} · L{n}</b><span>{excerpt(lines[n - 1], said[n])}</span></li>)}</ol>
+      </div>
+
+      <div class="x-none" data-x="without" hidden>
+        <p class="x-none__big">Nothing here to quote. <span>So the answer comes from somewhere else.</span></p>
+        <p class="x-none__why">Not every AI answer involves a live search. Without a page that answers the question plainly, an assistant falls back on what it learned in training, or quotes a page that did answer it.</p>
+        <p class="x-none__fine">An illustration of the same question with no source to read, not a quote from any assistant.</p>
+      </div>
+    </div>
+
+    <div class="ds-suggestion-chips x-pills" data-variant="jstov" data-size="lg" data-align="start" role="group" aria-label="Questions this guide answers">
+      <span class="ds-suggestion-chips__label"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M9 5l3 3-3 3"/></svg>Ask</span>
+      {answers.map((a, i) => <button type="button" class="ds-suggestion-chips__chip" data-q={a.key} aria-pressed={i === 0 ? 'true' : 'false'}><span class="ds-suggestion-chips__text">{a.pill}</span></button>)}
+    </div>
+
+    <footer class="x-stage__foot">
+      <div class="x-actions">
+        <a class="ds-button-primary" data-size="lg" href="#guide"><span class="ds-button-primary__label">Understand GEO</span></a>
+        <a class="ds-text-link" data-kind="route" href="#updates"><span class="ds-text-link__label">{ui.signupButton}</span><span class="ds-text-link__glyph" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></a>
+      </div>
+      <p class="x-stage__fine">No hype, no invented stats. Every footnote is a real line.</p>
+    </footer>
+  </div>
+
+  <div class="x-wall" data-side="r" aria-hidden="true">
+    <ol class="x-wall__lines">{w.right.map((l, r) => <li data-n={l.n} style={`--r: ${r}`} data-h={l.heading ? '' : undefined}><span>{l.text}</span></li>)}</ol>
+  </div>
+</section>
+<script src="../scripts/stage.ts"></script>
