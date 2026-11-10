@@ -1,0 +1,377 @@
+/* ============================================================================
+   citation-sources — Citations + source cards                  (taxonomy §I · common · S0)
+   Two roots, one component (the enum-chip / enum-chip-row precedent):
+     .ds-citation-sources        the "Sources" section that lands BEFORE the answer (J2 rule 8): header + a grid of
+                                 source cards + one overflow tile; or, with data-kind="row", a one-line favicon row
+                                 + count for receipts and headers.
+     .ds-citation-sources-cite   the inline numbered citation pill inside prose — an <a href="#src-n"> whose hover /
+                                 focus card quotes the sentence it supports (house: every claim → source link is
+                                 checkable without leaving the prose).
+   Parts (section): __header · __icon · __title · __count · __grid (<ol>) · __card[data-kind="featured|compact|overflow"]
+     · __link (<a> or <button>, the whole card) · __favicon[data-hue="1…8"] (20 disc; 40 in perplexity featured) ·
+     __favicon-row (6 spaced discs) · __name (source title, clamps to 2 lines) · __meta · __domain · __index · __more ·
+     __empty (dashed footprint) · __skeleton (loading twin)
+   Parts (cite): __num · __card (the hover card: __quote · __source)
+   Axes:  data-mark="mono|colour"   chroma-leakage policy for third-party marks: mono masks them to muted ink
+                                    (house default — favicons are the only non-brand colour on the page), colour lets
+                                    them through (perplexity)
+          data-kind="grid|row"      section layout · one-line favicon row + count
+          data-fit="row"            grid kind: every card + the overflow tile share ONE row (equal columns) above 560 px,
+                                    whatever the column width — the deterministic answer to "3 cards + More in one row"
+                                    (additive 2026-09-25, DESK-327). Without it the row count is arithmetic:
+                                    N cards fit when N·--_min + (N−1)·8 ≤ the column (4-up at 610 needs --_min ≤ 146).
+                                    Set --_min ON THE ROOT or the __grid — the root declares it, so an ancestor's value
+                                    never reaches the grid.
+          data-state="loading|empty"
+   Variants: jstov (unmarked — uniform tint cards + one overflow tile; 20 px pill at ≥ 4.5:1; hover card) ·
+     perplexity-provenance-first (featured / compact / overflow trio, 22 px pill, colour marks) ·
+     copilot-numbered-reference-list (one column: index-disc provenance pill over the title; count + collapse __toggle) ·
+     cohere-highlighted-spans (highlighted claim spans instead of numerals; "Citations:" footer of square domain chips)
+   Extra parts: __toggle (copilot collapse chevron) · data-state="collapsed" hides the list, keeps header + count
+   Private knobs: --_fill --_edge --_radius --_pad --_min --_disc --_pill
+   Tokens only (tools/lint-tokens.mjs).
+   ========================================================================== */
+
+.ds-citation-sources svg[fill="none"], .ds-citation-sources-cite svg[fill="none"] { fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+
+/* =========================================================================
+   SECTION
+   ========================================================================= */
+.ds-citation-sources {
+  --_fill:   var(--ds-surface-2);               /* perplexity: tint-1 cards, no border                 */
+  --_edge:   transparent;
+  --_radius: var(--ds-radius-md);
+  --_pad:    var(--ds-space-3);
+  --_min:    160px;                              /* uniform card min width — four across a 720 column   */
+  --_disc:   var(--ds-space-5);                  /* 20 favicon disc (perplexity compact 22 · featured 40) */
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  min-width: 0;
+  max-width: 100%;
+  color: var(--ds-ink);
+}
+
+/* -- header: 20 px outline icon + "Sources" + count in the mono lane ---------------------------- */
+.ds-citation-sources__header { display: flex; align-items: center; gap: var(--ds-space-2); min-height: var(--ds-space-7); }
+.ds-citation-sources__icon { flex: none; inline-size: var(--ds-icon-size-row); block-size: var(--ds-icon-size-row); color: var(--ds-ink-2); }
+.ds-citation-sources__title { margin: 0; font-size: var(--ds-text-lg); font-weight: var(--ds-weight-medium); line-height: var(--ds-lh-heading); color: var(--ds-ink); }
+.ds-citation-sources__count { font-family: var(--ds-font-mono); font-size: var(--ds-text-sm); font-variant-numeric: tabular-nums; color: var(--ds-ink-muted); }
+
+/* -- grid: uniform cards + one overflow tile ----------------------------------------------------- */
+.ds-citation-sources__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(var(--_min), 100%), 1fr));
+  gap: var(--ds-space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.ds-citation-sources__card { min-width: 0; display: flex; }
+.ds-citation-sources__link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  inline-size: 100%;
+  min-width: 0;
+  min-block-size: calc(var(--ds-space-7) * 3);   /* 84 — perplexity's 97 at 1.25× ≈ 78 CSS               */
+  padding: var(--_pad);
+  border: var(--ds-border-width) solid var(--_edge);
+  border-radius: var(--_radius);
+  background: var(--_fill);
+  color: var(--ds-ink);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard), border-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-citation-sources__link:hover, .ds-citation-sources__link[data-state="hover"] { background: var(--ds-surface-3); color: var(--ds-ink); }
+.ds-citation-sources__link:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+.ds-citation-sources__link[aria-current="true"] { box-shadow: inset 0 0 0 2px var(--ds-border-selected), var(--ds-card-shadow); }   /* the card the open cite points at */
+
+.ds-citation-sources__name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-width: 0;
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-body);
+  color: var(--ds-ink);
+}
+.ds-citation-sources__meta { display: flex; align-items: center; gap: var(--ds-space-1-5); min-width: 0; margin-block-start: auto; font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.ds-citation-sources__domain { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-citation-sources__index { flex: none; white-space: nowrap; font-family: var(--ds-font-mono); font-variant-numeric: tabular-nums; color: var(--ds-ink-2); }
+.ds-citation-sources__index::before { content: "· "; color: var(--ds-ink-muted); }
+
+/* -- favicon: a disc with the third-party mark; chroma policy on the root ------------------------ */
+.ds-citation-sources__favicon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--_disc);
+  block-size: var(--_disc);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface);
+  box-shadow: inset 0 0 0 var(--ds-border-width) var(--ds-rule), var(--ds-card-shadow);
+  color: var(--ds-ink-muted);
+  overflow: hidden;
+}
+.ds-citation-sources__favicon > svg, .ds-citation-sources__favicon > img { inline-size: 60%; block-size: 60%; object-fit: contain; }
+.ds-citation-sources__favicon[data-hue="1"] { color: var(--ds-data-1); }
+.ds-citation-sources__favicon[data-hue="2"] { color: var(--ds-data-2); }
+.ds-citation-sources__favicon[data-hue="3"] { color: var(--ds-data-3); }
+.ds-citation-sources__favicon[data-hue="4"] { color: var(--ds-data-4); }
+.ds-citation-sources__favicon[data-hue="5"] { color: var(--ds-data-5); }
+.ds-citation-sources__favicon[data-hue="6"] { color: var(--ds-data-6); }
+.ds-citation-sources__favicon[data-hue="7"] { color: var(--ds-data-7); }
+.ds-citation-sources__favicon[data-hue="8"] { color: var(--ds-data-8); }
+/* mono (house default): every third-party mark is masked to muted ink; images are desaturated */
+.ds-citation-sources:not([data-mark="colour"]) .ds-citation-sources__favicon { color: var(--ds-ink-muted); }
+.ds-citation-sources:not([data-mark="colour"]) .ds-citation-sources__favicon > img { filter: grayscale(1); opacity: .8; }
+.ds-citation-sources__favicon-row { display: flex; align-items: center; gap: var(--ds-space-2); flex-wrap: wrap; }
+.ds-citation-sources__more { font-size: var(--ds-text-sm); color: var(--ds-ink-muted); margin-block-start: auto; }
+.ds-citation-sources__link:hover .ds-citation-sources__more { color: var(--ds-ink); }
+
+/* -- kinds ---------------------------------------------------------------------------------------- */
+.ds-citation-sources[data-kind="row"] { flex-direction: row; flex-wrap: wrap; align-items: center; gap: var(--ds-space-2); }
+.ds-citation-sources[data-kind="row"] .ds-citation-sources__favicon-row { gap: 0; }
+.ds-citation-sources[data-kind="row"] .ds-citation-sources__favicon { margin-inline-end: calc(-1 * var(--ds-space-1)); box-shadow: 0 0 0 2px var(--ds-ground), inset 0 0 0 var(--ds-border-width) var(--ds-rule), var(--ds-card-shadow); }
+.ds-citation-sources[data-kind="row"] .ds-citation-sources__count { font-family: inherit; font-size: var(--ds-text-sm); color: var(--ds-ink-2); padding-inline-start: var(--ds-space-2); }
+
+/* -- fit: one row (data-fit="row") -------------------------------------------------------------------
+   Cards flow into equal columns on a single row; names clamp to 2 lines and domains ellipsise, so a 146 px card
+   still reads. Under 560 px the grid returns to auto-fit (a 4-up row would be ~80 px cards on a phone). Keep a
+   fit-row to ≤ 4 cells (3 sources + the overflow tile, or featured ×2 + compact + overflow). */
+.ds-citation-sources[data-fit="row"] .ds-citation-sources__grid { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+.ds-citation-sources[data-fit="row"] .ds-citation-sources__favicon-row { flex-wrap: nowrap; overflow: hidden; }
+.ds-citation-sources[data-fit="row"] .ds-citation-sources__favicon-row > :nth-child(n+5) { display: none; }   /* 4 discs fit a 146 px tile; a 5th would be cut */
+@media (max-width: 560px) {
+  .ds-citation-sources[data-fit="row"] .ds-citation-sources__grid { grid-auto-flow: row; grid-template-columns: repeat(auto-fit, minmax(min(var(--_min), 100%), 1fr)); }
+}
+
+/* -- loading / empty ------------------------------------------------------------------------------ */
+.ds-citation-sources[data-state="loading"] .ds-citation-sources__link { pointer-events: none; }
+.ds-citation-sources__skeleton { display: block; block-size: var(--ds-text-sm); border-radius: var(--ds-radius-xs); background: var(--ds-skeleton); }
+.ds-citation-sources__skeleton[data-w="short"] { inline-size: 55%; }
+.ds-citation-sources__empty {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-block-size: calc(var(--ds-space-7) * 2);
+  padding: var(--_pad);
+  border: var(--ds-border-width) dashed var(--ds-border);
+  border-radius: var(--_radius);
+  color: var(--ds-ink-muted);
+  font-size: var(--ds-text-sm);
+}
+.ds-citation-sources__empty > svg { flex: none; inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); }
+
+/* =========================================================================
+   INLINE CITE — <a class="ds-citation-sources-cite" href="#src-1">
+   ========================================================================= */
+.ds-citation-sources-cite {
+  --_pill: var(--ds-space-5);                    /* 20 (house) · 22 perplexity                            */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: baseline;
+  inline-size: var(--_pill);
+  block-size: var(--_pill);
+  margin-inline: var(--ds-space-0-5) 0;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface-3);
+  color: var(--ds-ink-2);                        /* ≥ 4.5:1 — perplexity's muted numeral at 3.5:1 is the weakness */
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard), color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-citation-sources-cite:hover, .ds-citation-sources-cite[data-state="open"] { background: var(--ds-surface-3); color: var(--ds-ink); }
+.ds-citation-sources-cite:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+.ds-citation-sources-cite__num { display: inline-block; }
+
+/* the hover card: quoted sentence + source line, on the raised neutral layer (R6), float shadow */
+.ds-citation-sources-cite__card {
+  position: absolute;
+  inset-block-end: calc(100% + var(--ds-space-2));
+  inset-inline-start: 0;
+  z-index: var(--ds-z-popover);
+  display: none;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  inline-size: max-content;
+  max-inline-size: min(320px, calc(100vw - var(--ds-space-8)));
+  padding: var(--ds-space-3);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-surface-raised);
+  border: var(--ds-border-width) solid var(--ds-rule);
+  box-shadow: var(--ds-shadow-float);
+  color: var(--ds-ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-regular);
+  line-height: var(--ds-lh-body);
+  text-align: start;
+  white-space: normal;
+}
+.ds-citation-sources-cite[data-placement="end"] .ds-citation-sources-cite__card { inset-inline-start: auto; inset-inline-end: 0; }
+.ds-citation-sources-cite:hover .ds-citation-sources-cite__card,
+.ds-citation-sources-cite:focus-visible .ds-citation-sources-cite__card,
+.ds-citation-sources-cite[data-state="open"] .ds-citation-sources-cite__card { display: flex; }
+.ds-citation-sources-cite__quote { margin: 0; padding-inline-start: var(--ds-space-2-5); border-inline-start: 2px solid var(--ds-accent-2); color: var(--ds-ink-2); font-family: var(--ds-font-body-alt); font-style: italic; }
+.ds-citation-sources-cite__source { display: flex; align-items: center; gap: var(--ds-space-1-5); min-width: 0; font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.ds-citation-sources-cite__source .ds-citation-sources__favicon { --_disc: var(--ds-space-4); color: var(--ds-ink-muted); }
+.ds-citation-sources-cite__source strong { color: var(--ds-ink); font-weight: var(--ds-weight-medium); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* phone: the card docks to the bottom of the viewport (a 320 px card anchored to a pill would leave a 390 px screen) */
+@media (max-width: 560px) {
+  .ds-citation-sources-cite__card { position: fixed; inset-inline: var(--ds-space-4); inset-block: auto var(--ds-space-4); inline-size: auto; max-inline-size: none; }
+}
+
+/* =========================================================================
+   VARIANTS
+   ========================================================================= */
+
+/* perplexity-provenance-first — Sources before Answer; card trio at three widths (featured 2-col: 40 disc + title + "domain · 1"
+   on one line · compact: 2-line title over disc + domain · overflow: 6 spaced favicons + "View 18 more"); colour marks;
+   22 px citation pill with a muted numeral [perplexity-asking-a-question-05-09] */
+.ds-citation-sources[data-variant="perplexity-provenance-first"] { --_min: 150px; --_disc: 22px; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__grid { grid-template-columns: repeat(auto-fit, minmax(min(var(--_min), 100%), 1fr)); }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] { grid-column: span 2; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] .ds-citation-sources__link { flex-direction: row; align-items: center; gap: var(--ds-space-3); }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] .ds-citation-sources__favicon { --_disc: var(--ds-space-10); }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] .ds-citation-sources__name { -webkit-line-clamp: 1; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] .ds-citation-sources__name { flex: 1 1 auto; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] .ds-citation-sources__meta { flex: 0 1 auto; max-inline-size: 45%; margin-block-start: 0; margin-inline-start: auto; font-size: var(--ds-text-sm); }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="compact"] .ds-citation-sources__link { flex-direction: column-reverse; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="compact"] .ds-citation-sources__meta { margin-block-start: 0; }
+.ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="compact"] .ds-citation-sources__favicon { --_disc: var(--ds-space-4); }
+.ds-citation-sources-cite[data-variant="perplexity-provenance-first"] { --_pill: 22px; background: var(--ds-surface-3); color: var(--ds-ink-muted); font-family: var(--ds-font-sans); }
+@media (max-width: 560px) {
+  .ds-citation-sources[data-variant="perplexity-provenance-first"] .ds-citation-sources__card[data-kind="featured"] { grid-column: auto; }
+}
+
+/* copilot-numbered-reference-list — a "References" heading with the count + a collapse chevron at the far end, then ONE
+   column of numbered rows: a provenance pill (tinted index disc · favicon · domain) over the page title in body text;
+   no card fill — the rows sit on the page. The inline cite is the same tinted index disc. [mobbin-copilot-citation-sources] */
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] { --_fill: transparent; --_pad: 0px; --_disc: var(--ds-space-4); gap: var(--ds-space-4); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__header { min-height: var(--ds-control-h-sm); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__title { font-size: var(--ds-text-xl); font-weight: var(--ds-weight-medium); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__count { margin-inline-start: auto; font-family: inherit; font-size: var(--ds-text-md); color: var(--ds-ink-2); }
+.ds-citation-sources__toggle {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ds-control-h-sm);
+  block-size: var(--ds-control-h-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  background: transparent;
+  color: var(--ds-ink-2);
+  cursor: pointer;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-citation-sources__toggle svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); transition: transform var(--ds-dur-base) var(--ds-ease-standard); }
+.ds-citation-sources__toggle:hover, .ds-citation-sources__toggle[data-state="hover"] { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.ds-citation-sources__toggle[aria-expanded="false"] svg { transform: rotate(180deg); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__grid { grid-template-columns: minmax(0, 1fr); gap: var(--ds-space-5); }
+.ds-citation-sources[data-state="collapsed"] .ds-citation-sources__grid { display: none; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link { min-block-size: 0; gap: var(--ds-space-2); border: 0; border-radius: var(--ds-radius-sm); background: transparent; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__meta {
+  align-self: flex-start;
+  max-inline-size: 100%;
+  margin-block-start: 0;
+  min-block-size: var(--ds-space-7);
+  padding-block: var(--ds-space-0-5);
+  padding-inline: var(--ds-space-1) var(--ds-space-2-5);
+  border: var(--ds-border-width) solid var(--ds-rule);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-ink-2);
+  transition: border-color var(--ds-dur-fast) var(--ds-ease-standard), background-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__index {
+  order: -1;
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--ds-space-5);
+  block-size: var(--ds-space-5);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-accent-tint);
+  color: var(--ds-accent-ink);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+}
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__index::before { content: none; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__favicon { box-shadow: none; background: transparent; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__name { font-size: var(--ds-text-md); font-weight: var(--ds-weight-regular); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link:is(:hover, [data-state="hover"]) { background: transparent; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link:is(:hover, [data-state="hover"]) .ds-citation-sources__meta { border-color: var(--ds-border-strong); background: var(--ds-surface-2); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link:is(:hover, [data-state="hover"]) .ds-citation-sources__name { text-decoration: underline; text-underline-offset: .2em; text-decoration-color: var(--ds-rule-strong); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link[data-state="focus"],
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__toggle[data-state="focus"] { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link[aria-current="true"] { box-shadow: none; }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__link[aria-current="true"] .ds-citation-sources__meta { border-color: var(--ds-selected-line); background: var(--ds-selected-bg); color: var(--ds-selected-ink); }
+.ds-citation-sources[data-variant="copilot-numbered-reference-list"] .ds-citation-sources__skeleton[data-w="pill"] { inline-size: 9em; block-size: var(--ds-space-7); border-radius: var(--ds-radius-pill); }
+.ds-citation-sources-cite[data-variant="copilot-numbered-reference-list"] { --_pill: 18px; background: var(--ds-accent-tint); color: var(--ds-accent-ink); font-family: var(--ds-font-sans); }
+.ds-citation-sources-cite[data-variant="copilot-numbered-reference-list"]:is(:hover, [data-state="open"]) { background: var(--ds-accent-soft); color: var(--ds-accent-ink); }
+
+/* cohere-highlighted-spans — no numerals at all: every cited claim is a tinted HIGHLIGHT over the words themselves
+   (the span is the link; hover / focus opens the same quote card), and the section is a one-line footer after the
+   answer — a muted "Citations:" label flowing straight into small square-cornered domain chips (tint, 4 px radius,
+   16 px square favicon) and a "+8" overflow chip. Sources follow the answer here — Cohere's choice, not the house
+   order. [mobbin-cohere-citation-sources] */
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] { --_disc: var(--ds-space-4); display: block; line-height: var(--ds-lh-list); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__header { display: inline-flex; min-height: var(--ds-control-h-sm); margin-inline-end: var(--ds-space-2); vertical-align: middle; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__title { font-size: var(--ds-text-sm); font-weight: var(--ds-weight-regular); color: var(--ds-ink-muted); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__count { font-size: var(--ds-text-xs); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__grid { display: inline; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__card { display: inline-flex; max-inline-size: 100%; margin-block: var(--ds-space-1); margin-inline-end: var(--ds-space-2); vertical-align: middle; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__link {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--ds-space-1-5);
+  inline-size: auto;
+  min-block-size: var(--ds-control-h-sm);
+  padding: 0 var(--ds-space-2-5);
+  border: 0;
+  border-radius: var(--ds-radius-xs);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-ink-2);
+}
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__link:is(:hover, [data-state="hover"]) { color: var(--ds-ink); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__link[data-state="focus"] { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__link[aria-current="true"] { box-shadow: none; background: var(--ds-selected-bg); color: var(--ds-selected-ink); }   /* current = the selected fill, so it never reads as the focus ring */
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__favicon { border-radius: var(--ds-radius-xs); box-shadow: none; background: var(--ds-surface); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__favicon > svg { inline-size: 75%; block-size: 75%; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__name { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }   /* the chip shows the domain; the title stays for screen readers */
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__meta { margin-block-start: 0; font-size: inherit; color: inherit; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__index { display: none; }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__more { margin: 0; font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-2); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__skeleton { display: inline-block; inline-size: 7em; block-size: var(--ds-text-xs); }
+.ds-citation-sources[data-variant="cohere-highlighted-spans"] .ds-citation-sources__empty { display: inline-flex; min-block-size: var(--ds-control-h-sm); padding-block: 0; vertical-align: middle; }
+.ds-citation-sources-cite[data-variant="cohere-highlighted-spans"] {
+  display: inline;
+  inline-size: auto;
+  block-size: auto;
+  margin: 0;
+  padding: .1em .15em;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-surface-3);
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.ds-citation-sources-cite[data-variant="cohere-highlighted-spans"]:is(:hover, [data-state="open"]) { background: var(--ds-accent-2-tint); color: var(--ds-accent-2-ink); }
+.ds-citation-sources-cite[data-variant="cohere-highlighted-spans"][data-state="focus"] { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }

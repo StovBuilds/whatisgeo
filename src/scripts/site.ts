@@ -1,15 +1,12 @@
 import { ui } from '../data/content';
 const themeButton = document.querySelector<HTMLButtonElement>('.theme-button');
-function updateThemeButton() { const dark = document.documentElement.dataset.theme === 'dark'; themeButton?.setAttribute('aria-pressed', String(dark)); themeButton?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`); }
+function updateThemeButton() { const dark = document.documentElement.dataset.mode === 'dark'; themeButton?.setAttribute('aria-pressed', String(dark)); themeButton?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`); }
 updateThemeButton();
-themeButton?.addEventListener('click', () => { const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = theme; try { localStorage.setItem('wig-theme', theme); } catch {} updateThemeButton(); });
+themeButton?.addEventListener('click', () => { const theme = document.documentElement.dataset.mode === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.mode = theme; try { localStorage.setItem('wig-theme', theme); } catch {} updateThemeButton(); });
 
-const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-const band = document.querySelector<HTMLElement>('.statement-band');
-const preview = document.querySelector<HTMLElement>('.answer-preview');
 let ticking = false;
-function onScroll() { if(ticking)return; ticking=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-innerHeight;document.documentElement.style.setProperty('--reading-progress',`${max>0?scrollY/max*100:0}%`);if(!reduced.matches){band?.style.setProperty('--marquee-shift',`${-Math.min(scrollY*.12,240)}px`);if(preview)preview.style.transform=`translateY(${-Math.min(scrollY*.055,24)}px) rotate(${-2+Math.min(scrollY*.004,2)}deg)`;}else{band?.style.removeProperty('--marquee-shift');preview?.style.removeProperty('transform');}ticking=false;}); }
-addEventListener('scroll',onScroll,{passive:true});reduced.addEventListener('change',onScroll);onScroll();
+function onScroll() { if(ticking)return; ticking=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-innerHeight;document.documentElement.style.setProperty('--reading-progress',`${max>0?scrollY/max*100:0}%`);ticking=false;}); }
+addEventListener('scroll',onScroll,{passive:true});onScroll();
 const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc a[href^="#"]')];
 if ('IntersectionObserver' in window) { const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){tocLinks.forEach(a=>a.setAttribute('aria-current',String(a.hash==='#'+entry.target.id)));}}},{rootMargin:'-10% 0px -65% 0px'});document.querySelectorAll('.chapter').forEach(section=>observer.observe(section)); }
 

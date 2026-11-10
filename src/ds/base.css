@@ -1,0 +1,690 @@
+/* ============================================================================
+   JSTOV design system — tokens/base.css
+   The neutral baseline. Implements the whole contract (tokens/CONTRACT.md) so
+   that ANY module renders correctly with no theme file loaded.
+
+   Load order (mandatory):  tokens/base.css → tokens/themes/<name>.css (optional)
+                           → components/_base.css → components/<id>/<id>.css
+
+   Layers in this file
+     1. Skin tokens, light defaults          :root, [data-mode="light"]      (0,1,0)
+     2. Structure knobs + constants           :root                            (0,1,0)
+     3. Derived tokens (calc / var chains)    the RE-DERIVE HOSTS rule         (0,1,0)
+     4. Dark remap                            :root[data-mode="dark"],
+                                              :not(:root)[data-mode="dark"]   (0,2,0)
+                                              + guarded prefers-color-scheme
+     5. Policy attributes                     :root[data-x="v"],
+                                              :not(:root)[data-x="v"]         (0,2,0)
+        + band islands (data-band)            [data-band="v"][data-band]      (0,2,0)
+     6. Reduced motion, grid-snapping (@supports round())
+
+   Specificity ladder — why the selectors look the way they do
+     • Theme LIGHT blocks are [data-theme="x"] (0,1,0) and load after this file,
+       so they beat the defaults in 1–3 by source order.
+     • Dark blocks (4) and policy attributes (5) are written at (0,2,0) so that
+       (a) a theme's light block can never leak a colour into dark mode, and
+       (b) an EXPLICIT attribute on the page beats a theme's CSS-only fallback
+       for that policy (a theme's fallback is (0,1,0)).
+     • Theme DARK blocks are [data-theme="x"][data-mode="dark"] (0,2,0) and load
+       later, so they beat the neutral dark remap.
+     • The guarded media form for a theme is :root[data-theme="x"]:not([data-mode="light"])
+       (0,3,0) so it beats the neutral guarded form (0,2,0).
+
+   Re-derive hosts
+     Custom properties that contain var()/calc() are substituted on the element
+     that DECLARES them, and descendants inherit the finished value. If a theme
+     scoped to <section data-theme="paper"> sets --ds-space-unit:8px, a
+     --ds-space-4 declared only on :root would still be 16px inside the section.
+     So every derived token is declared on the HOST LIST — :root plus every
+     element that can carry a theme/policy attribute, and every data-band
+     island — and recomputes wherever a knob can change. Keep that list in sync
+     with CONTRACT.md §3.
+
+   Islands (batch 12, 2026-09-20)
+     data-mode="dark|light" and data-band="tint|dark|accent" are section-level
+     islands. Base defines all three bands theme-agnostically (§5 below); a
+     theme's dark block also lists [data-theme="x"] [data-mode="dark"] and
+     [data-theme="x"] [data-band="dark"] so an island inside a themed page gets
+     THE THEME's dark, not this file's neutral one. The accent band reads the
+     page's accent through the --ds-band-* snapshots (declared on every host
+     except the accent band itself, because a custom property cannot reference
+     its own redefinition on the same element). Put data-band on a <section>,
+     never on the root and never on the same element as data-theme/data-mode —
+     the root is where the snapshot is taken from.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. LIGHT SKIN DEFAULTS — everything that changes between light and dark
+   (colours, shadows, glass, texture). [data-mode="light"] is in the list so a
+   light island inside a dark page works without resetting structure.
+   ------------------------------------------------------------------------- */
+:root,
+[data-mode="light"] {
+  color-scheme: light;
+
+  /* ---- Surfaces (§7.1) — pure-neutral ramp, surfaces lighter than ground --- */
+  --ds-ground:            #fafafa;   /* page / chrome background                */
+  --ds-ground-2:          #f4f4f4;   /* second chrome plane: sidebar, rail, canvas */
+  --ds-surface:           #ffffff;   /* cards, inputs, popovers                 */
+  --ds-surface-2:         #f3f3f3;   /* inset: nested fields, chips, wells      */
+  --ds-surface-3:         #ececec;   /* deeper inset / disabled fill            */
+  --ds-skeleton:          #e2e2e2;   /* loading placeholder fill — visible on ground AND surface (batch-1 finding) */
+  --ds-surface-raised:    #ffffff;   /* overlay fill (popover, modal) — NEUTRAL even in themed planes */
+  --ds-surface-hover:     #f0f0f0;   /* one tint step for hover                 */
+  --ds-surface-pressed:   #ebebeb;   /* pressed fill — hover < pressed < selected in distance from surface (batch-12) */
+  --ds-surface-selected:  #e6e6e6;   /* selected nav / row / tab (neutral)      */
+  --ds-surface-inverse:   #111111;   /* dark chrome, inverse cards              */
+  --ds-surface-inverse-hover: #262626; /* hover step for inverse fills (batch-2 finding) */
+  --ds-surface-polarity:  1;         /* 1 = surface lighter than ground, -1 = darker (informational) */
+  --ds-scrim:             rgba(0, 0, 0, .40);
+  --ds-scrim-filter:      none;      /* none | blur(6px) | grayscale(.5)        */
+
+  /* ---- Ink (§7.2) ---------------------------------------------------------- */
+  --ds-ink:               #111111;   /* primary text                            */
+  --ds-ink-2:             #3d3d3d;   /* secondary text, body inside cards, nav  */
+  --ds-ink-muted:         #6b6b6b;   /* labels, placeholders, meta — READABLE, ≥ 4.5:1 on ground/surface/surface-2 */
+  --ds-ink-faint:         #a3a3a3;   /* DECORATIVE only: disabled, indices, hints */
+  --ds-ink-inverse:       #fafafa;   /* text on --ds-surface-inverse            */
+  --ds-ink-on-primary:    #ffffff;   /* text on --ds-primary-fill               */
+  --ds-ink-on-accent:     #ffffff;   /* text on --ds-accent fill                */
+  /* --ds-ink-link and --ds-ink-code are derived (see hosts rule)               */
+
+  /* ---- Lines (§7.3) — three hairline grades + control borders --------------- */
+  --ds-rule-soft:         #ededed;   /* in-content / row dividers (1.17:1)      */
+  --ds-rule-faint:        #f4f4f4;   /* table COLUMN rules, fainter than rows (batch-2 finding) */
+  --ds-rule:              #e5e5e5;   /* structural hairline: dividers, card edges (≥ 1.15:1 — 1.26 here) */
+  --ds-rule-strong:       #d4d4d4;   /* column / section rules, the control lip */
+  --ds-border:            #d9d9d9;   /* control borders: inputs, buttons, chips */
+  --ds-border-strong:     #bdbdbd;   /* darker fields when a brand wants them; hover border */
+  /* --ds-ring, --ds-border-selected are derived                                */
+
+  /* ---- Action & accent (§7.4) ---------------------------------------------- */
+  --ds-primary-fill:        #111111; /* THE one filled button; ink-black here   */
+  --ds-primary-fill-hover:  #2a2a2a;
+  --ds-primary-border:      transparent;   /* optional 1px darker edge          */
+  --ds-primary-highlight:   transparent;   /* optional 1px inner top highlight  */
+  --ds-accent:              #2563eb; /* links, active state, badges, dots, CTA if hue */
+  --ds-accent-hover:        #1d4fd8;
+  --ds-accent-ink:          #1e40af; /* accent darkened for text on tint        */
+  --ds-accent-tint:         #e9effd; /* accent at ~10% for chips / selected rows */
+  --ds-accent-soft:         #93b4f5; /* ~45% — open triggers, soft borders      */
+  --ds-accent-2:            #7c5ee4; /* second accent: selection | data | sub-brand | AI */
+  --ds-accent-2-ink:        #5b3fc4;
+  --ds-accent-2-tint:       #eee9fb;
+  /* --ds-accent-line derived                                                   */
+
+  /* ---- Semantic (§7.5) — fill / tint / ink triplets ------------------------- */
+  --ds-success:       #15803d;  --ds-success-tint:  #e3f0e8;  --ds-success-ink:  #14703a;
+  --ds-danger:        #dc2626;  --ds-danger-tint:   #fbe5e5;  --ds-danger-ink:   #b91c1c;
+  --ds-warning:       #d97706;  --ds-warning-tint:  #faefe1;  --ds-warning-ink:  #9a4f00;
+  --ds-info:          #0369a1;  --ds-info-tint:     #e1edf4;  --ds-info-ink:     #075985;
+  /* same-hue hairlines for tinted callouts / validation outlines (batch-5 finding); themes may tune */
+  --ds-success-line:  color-mix(in srgb, var(--ds-success) 35%, transparent);
+  --ds-danger-line:   color-mix(in srgb, var(--ds-danger)  35%, transparent);
+  --ds-warning-line:  color-mix(in srgb, var(--ds-warning) 35%, transparent);
+  --ds-info-line:     color-mix(in srgb, var(--ds-info)    35%, transparent);
+  --ds-ink-on-semantic: #ffffff;    /* text on a semantic FILL (warning fill needs ink — see CONTRACT) */
+  --ds-ink-on-warning:  #1a1200;    /* text on a warning FILL — dark in BOTH modes (batch-2 finding) */
+  /* --ds-live, --ds-presence, --ds-selection-graph derived                     */
+
+  /* ---- Data (§7.6) — 8-hue categorical set, distinguishable in both modes ---
+     Hue order: blue · violet · green · orange · pink · amber · teal · umber.
+     Adjacent hues are ≥ 40° apart; every light mark is ≥ 3:1 on #ffffff AND on
+     --ds-ground, so a 1 px chart line passes on either plane (amber was 2.98 /
+     2.85 — darkened to #ad861b = 3.39 / 3.24, batch-12; its ink #7d6218 stays
+     darker than the fill and 5.2:1 on the tint). Dark amber #e2c04e is 10:1
+     on the dark surface — untouched. Amber is still a fill/badge hue: text
+     uses its ink.                                                             */
+  --ds-data-1: #2f6fed;  --ds-data-1-tint: #e2ebfc;  --ds-data-1-ink: #2455bd;
+  --ds-data-2: #7c5ee4;  --ds-data-2-tint: #ede8fb;  --ds-data-2-ink: #6248b8;
+  --ds-data-3: #0f9d6b;  --ds-data-3-tint: #ddf1ea;  --ds-data-3-ink: #0b7751;
+  --ds-data-4: #da6c36;  --ds-data-4-tint: #fbebe4;  --ds-data-4-ink: #a6542c;   /* orange 2.87 → 3.06 on surface-2 (the tint band's ground), batch-12 */
+  --ds-data-5: #d23f7a;  --ds-data-5-tint: #f9e4ec;  --ds-data-5-ink: #b53669;
+  --ds-data-6: #ad861b;  --ds-data-6-tint: #f7f2e1;  --ds-data-6-ink: #7d6218;
+  --ds-data-7: #0e9aa7;  --ds-data-7-tint: #ddf1f3;  --ds-data-7-ink: #0b757f;
+  --ds-data-8: #8a6a4b;  --ds-data-8-tint: #efeae6;  --ds-data-8-ink: #7f6245;
+  --ds-chart-ramp-1: #1e40af; --ds-chart-ramp-2: #2f6fed; --ds-chart-ramp-3: #93b4f5;  /* one hue, dark→light */
+  /* --ds-chart-grid, --ds-chart-comparison derived                             */
+
+  /* ---- Elevation (§7.7) — shadow recipes; card-* derived from data-depth ---- */
+  --ds-shadow-lift:   0 1px 2px rgba(0, 0, 0, .05);                    /* pressable controls */
+  --ds-shadow-card:   0 1px 3px rgba(0, 0, 0, .08);                    /* inert unless data-depth="shadow" */
+  --ds-shadow-float:  0 8px 24px rgba(0, 0, 0, .12), 0 0 0 1px rgba(0, 0, 0, .04);   /* popover / toast */
+  --ds-shadow-modal:  0 24px 80px rgba(0, 0, 0, .18), 0 0 0 1px rgba(0, 0, 0, .04);
+  --ds-shadow-object: 0 4px 12px rgba(0, 0, 0, .12);                   /* physical objects: covers, task cards */
+  /* --ds-shadow-lip derived                                                    */
+
+  /* ---- Imagery & ornament (§7.12) ------------------------------------------ */
+  --ds-overlay-fill:   rgba(0, 0, 0, .60);   /* chrome on images                 */
+  --ds-ink-on-overlay: #ffffff;              /* ink on --ds-overlay-fill / over media — light in BOTH modes (batch-2 finding) */
+  --ds-glass-fill:     rgba(255, 255, 255, .35);
+  --ds-glass-border:   rgba(255, 255, 255, .55);
+  --ds-texture-color:  rgba(0, 0, 0, .06);
+  --ds-illustration-ground: #eef2f7;         /* shared tint behind illustrations */
+  /* --ds-line-art, --ds-media-radius derived                                   */
+}
+
+/* ---------------------------------------------------------------------------
+   2. STRUCTURE DEFAULTS — system-owned knobs and constants. Declared on :root
+   ONLY (a light/dark island must not reset them). Themes SCALE these
+   (--ds-radius-scale, --ds-density-scale, --ds-space-unit, --ds-text-base) or
+   point lane families at their own stacks; they do not redefine the steps.
+   ------------------------------------------------------------------------- */
+:root {
+  /* ---- Lines: widths ------------------------------------------------------- */
+  --ds-border-width:      1px;
+  --ds-ring-width:        2px;
+  --ds-ring-offset:       2px;
+  --ds-ring-outset:       0px;       /* 0 | 3px — highlight ring drawn outside the box (Jasper) */
+
+  /* ---- Elevation: the control lip ------------------------------------------- */
+  --ds-control-lip:   0px;                                             /* 0 | 1px — darker bottom edge on pressables */
+
+  /* ---- Shape (§7.8) — steps derive from --ds-radius-scale ------------------ */
+  --ds-radius-scale:  1;             /* 0 drafting · 1 tool · 2 soft (any number works) */
+  --ds-radius-pill:   9999px;
+  /* xs/sm/md/lg/xl + --ds-radius-button derived                                */
+
+  /* ---- Typography (§7.9) --------------------------------------------------- */
+  --ds-font-sans:     "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ds-font-serif:    ui-serif, Georgia, "Times New Roman", serif;
+  --ds-font-mono:     ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  /* lane families — a theme points a lane at one of the families above:      */
+  --ds-font-display:  var(--ds-font-sans);   /* display / hero lane              */
+  --ds-font-label:    var(--ds-font-sans);   /* label / metadata lane            */
+  --ds-font-body-alt: var(--ds-font-sans);   /* explanatory / "writing" lane     */
+  --ds-font-sign:     var(--ds-font-display); /* signage lane: place names, wayfinding, posters (2026-10-11) */
+  --ds-text-base:     14px;          /* 14 app · 16 forms/marketing/consumer      */
+  /* scale ratios (flat by default; a theme may re-shape them)                  */
+  --ds-scale-xs: .786;  --ds-scale-sm: .857;  --ds-scale-lg: 1.143;  --ds-scale-xl: 1.429;
+  --ds-scale-2xl: 1.714; --ds-scale-3xl: 2.286; --ds-scale-display: 3.429;
+  --ds-weight-regular: 400; --ds-weight-medium: 500; --ds-weight-semibold: 600; --ds-weight-bold: 700;
+  --ds-display-weight: 600;          /* 400–500 editorial · 600–800 punch          */
+  --ds-heading-weight: 600;
+  --ds-display-tracking: -0.02em;
+  --ds-heading-tracking: -0.01em;
+  --ds-label-tracking: 0;            /* sentence-case tracking (set by data-labels) */
+  --ds-label-tracking-upper: .08em;  /* the tracking uppercase labels take; a theme sets ITS value here and
+                                        data-labels="upper" reads it (batch-12: the attribute no longer pins .08em) */
+  --ds-label-case:     none;         /* none | uppercase  (set by data-labels)   */
+  --ds-control-case:   none;         /* none | capitalize (set by data-controls) */
+  --ds-lh-tight: 1.05; --ds-lh-heading: 1.2; --ds-lh-body: 1.45; --ds-lh-prose: 1.6; --ds-lh-list: 1.25;
+  --ds-numeric:        tabular-nums; /* font-variant-numeric for numbers          */
+  --ds-measure:        65ch;         /* reading measure for prose                  */
+
+  /* ---- Space & density (§7.10) -------------------------------------------- */
+  --ds-space-unit:     4px;          /* 4 apps · 8 marketing                     */
+  --ds-density-scale:  1;            /* .85 compact · 1 default · 1.2 comfortable */
+  --ds-control-h-base: 36px;         /* system-owned; themes scale via density   */
+  --ds-field-gap:      8px;          /* label → control                          */
+  --ds-gutter-page:    clamp(16px, 4vw, 72px);
+  --ds-container-max:  1152px;
+  --ds-container-narrow: 640px;
+  --ds-container-prose:  720px;
+  --ds-container-content: 1088px;    /* app content column (.ds-content, C-03) — theme-tunable (batch-12) */
+  --ds-section-gap-units: 12;        /* marketing region gap in space units (C-01 house = 12–16) */
+  --ds-rail-inset:     24px;         /* C-03 drawn rails: inset from the page edge, NOT a space step (48 px at unit 8 was wrong) — theme-tunable (batch-12) */
+  --ds-rail-w:         64px;         /* labelled icon rail                        */
+  --ds-sidebar-w:      256px;
+  --ds-inspector-w:    320px;
+  --ds-topbar-h:       56px;
+  --ds-sheet-inset:    12px;         /* inset sheet gap from the chrome edge (house shell) */
+  --ds-icon-size:      16px;         /* inline                                   */
+  --ds-icon-size-row:  20px;         /* list / nav rows                          */
+  --ds-icon-size-rail: 24px;         /* rails                                    */
+  --ds-icon-stroke:    1.5px;
+  --ds-tap-target-min: 40px;
+
+  /* ---- Motion (§7.11) ------------------------------------------------------ */
+  --ds-motion-scale:   1;            /* 0 under prefers-reduced-motion           */
+  --ds-ease-standard:  cubic-bezier(.2, 0, 0, 1);
+  --ds-ease-out:       cubic-bezier(0, 0, .2, 1);
+  --ds-ease-in:        cubic-bezier(.4, 0, 1, 1);
+  --ds-ambient-play:   running;      /* animation-play-state for marketing blobs / marquee / parallax:
+                                        running | paused — paused under data-ambient="off" and reduced motion.
+                                        Consume as `animation-play-state: var(--ds-ambient-play)` (batch-12) */
+  --ds-ambient-motion: 1;            /* DEPRECATED alias of --ds-ambient-play (1 | 0) — nothing should read it; kept so
+                                        old references resolve until they are re-pointed */
+  /* --ds-dur-* derived                                                         */
+
+  /* ---- Imagery: geometry --------------------------------------------------- */
+  --ds-glass-blur:     12px;
+  --ds-media-aspect:   16 / 9;
+  --ds-mock-fade:      96px;                 /* fade-mask length on product frames */
+
+  /* ---- Z-index ladder ------------------------------------------------------
+     Transient layers sit ABOVE the scrim + modal pair (DESK-326, CONTRACT §15): a popover or dropdown
+     opened over a scrimmed page, or portalled out of a modal, must be on top. Page-level popovers are
+     light-dismissed when a modal opens, so a page popover never ends up over a modal.            */
+  --ds-z-sticky:   100;
+  --ds-z-scrim:    200;
+  --ds-z-modal:    210;
+  --ds-z-dropdown: 300;
+  --ds-z-popover:  310;
+  --ds-z-toast:    500;
+  --ds-z-tooltip:  600;
+}
+
+/* ---------------------------------------------------------------------------
+   3. DERIVED TOKENS — declared on every RE-DERIVE HOST (see header).
+   A theme sets the knobs (unit, scales, seed, families); these follow.
+   [data-band] is a host too (batch-12), so a band block sets planes and
+   accent roles only — card-*, selected-*, hover-*, link / ring / lines
+   re-derive from them on the band element itself.
+   ------------------------------------------------------------------------- */
+:root,
+[data-theme], [data-mode], [data-density], [data-depth], [data-selection],
+[data-buttons], [data-labels], [data-controls], [data-accent-scope], [data-hover],
+[data-band] {
+  /* ink chains */
+  --ds-ink-link:          var(--ds-accent);
+  --ds-ink-code:          var(--ds-ink-2);
+  --ds-ring:              var(--ds-accent);
+  --ds-border-selected:   var(--ds-accent);
+  --ds-accent-line:       var(--ds-accent);
+  --ds-live:              var(--ds-danger);
+  --ds-presence:          var(--ds-success);
+  --ds-selection-graph:   var(--ds-accent);
+  --ds-data-primary:      var(--ds-data-1);   /* a chart's default / single series; themes whose data-1 IS the accent re-point it (CONTRACT §15.2) */
+  --ds-chart-grid:        var(--ds-rule-soft);
+  --ds-chart-comparison:  var(--ds-ink-faint);
+  --ds-line-art:          var(--ds-rule-strong);
+
+  /* elevation: card-* follow data-depth (defaults = tint-hairline) */
+  --ds-card-bg:           var(--ds-surface);
+  --ds-card-border:       var(--ds-rule);
+  --ds-card-shadow:       0 0 0 0 transparent;   /* composable 'none' — `none` would invalidate a comma-joined box-shadow */
+  --ds-shadow-lip:        inset 0 calc(-1 * var(--ds-control-lip)) 0 0 var(--ds-border-strong);
+  --ds-hover-bg:          var(--ds-surface-hover);   /* data-hover="tint" */
+  --ds-hover-shadow:      0 0 0 0 transparent;
+
+  /* selection primitives (defaults = data-selection="tint") */
+  --ds-selected-bg:       var(--ds-surface-selected);
+  --ds-selected-ink:      var(--ds-ink);
+  --ds-selected-line:     transparent;
+  --ds-selected-weight:   var(--ds-weight-medium);
+
+  /* shape */
+  --ds-radius-xs:   calc(4px  * var(--ds-radius-scale));
+  --ds-radius-sm:   calc(6px  * var(--ds-radius-scale));
+  --ds-radius-md:   calc(8px  * var(--ds-radius-scale));
+  --ds-radius-lg:   calc(12px * var(--ds-radius-scale));
+  --ds-radius-xl:   calc(20px * var(--ds-radius-scale));
+  --ds-radius-button: var(--ds-radius-sm);          /* data-buttons="pill" → pill */
+  --ds-media-radius:  var(--ds-radius-lg);
+
+  /* type scale */
+  --ds-text-xs:      calc(var(--ds-text-base) * var(--ds-scale-xs));
+  --ds-text-sm:      calc(var(--ds-text-base) * var(--ds-scale-sm));
+  --ds-text-md:      var(--ds-text-base);
+  --ds-text-lg:      calc(var(--ds-text-base) * var(--ds-scale-lg));
+  --ds-text-xl:      calc(var(--ds-text-base) * var(--ds-scale-xl));
+  --ds-text-2xl:     calc(var(--ds-text-base) * var(--ds-scale-2xl));
+  --ds-text-3xl:     calc(var(--ds-text-base) * var(--ds-scale-3xl));
+  --ds-text-display: calc(var(--ds-text-base) * var(--ds-scale-display));
+  /* the house hero formula — one fluid display size instead of a clamp() per recipe (batch-12):
+     never below 3xl, grows with the viewport, never past 1.4 × display */
+  --ds-text-display-fluid: clamp(var(--ds-text-3xl), calc(var(--ds-text-xl) + 3vw), calc(var(--ds-text-display) * 1.4));
+  /* title sizes by ROLE — components read these, never pick a step themselves (batch-12).
+     Values = the built house: page-header 2xl · section-header (in-page shelf title) lg ·
+     card md · chapter-header (marketing) 3xl. A theme may move a role one step. */
+  --ds-text-title-page:    var(--ds-text-2xl);
+  --ds-text-title-section: var(--ds-text-lg);
+  --ds-text-title-card:    var(--ds-text-md);
+  --ds-text-title-chapter: var(--ds-text-3xl);
+
+  /* space steps (unit × n) — unit-based, NOT density-scaled */
+  --ds-space-0-5: calc(var(--ds-space-unit) * .5);
+  --ds-space-1:  calc(var(--ds-space-unit) * 1);
+  --ds-space-1-5: calc(var(--ds-space-unit) * 1.5);   /* 6px half-step: kbd chips, 42px rows (batch-1 finding) */
+  --ds-space-2:  calc(var(--ds-space-unit) * 2);
+  --ds-space-2-5: calc(var(--ds-space-unit) * 2.5);   /* 10px: favicon rows, board wells (batch-2 finding) */
+  --ds-space-3:  calc(var(--ds-space-unit) * 3);
+  --ds-space-4:  calc(var(--ds-space-unit) * 4);
+  --ds-space-5:  calc(var(--ds-space-unit) * 5);
+  --ds-space-6:  calc(var(--ds-space-unit) * 6);
+  --ds-space-7:  calc(var(--ds-space-unit) * 7);      /* 28px: 72px card rows, board gutters (batch-2 finding) */
+  --ds-space-8:  calc(var(--ds-space-unit) * 8);
+  --ds-space-10: calc(var(--ds-space-unit) * 10);
+  --ds-space-12: calc(var(--ds-space-unit) * 12);
+  --ds-space-16: calc(var(--ds-space-unit) * 16);
+  --ds-space-20: calc(var(--ds-space-unit) * 20);
+  --ds-space-24: calc(var(--ds-space-unit) * 24);
+  --ds-section-gap: calc(var(--ds-space-unit) * var(--ds-section-gap-units));
+
+  /* density-scaled sizes — snapped to the 4px grid by the @supports block below */
+  --ds-control-h:    calc(var(--ds-control-h-base) * var(--ds-density-scale));
+  --ds-control-h-sm: calc((var(--ds-control-h-base) - 4px) * var(--ds-density-scale));
+  --ds-control-h-lg: calc((var(--ds-control-h-base) + 8px) * var(--ds-density-scale));
+  --ds-row-h:        calc(var(--ds-control-h) + 4px);
+  --ds-card-pad:     calc(16px * var(--ds-density-scale));
+  --ds-card-gap:     calc(16px * var(--ds-density-scale));
+  --ds-field-pitch:  calc(16px * var(--ds-density-scale));   /* control → next label */
+  --ds-control-pad-x: calc(12px * var(--ds-density-scale));
+
+  /* current-element size hooks (components/_base.css remaps them under data-size) */
+  --ds-size-h:      var(--ds-control-h);
+  --ds-size-text:   var(--ds-text-md);
+  --ds-size-pad-x:  var(--ds-control-pad-x);
+
+  /* motion */
+  --ds-dur-fast: calc(120ms * var(--ds-motion-scale));
+  --ds-dur-base: calc(180ms * var(--ds-motion-scale));
+  --ds-dur-slow: calc(280ms * var(--ds-motion-scale));
+}
+
+/* Band snapshots — the page's accent pair as seen from OUTSIDE an accent band (batch-12).
+   [data-band="accent"] redefines --ds-accent to the ink; a custom property cannot reference
+   the value it is replacing on the same element (inherit() is not shipped), so the band reads
+   these instead. Declared on every host EXCEPT the accent band, so the band inherits them from
+   its nearest host ancestor — the page root, a themed wrapper, a dark island.
+   --ds-band-ink-away is the ink's sRGB inverse: the direction a plane steps to GAIN contrast.
+   Plumbing — components never read --ds-band-*. */
+:is(:root, [data-theme], [data-mode], [data-density], [data-depth], [data-selection],
+    [data-buttons], [data-labels], [data-controls], [data-accent-scope], [data-hover],
+    [data-band]):not([data-band="accent"]) {
+  --ds-band-accent:   var(--ds-accent);
+  --ds-band-ink:      var(--ds-ink-on-accent);
+  --ds-band-ink-away: rgb(from var(--ds-ink-on-accent) calc(255 - r) calc(255 - g) calc(255 - b));
+}
+
+/* Snap density-scaled sizes to the 4px grid where round() exists
+   (Chromium 125+, Firefox 118+, Safari 15.4+). Fallback above is unsnapped. */
+@supports (width: round(1px, 1px)) {
+  :root,
+  [data-theme], [data-mode], [data-density], [data-depth], [data-selection],
+  [data-buttons], [data-labels], [data-controls], [data-accent-scope], [data-hover],
+  [data-band] {
+    --ds-control-h:    round(calc(var(--ds-control-h-base) * var(--ds-density-scale)), 4px);
+    --ds-control-h-sm: round(calc((var(--ds-control-h-base) - 4px) * var(--ds-density-scale)), 4px);
+    --ds-control-h-lg: round(calc((var(--ds-control-h-base) + 8px) * var(--ds-density-scale)), 4px);
+    --ds-card-pad:     round(calc(16px * var(--ds-density-scale)), 4px);
+    --ds-card-gap:     round(calc(16px * var(--ds-density-scale)), 4px);
+    --ds-field-pitch:  round(calc(16px * var(--ds-density-scale)), 4px);
+    --ds-control-pad-x: round(calc(12px * var(--ds-density-scale)), 2px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. DARK REMAP — §7.1–7.3 + primary + accent + semantic + data + shadows.
+   Neutral ramp inversion with P5's in-hue surface step (surfaces step UP from
+   ground). Explicit data-mode wins; the guarded media form applies only when no
+   data-mode is set on :root.
+   ------------------------------------------------------------------------- */
+:root[data-mode="dark"],
+:not(:root)[data-mode="dark"],
+:not(:root)[data-band="dark"] {      /* data-band="dark" IS the dark island (batch-12) — one source of truth, no alias copies */
+  color-scheme: dark;
+  --ds-ground:            #0f0f10;
+  --ds-ground-2:          #141416;
+  --ds-surface:           #18181a;
+  --ds-surface-2:         #1f1f22;
+  --ds-surface-3:         #26262a;
+  --ds-skeleton:          #2e2e33;
+  --ds-surface-raised:    #1f1f22;   /* popovers step up, not down, in dark      */
+  --ds-surface-hover:     #222226;
+  --ds-surface-pressed:   #26262a;
+  --ds-surface-selected:  #2a2a2e;
+  --ds-surface-inverse:   #fafafa;
+  --ds-surface-inverse-hover: #e6e6e8;
+  --ds-scrim:             rgba(0, 0, 0, .60);
+
+  --ds-ink:               #f4f4f5;
+  --ds-ink-2:             #c9c9cc;
+  --ds-ink-muted:         #9d9da3;   /* 6.6:1 on surface                         */
+  --ds-ink-faint:         #5e5e64;
+  --ds-ink-inverse:       #111111;
+  --ds-ink-on-primary:    #111111;
+  --ds-ink-on-accent:     #0b0b0c;
+
+  --ds-rule-soft:         #222226;
+  --ds-rule-faint:        #1c1c1f;
+  --ds-rule:              #2a2a2e;   /* 1.24:1 on surface                        */
+  --ds-rule-strong:       #38383d;
+  --ds-border:            #303035;
+  --ds-border-strong:     #45454b;
+
+  --ds-primary-fill:        #f4f4f5;
+  --ds-primary-fill-hover:  #e2e2e4;
+  --ds-accent:              #6b9cff;
+  --ds-accent-hover:        #86adff;
+  --ds-accent-ink:          #b9ccff;
+  --ds-accent-tint:         #273043;
+  --ds-accent-soft:         #3b5fb8;
+  --ds-accent-2:            #a48cf5;
+  --ds-accent-2-ink:        #c7b8fa;
+  --ds-accent-2-tint:       #342f46;
+
+  --ds-success: #34c57f;  --ds-success-tint: #1e3b2e;  --ds-success-ink: #5fd79b;
+  --ds-danger:  #f26a6a;  --ds-danger-tint:  #44282a;  --ds-danger-ink:  #f58d8d;
+  --ds-warning: #f2b04a;  --ds-warning-tint: #443624;  --ds-warning-ink: #f6c473;
+  --ds-info:    #4fb3f0;  --ds-info-tint:    #233745;  --ds-info-ink:    #7ec8f5;
+  --ds-ink-on-semantic: #0b0b0c;
+
+  --ds-data-1: #6b9cff;  --ds-data-1-tint: #293248;  --ds-data-1-ink: #9dbcff;
+  --ds-data-2: #a48cf5;  --ds-data-2-tint: #342f46;  --ds-data-2-ink: #c1b1f8;
+  --ds-data-3: #3ecf95;  --ds-data-3-tint: #203d33;  --ds-data-3-ink: #6fdcb2;
+  --ds-data-4: #f5915b;  --ds-data-4-tint: #443027;  --ds-data-4-ink: #f8ac84;
+  --ds-data-5: #f06fa4;  --ds-data-5-tint: #432936;  --ds-data-5-ink: #f596bd;
+  --ds-data-6: #e2c04e;  --ds-data-6-tint: #403a24;  --ds-data-6-ink: #ebd07e;
+  --ds-data-7: #3fc7d4;  --ds-data-7-tint: #203b3f;  --ds-data-7-ink: #7cdae3;
+  --ds-data-8: #c3a184;  --ds-data-8-tint: #3a332f;  --ds-data-8-ink: #d6bda8;
+  --ds-chart-ramp-1: #b9ccff; --ds-chart-ramp-2: #6b9cff; --ds-chart-ramp-3: #3b5fb8;
+
+  --ds-shadow-lift:   0 1px 2px rgba(0, 0, 0, .40);
+  --ds-shadow-card:   0 1px 3px rgba(0, 0, 0, .50);
+  --ds-shadow-float:  0 8px 24px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+  --ds-shadow-modal:  0 24px 80px rgba(0, 0, 0, .65), 0 0 0 1px rgba(255, 255, 255, .06);
+  --ds-shadow-object: 0 4px 12px rgba(0, 0, 0, .50);
+
+  --ds-overlay-fill:   rgba(0, 0, 0, .65);
+  --ds-glass-fill:     rgba(24, 24, 26, .55);
+  --ds-glass-border:   rgba(255, 255, 255, .14);
+  --ds-texture-color:  rgba(255, 255, 255, .06);
+  --ds-illustration-ground: #1c2129;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) {
+    color-scheme: dark;
+    --ds-ground: #0f0f10; --ds-ground-2: #141416; --ds-surface: #18181a; --ds-surface-2: #1f1f22;
+    --ds-surface-3: #26262a; --ds-skeleton: #2e2e33; --ds-surface-raised: #1f1f22; --ds-surface-hover: #222226;
+    --ds-surface-pressed: #26262a; --ds-surface-selected: #2a2a2e; --ds-surface-inverse: #fafafa; --ds-surface-inverse-hover: #e6e6e8; --ds-scrim: rgba(0, 0, 0, .60);
+    --ds-ink: #f4f4f5; --ds-ink-2: #c9c9cc; --ds-ink-muted: #9d9da3; --ds-ink-faint: #5e5e64;
+    --ds-ink-inverse: #111111; --ds-ink-on-primary: #111111; --ds-ink-on-accent: #0b0b0c;
+    --ds-rule-soft: #222226; --ds-rule-faint: #1c1c1f; --ds-rule: #2a2a2e; --ds-rule-strong: #38383d; --ds-border: #303035; --ds-border-strong: #45454b;
+    --ds-primary-fill: #f4f4f5; --ds-primary-fill-hover: #e2e2e4;
+    --ds-accent: #6b9cff; --ds-accent-hover: #86adff; --ds-accent-ink: #b9ccff; --ds-accent-tint: #273043; --ds-accent-soft: #3b5fb8;
+    --ds-accent-2: #a48cf5; --ds-accent-2-ink: #c7b8fa; --ds-accent-2-tint: #342f46;
+    --ds-success: #34c57f; --ds-success-tint: #1e3b2e; --ds-success-ink: #5fd79b;
+    --ds-danger: #f26a6a; --ds-danger-tint: #44282a; --ds-danger-ink: #f58d8d;
+    --ds-warning: #f2b04a; --ds-warning-tint: #443624; --ds-warning-ink: #f6c473;
+    --ds-info: #4fb3f0; --ds-info-tint: #233745; --ds-info-ink: #7ec8f5; --ds-ink-on-semantic: #0b0b0c;
+    --ds-data-1: #6b9cff; --ds-data-1-tint: #293248; --ds-data-1-ink: #9dbcff;
+    --ds-data-2: #a48cf5; --ds-data-2-tint: #342f46; --ds-data-2-ink: #c1b1f8;
+    --ds-data-3: #3ecf95; --ds-data-3-tint: #203d33; --ds-data-3-ink: #6fdcb2;
+    --ds-data-4: #f5915b; --ds-data-4-tint: #443027; --ds-data-4-ink: #f8ac84;
+    --ds-data-5: #f06fa4; --ds-data-5-tint: #432936; --ds-data-5-ink: #f596bd;
+    --ds-data-6: #e2c04e; --ds-data-6-tint: #403a24; --ds-data-6-ink: #ebd07e;
+    --ds-data-7: #3fc7d4; --ds-data-7-tint: #203b3f; --ds-data-7-ink: #7cdae3;
+    --ds-data-8: #c3a184; --ds-data-8-tint: #3a332f; --ds-data-8-ink: #d6bda8;
+    --ds-chart-ramp-1: #b9ccff; --ds-chart-ramp-2: #6b9cff; --ds-chart-ramp-3: #3b5fb8;
+    --ds-shadow-lift: 0 1px 2px rgba(0, 0, 0, .40); --ds-shadow-card: 0 1px 3px rgba(0, 0, 0, .50);
+    --ds-shadow-float: 0 8px 24px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .06);
+    --ds-shadow-modal: 0 24px 80px rgba(0, 0, 0, .65), 0 0 0 1px rgba(255, 255, 255, .06);
+    --ds-shadow-object: 0 4px 12px rgba(0, 0, 0, .50);
+    --ds-overlay-fill: rgba(0, 0, 0, .65); --ds-glass-fill: rgba(24, 24, 26, .55); --ds-glass-border: rgba(255, 255, 255, .14);
+    --ds-texture-color: rgba(255, 255, 255, .06); --ds-illustration-ground: #1c2129;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   5. POLICY ATTRIBUTES — root (or any ancestor) data-* switches.
+   Each sets the derived tokens components consume; components ALSO select on
+   the attribute where geometry changes (tabs underline vs pill, etc.).
+   Written at (0,2,0) so an explicit attribute beats a theme's CSS-only fallback.
+   ------------------------------------------------------------------------- */
+
+/* data-density — compact | default | comfortable  (D1 / D2 / D3) */
+:root[data-density="compact"],     :not(:root)[data-density="compact"]     { --ds-density-scale: .85; }
+:root[data-density="default"],     :not(:root)[data-density="default"]     { --ds-density-scale: 1; }
+:root[data-density="comfortable"], :not(:root)[data-density="comfortable"] { --ds-density-scale: 1.2; }
+
+/* data-depth — tint | hairline | shadow | tint-hairline | shadow-hairline  (§3.2.1; shadow-hairline = quicktunnels, batch-12) */
+:root[data-depth="tint"],            :not(:root)[data-depth="tint"]            { --ds-card-bg: var(--ds-surface); --ds-card-border: transparent;   --ds-card-shadow: 0 0 0 0 transparent; }
+:root[data-depth="hairline"],        :not(:root)[data-depth="hairline"]        { --ds-card-bg: var(--ds-ground);  --ds-card-border: var(--ds-rule); --ds-card-shadow: 0 0 0 0 transparent; }
+:root[data-depth="shadow"],          :not(:root)[data-depth="shadow"]          { --ds-card-bg: var(--ds-surface); --ds-card-border: transparent;   --ds-card-shadow: var(--ds-shadow-card); }
+:root[data-depth="tint-hairline"],   :not(:root)[data-depth="tint-hairline"]   { --ds-card-bg: var(--ds-surface); --ds-card-border: var(--ds-rule); --ds-card-shadow: 0 0 0 0 transparent; }
+:root[data-depth="shadow-hairline"], :not(:root)[data-depth="shadow-hairline"] { --ds-card-bg: var(--ds-surface); --ds-card-border: var(--ds-rule); --ds-card-shadow: var(--ds-shadow-card); }
+
+/* data-selection — tint | accent | accent-fill | underline | bar | invert  (§2.2.6; accent-fill = a brand theme's solid chip, batch-12) */
+:root[data-selection="tint"],        :not(:root)[data-selection="tint"]        { --ds-selected-bg: var(--ds-surface-selected); --ds-selected-ink: var(--ds-ink);           --ds-selected-line: transparent;           --ds-selected-weight: var(--ds-weight-medium); }
+:root[data-selection="accent"],      :not(:root)[data-selection="accent"]      { --ds-selected-bg: var(--ds-accent-tint);      --ds-selected-ink: var(--ds-accent-ink);    --ds-selected-line: transparent;           --ds-selected-weight: var(--ds-weight-medium); }
+:root[data-selection="accent-fill"], :not(:root)[data-selection="accent-fill"] { --ds-selected-bg: var(--ds-accent);           --ds-selected-ink: var(--ds-ink-on-accent); --ds-selected-line: transparent;           --ds-selected-weight: var(--ds-weight-medium); }
+:root[data-selection="underline"],   :not(:root)[data-selection="underline"]   { --ds-selected-bg: transparent;                --ds-selected-ink: var(--ds-ink);           --ds-selected-line: var(--ds-accent-line); --ds-selected-weight: var(--ds-weight-medium); }
+:root[data-selection="bar"],         :not(:root)[data-selection="bar"]         { --ds-selected-bg: transparent;                --ds-selected-ink: var(--ds-ink);           --ds-selected-line: var(--ds-accent-line); --ds-selected-weight: var(--ds-weight-medium); }
+:root[data-selection="invert"],      :not(:root)[data-selection="invert"]      { --ds-selected-bg: var(--ds-surface-inverse);  --ds-selected-ink: var(--ds-ink-inverse);   --ds-selected-line: transparent;           --ds-selected-weight: var(--ds-weight-medium); }
+
+/* data-buttons — sm | pill  (§7.8 radius-button) */
+:root[data-buttons="sm"],   :not(:root)[data-buttons="sm"]   { --ds-radius-button: var(--ds-radius-sm); }
+:root[data-buttons="pill"], :not(:root)[data-buttons="pill"] { --ds-radius-button: var(--ds-radius-pill); }
+
+/* data-labels — sentence | upper  (§7.9 label-case; upper implies tracking — the THEME's own value
+   via --ds-label-tracking-upper, .08em in base; batch-12: the attribute no longer pins .08em over paper's .1em) */
+:root[data-labels="sentence"], :not(:root)[data-labels="sentence"] { --ds-label-case: none;      --ds-label-tracking: 0; }
+:root[data-labels="upper"],    :not(:root)[data-labels="upper"]    { --ds-label-case: uppercase; --ds-label-tracking: var(--ds-label-tracking-upper); }
+
+/* data-controls — sentence | title  (§7.9 control-case) */
+:root[data-controls="sentence"], :not(:root)[data-controls="sentence"] { --ds-control-case: none; }
+:root[data-controls="title"],    :not(:root)[data-controls="title"]    { --ds-control-case: capitalize; }
+
+/* data-accent-scope — state | action | all | none  (§7.4 policy).
+   Only "none" changes CSS: links, rings and selection lines fall back to ink.
+   state/action/all are enforced by review + the "one filled button" rule. With
+   no attribute this file BEHAVES as "state": the primary above is ink-black and
+   the accent is information only (links, rings, dots). A theme whose filled
+   button is the hue declares "action" (workbench) or "all" (seeded,
+   quicktunnels) in its header and sets --ds-primary-fill to the accent. */
+:root[data-accent-scope="none"], :not(:root)[data-accent-scope="none"] {
+  --ds-ink-link: var(--ds-ink); --ds-ring: var(--ds-ink); --ds-accent-line: var(--ds-ink);
+  --ds-border-selected: var(--ds-ink); --ds-selection-graph: var(--ds-ink);
+}
+
+/* data-hover — tint | lift  (§7.11 hover-mode) */
+:root[data-hover="tint"], :not(:root)[data-hover="tint"] { --ds-hover-bg: var(--ds-surface-hover); --ds-hover-shadow: 0 0 0 0 transparent; }
+:root[data-hover="lift"], :not(:root)[data-hover="lift"] { --ds-hover-bg: var(--ds-surface);       --ds-hover-shadow: var(--ds-shadow-lift); }
+
+/* data-ambient — off  (§7.11 ambient motion: marquee, blobs, parallax). One value: the page (or a
+   region) parks its ambient animations. Reduced motion (§6) parks them too. The deprecated
+   --ds-ambient-motion follows for anything that still reads it. (batch-12) */
+:root[data-ambient="off"], :not(:root)[data-ambient="off"] { --ds-ambient-play: paused; --ds-ambient-motion: 0; }
+
+/* ---- data-band — tint | dark | accent  (§7.1 islands; batch-12) --------------------------
+   Section-level islands, defined here for EVERY theme; a theme may hand-tune its own at the
+   same (0,2,0) — it loads later and wins (quicktunnels' accent band). Written as
+   [data-band="v"][data-band] rather than :root[…], :not(:root)[…] on purpose: same (0,2,0),
+   but a band never sits on the root (the root is where the accent band's snapshot is read
+   from), so the :root form would be a lie. A band is a re-derive host (§3), so only planes and
+   accent roles are set here; card-*, selected-*, hover-*, link / ring / lines follow. A theme's
+   CSS-only fallbacks reach inside a band through the theme's own host rule (see any theme file,
+   "restated for every host ISLAND").
+   Put data-band on a <section> of its own — never on the root, never beside data-theme /
+   data-mode on one element (a theme's island selector at the same specificity would win).
+   data-band="dark" is NOT here: it is a selector on the dark remap (§4) and on every theme's
+   dark block — one source of truth. */
+
+/* tint — one plane step: the section sits on surface-2, its second plane on surface-3; cards
+   (surface) and everything else keep the page's values. Available under any theme. */
+[data-band="tint"][data-band] {
+  --ds-ground:   var(--ds-surface-2);
+  --ds-ground-2: var(--ds-surface-3);
+  --ds-rule:     var(--ds-rule-strong);   /* one grade up: the structural hairline is 1.14:1 on surface-2 (R2 wants 1.15); card edges re-derive from it */
+}
+
+/* accent — the accent IS the ground. Generic recipe over the --ds-band-* snapshots (§3): holds
+   for any hue and either ink polarity (white ink on a blue, dark ink on an orange / terracotta /
+   white). Every plane steps AWAY from the ink (contrast can only rise — the theme's own
+   ink-on-accent : accent pair, ≈ 5:1 on most brands, is the whole budget), so cards read as a
+   deeper plane on a dark accent and a lighter one on a light accent; insets step further.
+   Ink tiers collapse toward the ink (96 / 94 / 60 %) for the same reason — on a band, hierarchy
+   is weight and size. Rules are the ink at 12 / 18 / 26 % over the accent. The ONE filled
+   control inverts (ink fill, accent text); every accent role becomes the ink; semantic tints
+   become a deeper accent step and semantic inks the ink, so a callout still reads; shadows
+   soften to the ink at low alpha. Overlays (surface-raised, scrim) stay the page's — R6. */
+[data-band="accent"][data-band] {
+  /* planes */
+  --ds-ground:                var(--ds-band-accent);
+  --ds-ground-2:              color-mix(in srgb, var(--ds-band-accent) 96%, var(--ds-band-ink-away));
+  --ds-surface:               color-mix(in srgb, var(--ds-band-accent) 90%, var(--ds-band-ink-away));
+  --ds-surface-2:             color-mix(in srgb, var(--ds-band-accent) 84%, var(--ds-band-ink-away));
+  --ds-surface-3:             color-mix(in srgb, var(--ds-band-accent) 76%, var(--ds-band-ink-away));
+  --ds-surface-hover:         color-mix(in srgb, var(--ds-band-accent) 86%, var(--ds-band-ink-away));
+  --ds-surface-pressed:       color-mix(in srgb, var(--ds-band-accent) 82%, var(--ds-band-ink-away));
+  --ds-surface-selected:      color-mix(in srgb, var(--ds-band-accent) 76%, var(--ds-band-ink-away));
+  --ds-skeleton:              color-mix(in srgb, var(--ds-band-accent) 86%, var(--ds-band-ink-away));
+  --ds-surface-inverse:       var(--ds-band-ink);
+  --ds-surface-inverse-hover: color-mix(in srgb, var(--ds-band-ink) 90%, var(--ds-band-accent));
+  /* ink */
+  --ds-ink:                   var(--ds-band-ink);
+  --ds-ink-2:                 color-mix(in srgb, var(--ds-band-ink) 96%, var(--ds-band-accent));
+  --ds-ink-muted:             color-mix(in srgb, var(--ds-band-ink) 94%, var(--ds-band-accent));
+  --ds-ink-faint:             color-mix(in srgb, var(--ds-band-ink) 60%, var(--ds-band-accent));
+  --ds-ink-inverse:           var(--ds-band-accent);
+  --ds-ink-on-primary:        var(--ds-band-accent);
+  --ds-ink-on-accent:         var(--ds-band-accent);
+  /* lines: the ink over the accent at 8 / 12 / 18 / 26 %; borders 22 / 34 % */
+  --ds-rule-faint:            color-mix(in srgb, var(--ds-band-ink)  8%, var(--ds-band-accent));
+  --ds-rule-soft:             color-mix(in srgb, var(--ds-band-ink) 12%, var(--ds-band-accent));
+  --ds-rule:                  color-mix(in srgb, var(--ds-band-ink) 18%, var(--ds-band-accent));
+  --ds-rule-strong:           color-mix(in srgb, var(--ds-band-ink) 26%, var(--ds-band-accent));
+  --ds-border:                color-mix(in srgb, var(--ds-band-ink) 22%, var(--ds-band-accent));
+  --ds-border-strong:         color-mix(in srgb, var(--ds-band-ink) 34%, var(--ds-band-accent));
+  /* action: the one filled control inverts; every accent role is the ink */
+  --ds-primary-fill:          var(--ds-band-ink);
+  --ds-primary-fill-hover:    color-mix(in srgb, var(--ds-band-ink) 88%, var(--ds-band-accent));
+  --ds-primary-border:        transparent;
+  --ds-primary-highlight:     transparent;
+  --ds-accent:                var(--ds-band-ink);
+  --ds-accent-hover:          color-mix(in srgb, var(--ds-band-ink) 88%, var(--ds-band-accent));
+  --ds-accent-ink:            var(--ds-band-ink);
+  --ds-accent-tint:           color-mix(in srgb, var(--ds-band-accent) 84%, var(--ds-band-ink-away));   /* chips: a deeper accent step, ink text */
+  --ds-accent-soft:           color-mix(in srgb, var(--ds-band-ink) 45%, var(--ds-band-accent));
+  --ds-ink-link:              var(--ds-band-ink);
+  --ds-ring:                  var(--ds-band-ink);
+  --ds-border-selected:       var(--ds-band-ink);
+  --ds-accent-line:           var(--ds-band-ink);
+  --ds-selection-graph:       var(--ds-band-ink);
+  /* semantic on the band: tint = a deeper accent step, ink = the ink, line = the ink at 35 % (fills keep their hue for dots / badges) */
+  --ds-success-tint:          var(--ds-accent-tint);  --ds-success-ink: var(--ds-band-ink);  --ds-success-line: color-mix(in srgb, var(--ds-band-ink) 35%, transparent);
+  --ds-danger-tint:           var(--ds-accent-tint);  --ds-danger-ink:  var(--ds-band-ink);  --ds-danger-line:  color-mix(in srgb, var(--ds-band-ink) 35%, transparent);
+  --ds-warning-tint:          var(--ds-accent-tint);  --ds-warning-ink: var(--ds-band-ink);  --ds-warning-line: color-mix(in srgb, var(--ds-band-ink) 35%, transparent);
+  --ds-info-tint:             var(--ds-accent-tint);  --ds-info-ink:    var(--ds-band-ink);  --ds-info-line:    color-mix(in srgb, var(--ds-band-ink) 35%, transparent);
+  /* depth + imagery: the ink at low alpha */
+  --ds-shadow-lift:           0 1px 2px  color-mix(in srgb, var(--ds-band-ink) 10%, transparent);
+  --ds-shadow-card:           0 1px 3px  color-mix(in srgb, var(--ds-band-ink) 12%, transparent);
+  --ds-shadow-float:          0 8px 24px color-mix(in srgb, var(--ds-band-ink) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--ds-band-ink) 12%, transparent);
+  --ds-shadow-modal:          0 24px 80px color-mix(in srgb, var(--ds-band-ink) 35%, transparent), 0 0 0 1px color-mix(in srgb, var(--ds-band-ink) 12%, transparent);
+  --ds-shadow-object:         0 4px 12px color-mix(in srgb, var(--ds-band-ink) 25%, transparent);
+  --ds-illustration-ground:   var(--ds-accent-tint);
+  --ds-texture-color:         color-mix(in srgb, var(--ds-band-ink) 10%, transparent);
+  --ds-glass-fill:            color-mix(in srgb, var(--ds-band-ink) 10%, transparent);
+  --ds-glass-border:          color-mix(in srgb, var(--ds-band-ink) 20%, transparent);
+}
+
+/* data-texture / data-ornament / data-illustration / data-emoji / data-avatar
+   are DESCRIPTIVE — no tokens change; patterns select on them
+   (e.g. [data-texture="dot"] .ds-hero::before). See CONTRACT.md §3. */
+
+/* ---------------------------------------------------------------------------
+   6. REDUCED MOTION — durations collapse to 0 through --ds-motion-scale.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root,
+  [data-theme], [data-mode], [data-density], [data-depth], [data-selection],
+  [data-buttons], [data-labels], [data-controls], [data-accent-scope], [data-hover],
+  [data-band] {
+    --ds-motion-scale: 0;
+    --ds-ambient-play: paused;
+    --ds-ambient-motion: 0;   /* deprecated alias — see §2 */
+  }
+}

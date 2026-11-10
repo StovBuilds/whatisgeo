@@ -3,18 +3,24 @@ import '@fontsource-variable/manrope';
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { site } from '../data/content';
+// Preload the two latin font files every page paints with, so the swap from the fallback face cannot reflow the
+// first screen (the home hero centres its content, so a late swap moved all of it).
+import manropeLatin from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 interface Props { title: string; description: string; noindex?: boolean; markdown?: string; /** Fleet suggestions card above the footer; off on form pages. */ suggest?: boolean; }
 const { title, description, noindex = false, markdown = '/guide.md', suggest = true } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url);
 ---
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-theme="whatisgeo" data-mode="light" data-depth="flat" data-selection="tint" data-buttons="pill" data-labels="sentence" data-controls="sentence" data-accent-scope="action" data-hover="tint" data-density="default" data-texture="none" data-ornament="none" data-illustration="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="preload" href={manropeLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="text/markdown" href={markdown} title="Text version" />
     <meta property="og:type" content="website" />
@@ -33,7 +39,7 @@ const canonical = new URL(Astro.url.pathname, site.url);
     <meta name="theme-color" content="#ffffff" />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <script is:inline>
-      try { document.documentElement.dataset.theme = localStorage.getItem('wig-theme') === 'dark' ? 'dark' : 'light'; } catch { }
+      try { document.documentElement.dataset.mode = localStorage.getItem('wig-theme') === 'dark' ? 'dark' : 'light'; } catch { }
     </script>
   </head>
   <body>

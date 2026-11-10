@@ -1,0 +1,153 @@
+/* ============================================================================
+   components/text-link/text-link.css — Text link / inline link (core · S1)
+   Root `.ds-text-link` is the <a> itself. Two idioms, one each (the rule the
+   taxonomy sets): data-kind="inline" (default — in running text: --ds-ink-link
+   + soft underline) and data-kind="route" (a navigational "See more →": ink,
+   no underline, trailing arrow); plus data-kind="danger" (the destructive text
+   action: danger-ink, inline underline rules). Designer idioms stay as data-variant.
+   Tokens only (tools/lint-tokens.mjs). Private knobs: --_gap --_glyph.
+   ========================================================================== */
+
+.ds-text-link {
+  --_gap:   var(--ds-space-1);
+  --_glyph: 1em;                                   /* arrow / chevron scale with the text */
+  display: inline;                                 /* wraps like text                         */
+  color: var(--ds-ink-link);
+  font: inherit;
+  font-weight: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: var(--ds-border-width);
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: .18em;
+  border-radius: var(--ds-radius-xs);              /* the ring follows this               */
+  cursor: pointer;
+  transition: color var(--ds-dur-fast) var(--ds-ease-standard),
+              text-decoration-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+/* parts: an inline glyph after (→ › ↗) or before (G2 ›) the text */
+.ds-text-link__glyph {
+  display: inline-block;
+  width: var(--_glyph);
+  height: var(--_glyph);
+  vertical-align: -.12em;
+  margin-inline-start: var(--_gap);
+  transition: transform var(--ds-dur-fast) var(--ds-ease-out);
+}
+.ds-text-link__glyph[data-slot="leading"] { margin-inline-start: 0; margin-inline-end: var(--_gap); }
+.ds-text-link__glyph svg {
+  width: 100%; height: 100%;
+  fill: none; stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.ds-text-link__label { }
+
+/* ---- states ------------------------------------------------------------------ */
+.ds-text-link:hover,
+.ds-text-link[data-state="hover"] { text-decoration-color: currentColor; }
+.ds-text-link:hover .ds-text-link__glyph:not([data-slot="leading"]) { transform: translateX(var(--ds-space-0-5)); }
+.ds-text-link:focus-visible,
+.ds-text-link[data-state="focus"] {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+  text-decoration-color: currentColor;
+}
+.ds-text-link:active { color: var(--ds-accent-hover); }
+.ds-text-link[aria-current="page"],
+.ds-text-link[aria-current="true"] { color: var(--ds-ink); font-weight: var(--ds-weight-medium); text-decoration: none; }
+/* disabled link: no href, faint, no pointer — rare; prefer removing the link */
+.ds-text-link[aria-disabled="true"] { color: var(--ds-ink-faint); text-decoration-color: currentColor; pointer-events: none; cursor: default; }
+/* external: the ↗ glyph is content; nothing else changes */
+.ds-text-link[data-external] .ds-text-link__glyph { vertical-align: -.05em; }
+
+/* ---- kinds (the house rule: ONE inline idiom, ONE route idiom) -------------- */
+/* route: ink, no underline, weight 500, trailing → ; a section "See more" or a nav item */
+.ds-text-link[data-kind="route"] {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-ink);
+  font-weight: var(--ds-weight-medium);
+  text-decoration: none;
+}
+.ds-text-link[data-kind="route"]:hover,
+.ds-text-link[data-kind="route"][data-state="hover"] { color: var(--ds-ink); text-decoration: underline; text-decoration-color: currentColor; }
+.ds-text-link[data-kind="route"]:active { color: var(--ds-ink-2); }
+
+/* danger: the destructive text action ("Delete account", "Remove") — --ds-danger-ink at rest, --ds-danger on
+   hover, otherwise the inline rules (40 % underline → solid). Text only, never a red fill (R3); a danger
+   action that needs a button footprint is button-secondary[data-variant="danger-text"]. (2026-09-20) */
+.ds-text-link[data-kind="danger"] { color: var(--ds-danger-ink); }
+.ds-text-link[data-kind="danger"]:hover,
+.ds-text-link[data-kind="danger"][data-state="hover"] { color: var(--ds-danger); text-decoration-color: currentColor; }
+.ds-text-link[data-kind="danger"]:active { color: var(--ds-danger); }
+
+/* ============================================================================
+   VARIANTS — each designer's idiom by name. Unmarked root = jstov: inline =
+   --ds-ink-link + 40 % underline (the _base.css <a> convention), route =
+   data-kind="route".
+   ========================================================================== */
+
+/* no-underline-coloured — accent, no underline at rest, underline on hover
+   [descript-editing-profile-00-03] [grammarly-web-158-acordian] */
+.ds-text-link[data-variant="no-underline-coloured"] { text-decoration: none; }
+.ds-text-link[data-variant="no-underline-coloured"]:hover { text-decoration: underline; text-decoration-color: currentColor; }
+
+/* underlined-ink — same colour as body, 1px underline, offset ~3px; affordance by underline
+   alone [jasper-web-19] [oku-web-88] [intercom-3-830x8816] [braintrust-web-13] "View all jobs" */
+.ds-text-link[data-variant="underlined-ink"] {
+  color: var(--ds-ink);
+  text-decoration-color: currentColor;
+  text-underline-offset: .2em;
+}
+.ds-text-link[data-variant="underlined-ink"]:hover { color: var(--ds-ink-2); text-decoration-thickness: 2px; }
+
+/* hue-plus-trailing-chevron — accent text + 8px gap + thin › in the same hue, no underline
+   [sequence-section] "Take product tour ›", "G2 ›" (chevron before the stars) */
+.ds-text-link[data-variant="hue-plus-trailing-chevron"] {
+  --_gap: var(--ds-space-2);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+.ds-text-link[data-variant="hue-plus-trailing-chevron"]:hover { color: var(--ds-accent-hover); }
+
+/* arrow-suffix-route-link — "See more →": body ink, no underline, arrow suffix
+   [oku-web-88] [braintrust-web-13] "Help Center ↗" */
+.ds-text-link[data-variant="arrow-suffix-route-link"] {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ds-ink);
+  text-decoration: none;
+}
+.ds-text-link[data-variant="arrow-suffix-route-link"]:hover { text-decoration: underline; text-decoration-color: currentColor; }
+
+/* muted-underlined-in-system-text — inside a muted system line the link stays muted and
+   is underlined; the reader knows it is a link without a colour jump [manychat-web-184] */
+.ds-text-link[data-variant="muted-underlined-in-system-text"] {
+  color: var(--ds-ink-muted);
+  text-decoration-color: currentColor;
+}
+.ds-text-link[data-variant="muted-underlined-in-system-text"]:hover { color: var(--ds-ink); }
+
+/* quiet-ink-cta — plain secondary ink, no underline, no glyph: scanners miss it (weakness
+   kept as evidence) [confluence-web-23]. Hover restores an underline. */
+.ds-text-link[data-variant="quiet-ink-cta"] {
+  color: var(--ds-ink-2);
+  text-decoration: none;
+}
+.ds-text-link[data-variant="quiet-ink-cta"]:hover { text-decoration: underline; text-decoration-color: currentColor; }
+
+/* mono-caps-underlined — the label lane as a link: mono, uppercase, +0.12em, underlined
+   [origin-connecting-an-account-05-06] "Direction", [heron-ai-830x5619] "BEARPLUS" */
+.ds-text-link[data-variant="mono-caps-underlined"] {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ds-ink);
+  text-decoration-color: currentColor;
+  text-underline-offset: .25em;
+}
+.ds-text-link[data-variant="mono-caps-underlined"]:hover { color: var(--ds-ink-2); }
+/* a text link on a <button> (a reset / "clear" action): drop the UA button chrome so it matches the anchor (fix 2026-09-30) */
+button.ds-text-link { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; }
