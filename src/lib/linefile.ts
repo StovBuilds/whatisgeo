@@ -100,7 +100,9 @@ function row(n: number | string, body: string, kind: string, marker = '', extra 
   const id = typeof n === 'number' ? ` id="L${n}"` : '';
   return `<${tag} class="lf-l"${id} data-kind="${kind}"${extra}>${num(n)}${mark(marker)}<${inner} class="lf-t"${innerAttrs}>${body}</${inner}></${tag}>`;
 }
-const plain = (h: string) => h.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+/** Text of an HTML fragment, for labels (always passed through esc() as well). Any stray < or > left after removing
+ * tags is dropped, so the result can never contain markup. */
+const plain = (h: string) => h.replace(/<[^>]*>/g, '').replace(/[<>]/g, '').replace(/\s+/g, ' ').trim();
 
 function table(rows: string[], label: string | undefined, opts: RenderOpts) {
   const cells = (r: string) => r.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
