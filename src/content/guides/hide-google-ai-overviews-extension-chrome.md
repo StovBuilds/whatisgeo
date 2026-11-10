@@ -18,7 +18,7 @@ sources:
     url: "https://chromewebstore.google.com/detail/foobohnghnhkmgpglaefdnbcjkenjpgi"
   - label: "Chrome Web Store listing: Hide Google AI Overview (checked 19 October 2026)"
     url: "https://chromewebstore.google.com/detail/ckalpgoholmlfjncjahmnkmmihodgajc"
-  - label: "Firefox Add-ons listing: Hide Google AI Overviews (checked 19 October 2026)"
+  - label: "Firefox Add-ons listing: Hide Google AI Overviews (checked 10 November 2026)"
     url: "https://addons.mozilla.org/en-US/firefox/addon/hide-google-ai-overviews/"
   - label: "Google Chrome Help: Set default search engine and site search shortcuts"
     url: "https://support.google.com/chrome/answer/95426?hl=en"
@@ -32,11 +32,11 @@ faq:
   - q: "Is it safe to install a Google AI Overview hider extension?"
     a: "We cannot vouch for any extension. Before you install, check the listing's developer details, its update date and its Privacy section, and once it is installed, limit its site access in Chrome's extension Details to the Google site you use."
   - q: "Why did my AI Overview extension stop working?"
-    a: "Most likely Google changed its results page and the extension no longer finds the AI Overview. Check the listing for a recent update. The Firefox Hide Google AI Overviews listing, for example, said it stopped working in late March and was waiting for an update to be reviewed."
+    a: "Most likely Google changed its results page and the extension no longer finds the AI Overview. Check the listing for a recent update. The Firefox Hide Google AI Overviews listing, for example, said on 19 October 2026 that it had stopped working in late March and was waiting for an update to be reviewed; by 10 November 2026 that notice was gone and the listing showed a newer version."
   - q: "Can I hide AI Overviews in Chrome without an extension?"
     a: "Yes. Choose the Web filter after each search, or add a custom search engine in Chrome's settings that opens the Web view and make it your default. That shortcut relies on an address parameter Google does not document, so it may stop working."
 published: 2026-10-19
-updated: 2026-10-19
+updated: 2026-11-10
 status: "published"
 ---
 Every one of these extensions works the same way. It edits the Google results page inside your browser after the page arrives, so the AI Overview is still produced and simply not shown to you. Before you install one, ask three questions: what can it access, what does its developer declare about your data, and is anyone keeping it up to date?
@@ -63,7 +63,7 @@ Searching the Chrome Web Store for "Google AI Overview Hider" on 19 October 2026
 | Google AI Overview Hider | Hides AI Overviews and "AI Mode" labels with an on/off toggle, "bringing the top organic search results back to the top of the page" | 23 April 2026 | Developer says it will not collect or use your data, and links a privacy policy |
 | Hide Google AI Overview (ternera) | Hides the AI Overview from Google results; says it is open source and links its code | 30 December 2025 | Developer says it will not collect or use your data |
 
-Firefox has its own equivalents. The "Hide Google AI Overviews" add-on on Mozilla's add-ons site says it removes "AI-generated overviews from Google search results". Its listing is also the clearest example of what can go wrong, covered below.
+Firefox has its own equivalents. The "Hide Google AI Overviews" add-on on Mozilla's add-ons site describes itself as "Hide annoying Google AI Overviews", and says it hides the AI Overviews at the top of search results, the "People also ask" box, the AI-generated sections of "Things to know" and the AI Mode tab. Its listing is also the clearest example of what can go wrong, covered below.
 
 We leave out user counts and star ratings. They change daily, several of these listings have only a handful of ratings, and neither tells you whether an extension is safe. Check the listing yourself on the day you install.
 
@@ -75,13 +75,13 @@ Chrome and the Web Store give you three things to check, and each takes a minute
 2. **The Privacy section.** Chrome's developer documentation says developers "must disclose how your extension collects and uses user data" in the Web Store's privacy fields, and certify that they comply with its limited use policy. That disclosure is what appears under "Privacy" on the listing. It is the developer's own declaration, so read it as their statement of what the extension does with your data.
 3. **What it asks for, and what you allow afterwards.** Chrome Web Store Help says some extensions tell you at install time if they "need certain permissions or data", and advises: "Make sure you only approve extensions that you trust." After installing, open More, then Extensions, then Manage extensions, and select Details on the extension. Next to "Allow this extension to read and change all your data on websites you visit", you can set its site access to On select, On specific sites or On all sites. Our reading: a hider only needs Google's search pages, so limiting it to the Google site you use is a sensible default.
 
-Firefox shows required permissions on the listing page itself. The Hide Google AI Overviews listing, for example, asks for access to Google's search pages across Google's country domains.
+Firefox shows required permissions on the listing page itself. The Hide Google AI Overviews listing, for example, asks for access to Google's search pages across Google's country domains, and its description says it "runs only on Google search pages, collects no data, and makes no network requests".
 
 ## What can go wrong
 
 Hiding depends on how Google builds its results page. When Google changes the page, the extension can stop finding the AI Overview until its developer ships a fix, and nothing warns you. You just see the AI Overview again.
 
-The Firefox Hide Google AI Overviews listing shows this happening. When we checked it on 19 October 2026, it carried an "April Update" saying the developers were "aware the extension no longer functions as of late March", had updated the add-on and were awaiting review from Mozilla.
+The Firefox Hide Google AI Overviews listing shows this happening. When we checked it on 19 October 2026, it carried an "April Update" saying the developers were "aware the extension no longer functions as of late March", had updated the add-on and were awaiting review from Mozilla. When we checked again on 10 November 2026, that notice was no longer in the description. The listing showed version 1.7.2, whose release note says it "Fixes search results appearing squeezed into a narrow column on Google's new layout (follow-up to 1.7.1)".
 
 Two more risks, both our reading:
 
