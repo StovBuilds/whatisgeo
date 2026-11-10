@@ -190,9 +190,9 @@ function init() {
   prose.addEventListener('focusout', () => focusLine(null));
   prose.addEventListener('click', e => { if ((e.target as Element).closest('.ds-citation-sources-cite')) e.preventDefault(); });
 
-  function setSource(v: string) {
-    const r = $<HTMLInputElement>(`input[name="x-src"][value="${v}"]`, stage); if (r) r.checked = true;
-    const off = v === 'without';
+  function setSource(value: string) {
+    const off = value === 'without', v = off ? 'without' : 'with'; /* only ever one of the two known values */
+    const r = $<HTMLInputElement>(off ? 'input[name="x-src"][value="without"]' : 'input[name="x-src"][value="with"]', stage); if (r) r.checked = true;
     stage.dataset.src = v;
     answer.hidden = off; without.hidden = !off;
     if (off) { run++; clearTimers(); stage.setAttribute('data-ready', ''); stage.setAttribute('data-idle', ''); stage.removeAttribute('data-typing'); }
