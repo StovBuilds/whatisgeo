@@ -1,0 +1,1083 @@
+{
+ "$comment": "Real whatisgeo.app content only, pulled 2026-11-10 from the repo (src/) and the live site. Long text lives in assets/: guide.md (the live /guide.md, byte-identical, 219 lines), article-ai-mode-vs-ai-overviews.md (the guide article screen), mcp-server.md (the MCP page). Never lorem, never invented numbers. Counts below are computed from the files, not estimated.",
+ "site": {
+  "name": "What is GEO",
+  "domain": "whatisgeo.app",
+  "tagline_live": "A field guide to AI search",
+  "hero_h1": "Become a source AI can actually cite.",
+  "hero_lede_live": "GEO helps your business show up accurately when people ask AI tools questions instead of typing them into a search box. This site explains what that means, what actually helps, and what's still guesswork. No hype, no invented stats.",
+  "description": "A practical, source-linked guide to Generative Engine Optimisation (GEO) for business owners and marketers.",
+  "publisher": "Adapt Progress Evolve Limited",
+  "publisher_url": "https://aibyape.com",
+  "contact": "hello@whatisgeo.app",
+  "source": "https://github.com/StovBuilds/whatisgeo",
+  "guide_updated": "14 September 2026",
+  "guide_published": "14 September 2026",
+  "guide_words": 2959,
+  "guide_lines": 218,
+  "guide_read_minutes": 15,
+  "legal": "Operated by Adapt Progress Evolve Limited. Registered in England and Wales, company no. 10047328, registered office 5 Brayford Square, London E1 0SG. VAT GB362654684."
+ },
+ "nav_live": [
+  {
+   "label": "The guide",
+   "href": "/#guide"
+  },
+  {
+   "label": "All guides",
+   "href": "/guides/"
+  },
+  {
+   "label": "Get started",
+   "href": "/#getting-started"
+  }
+ ],
+ "nav_action_live": {
+  "label": "Stay in the loop",
+  "href": "/#updates"
+ },
+ "footer_links_live": [
+  [
+   "Guides",
+   "/guides/"
+  ],
+  [
+   "Privacy",
+   "/privacy/"
+  ],
+  [
+   "MCP server",
+   "/mcp-server/"
+  ],
+  [
+   "Contact",
+   "mailto:hello@whatisgeo.app"
+  ],
+  [
+   "llms.txt",
+   "/llms.txt"
+  ],
+  [
+   "Text version",
+   "/guide.md"
+  ],
+  [
+   "Source",
+   "https://github.com/StovBuilds/whatisgeo"
+  ]
+ ],
+ "machine_surfaces": [
+  "/guide.md (the whole guide as Markdown)",
+  "/llms.txt",
+  "/llms-full.txt",
+  "/<slug>.md for every guide",
+  "/mcp (read-only MCP server)"
+ ],
+ "guide_chapters": [
+  {
+   "n": 1,
+   "title": "What is GEO?",
+   "lines": [
+    8,
+    14
+   ],
+   "subheads": []
+  },
+  {
+   "n": 2,
+   "title": "GEO and SEO",
+   "lines": [
+    16,
+    29
+   ],
+   "subheads": []
+  },
+  {
+   "n": 3,
+   "title": "How AI answers happen",
+   "lines": [
+    31,
+    42
+   ],
+   "subheads": []
+  },
+  {
+   "n": 4,
+   "title": "The principles",
+   "lines": [
+    44,
+    68
+   ],
+   "subheads": [
+    {
+     "line": 46,
+     "title": "1. Answer real customer questions, directly"
+    },
+    {
+     "line": 50,
+     "title": "2. Make your content self-contained"
+    },
+    {
+     "line": 54,
+     "title": "3. Back claims with real data and explain your method"
+    },
+    {
+     "line": 58,
+     "title": "4. Show who's behind the words"
+    },
+    {
+     "line": 62,
+     "title": "5. Keep facts current and mark corrections"
+    },
+    {
+     "line": 66,
+     "title": "6. Fix the plumbing: structure, crawlability, honesty"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "title": "Let the right crawlers in",
+   "lines": [
+    70,
+    102
+   ],
+   "subheads": [
+    {
+     "line": 74,
+     "title": "Robots.txt is a request, not a lock"
+    },
+    {
+     "line": 80,
+     "title": "Search retrieval and model training are different permissions"
+    },
+    {
+     "line": 88,
+     "title": "llms.txt: useful, not magic"
+    },
+    {
+     "line": 92,
+     "title": "Practical checks worth doing this week"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "title": "A practical example",
+   "lines": [
+    104,
+    114
+   ],
+   "subheads": []
+  },
+  {
+   "n": 7,
+   "title": "Your first 30 days",
+   "lines": [
+    116,
+    150
+   ],
+   "subheads": [
+    {
+     "line": 120,
+     "title": "Week 1: audit what you already have"
+    },
+    {
+     "line": 128,
+     "title": "Week 2: fix the foundations"
+    },
+    {
+     "line": 136,
+     "title": "Week 3: rewrite for direct answers"
+    },
+    {
+     "line": 144,
+     "title": "Week 4: add substance and start watching"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "title": "How to measure progress",
+   "lines": [
+    152,
+    176
+   ],
+   "subheads": []
+  },
+  {
+   "n": 9,
+   "title": "Common questions",
+   "lines": [
+    178,
+    218
+   ],
+   "subheads": [
+    {
+     "line": 180,
+     "title": "What's the actual difference between GEO and SEO?"
+    },
+    {
+     "line": 184,
+     "title": "Is SEO dead now that AI answers exist?"
+    },
+    {
+     "line": 188,
+     "title": "Do I need to write special code for GEO?"
+    },
+    {
+     "line": 192,
+     "title": "What does GEO cost?"
+    },
+    {
+     "line": 196,
+     "title": "How long before I see results?"
+    },
+    {
+     "line": 200,
+     "title": "Do I need an llms.txt file?"
+    },
+    {
+     "line": 204,
+     "title": "Can you guarantee we'll be cited by ChatGPT or Google?"
+    },
+    {
+     "line": 208,
+     "title": "What's the difference between AI training and AI search?"
+    },
+    {
+     "line": 212,
+     "title": "Is any of this realistic for a small business with no dedicated marketing team?"
+    },
+    {
+     "line": 216,
+     "title": "How often should I update GEO-related content?"
+    }
+   ]
+  }
+ ],
+ "guide_sources": [
+  {
+   "n": 1,
+   "label": "Google Search Central: AI features and your website",
+   "url": "https://developers.google.com/search/docs/appearance/ai-features",
+   "cited_on_guide_line": 27
+  },
+  {
+   "n": 2,
+   "label": "Aggarwal et al.: GEO: Generative Engine Optimization (KDD 2024)",
+   "url": "https://arxiv.org/abs/2311.09735",
+   "cited_on_guide_line": 56
+  },
+  {
+   "n": 3,
+   "label": "OpenAI: overview of crawlers",
+   "url": "https://developers.openai.com/api/docs/bots",
+   "cited_on_guide_line": 82
+  },
+  {
+   "n": 4,
+   "label": "Perplexity: crawler documentation",
+   "url": "https://docs.perplexity.ai/docs/resources/perplexity-crawlers",
+   "cited_on_guide_line": 84
+  },
+  {
+   "n": 5,
+   "label": "The llms.txt proposal",
+   "url": "https://llmstxt.org/",
+   "cited_on_guide_line": 202
+  }
+ ],
+ "guide_sources_note": "Reviewed 14 September 2026. Practical recommendations are distinguished from platform requirements and research findings.",
+ "stage_questions": [
+  "What is GEO?",
+  "Is SEO dead?",
+  "Do I need llms.txt?",
+  "Training or search?",
+  "Can citation be guaranteed?",
+  "Which tool should I buy?"
+ ],
+ "signup": {
+  "title": "Get the next guide first",
+  "body": "New guides and course news, sent when there's something worth sending.",
+  "label": "Email address",
+  "button": "Join email updates",
+  "consent": "I'd like email updates about new GEO guides and future courses. I can unsubscribe anytime.",
+  "note": "Privacy · Email confirmation required."
+ },
+ "categories": [
+  {
+   "id": "basics",
+   "title": "The basics",
+   "blurb": "What the terms mean and where they came from.",
+   "count": 10
+  },
+  {
+   "id": "compare",
+   "title": "Comparisons",
+   "blurb": "GEO, AEO, SEO and the rest, side by side.",
+   "count": 6
+  },
+  {
+   "id": "platforms",
+   "title": "Platform by platform",
+   "blurb": "ChatGPT, Google AI Overviews, Perplexity and others.",
+   "count": 13
+  },
+  {
+   "id": "technical",
+   "title": "Technical",
+   "blurb": "llms.txt, structured data, crawlers and access.",
+   "count": 4
+  },
+  {
+   "id": "measure",
+   "title": "Measuring it",
+   "blurb": "Tracking mentions, citations and AI referral traffic.",
+   "count": 8
+  },
+  {
+   "id": "choosing",
+   "title": "Tools and help",
+   "blurb": "Choosing software, agencies and courses without getting burned.",
+   "count": 19
+  }
+ ],
+ "guides": [
+  {
+   "slug": "ads-in-ai-overviews",
+   "url": "/ads-in-ai-overviews/",
+   "title": "Are there ads in Google AI Overviews? What Google documents, and what it means for you",
+   "summary": "Yes. Google shows ads above and below AI Overviews, and inside them in some English-language markets, labelled as sponsored. Paying for ads is not a documented route to being cited in the AI answer.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1374,
+   "sources": 5
+  },
+  {
+   "slug": "aeo-vs-seo",
+   "url": "/aeo-vs-seo/",
+   "title": "AEO vs SEO: what is the difference?",
+   "summary": "SEO is the wider work of making a site findable in search. AEO is a label for shaping content so answer engines can quote it. Google says its AI features need no special optimisation beyond good SEO.",
+   "category": "compare",
+   "updated": "2026-10-18",
+   "words": 1575,
+   "sources": 7
+  },
+  {
+   "slug": "ai-crawlers-robots-txt",
+   "url": "/ai-crawlers-robots-txt/",
+   "title": "AI crawlers and robots.txt: which bots exist, and what to allow or block",
+   "summary": "robots.txt lets you set a separate rule for each AI crawler. Vendors run different bots for training, search and user-requested fetches, so blocking one rarely blocks the others, and obeying the file is voluntary.",
+   "category": "technical",
+   "updated": "2026-10-18",
+   "words": 1975,
+   "sources": 10
+  },
+  {
+   "slug": "ai-driven-seo-services",
+   "url": "/ai-driven-seo-services/",
+   "title": "AI-driven SEO services: what you are buying, what Google says, and how to vet one",
+   "summary": "\"AI-driven SEO services\" can mean SEO done with AI tools or SEO aimed at AI answers. Ask which you are buying, who checks the work and how results are measured. Nobody can guarantee rankings or AI citations.",
+   "category": "choosing",
+   "updated": "2026-10-26",
+   "words": 1505,
+   "sources": 5
+  },
+  {
+   "slug": "ai-mode-vs-ai-overviews",
+   "url": "/ai-mode-vs-ai-overviews/",
+   "title": "AI Mode vs AI Overviews: what is the difference, and does it change what you do?",
+   "summary": "AI Overviews are a summary Google adds to some ordinary results pages. AI Mode is a separate conversational search. Google's guidance for site owners is the same for both, though the answers and links can differ.",
+   "category": "compare",
+   "updated": "2026-10-18",
+   "words": 1402,
+   "sources": 7
+  },
+  {
+   "slug": "ai-search-optimization-tool-data-accuracy",
+   "url": "/ai-search-optimization-tool-data-accuracy/",
+   "title": "Which AI search optimisation tool has the most accurate data? How to test any of them",
+   "summary": "No independent test names one AI search optimisation tool as most accurate, so be wary of anyone who does. Judge any tool by how it samples answers, which surface it measures, and whether you can reproduce its numbers.",
+   "category": "choosing",
+   "updated": "2026-10-21",
+   "words": 1462,
+   "sources": 7
+  },
+  {
+   "slug": "ai-seo-course",
+   "url": "/ai-seo-course/",
+   "title": "AI SEO course: what a good one teaches, and how to choose one",
+   "summary": "A good AI SEO course teaches two skills: using AI for SEO work with human review, and getting content cited in AI answers. Check its claims against platform documentation; no course can guarantee inclusion.",
+   "category": "choosing",
+   "updated": "2026-10-23",
+   "words": 1485,
+   "sources": 13
+  },
+  {
+   "slug": "ai-seo-tools",
+   "url": "/ai-seo-tools/",
+   "title": "AI SEO tools: what they do, which kinds exist, and how to choose",
+   "summary": "'AI SEO tools' means two things: SEO software with AI features added, and tools that track how AI answers mention you. Choose by the job you need done, and check every AI output yourself.",
+   "category": "choosing",
+   "updated": "2026-10-18",
+   "words": 1488,
+   "sources": 8
+  },
+  {
+   "slug": "ai-seo-vs-traditional-seo",
+   "url": "/ai-seo-vs-traditional-seo/",
+   "title": "AI SEO vs traditional SEO: what is the difference, and which meaning do you need?",
+   "summary": "\"AI SEO\" means two things: using AI tools to do SEO work, or optimising to appear in AI answers. Traditional SEO is the foundation for both, and neither route can guarantee results.",
+   "category": "compare",
+   "updated": "2026-10-29",
+   "words": 1671,
+   "sources": 9
+  },
+  {
+   "slug": "ai-tool-for-seo-keyword-research",
+   "url": "/ai-tool-for-seo-keyword-research/",
+   "title": "AI tools for SEO keyword research: what they can do, what they cannot, and how to use them",
+   "summary": "AI tools are good at generating, grouping and sense-checking keyword ideas, but a chatbot has no search volume data of its own. Use AI for ideas and clustering, and check demand in Google's own tools.",
+   "category": "choosing",
+   "updated": "2026-10-30",
+   "words": 1742,
+   "sources": 6
+  },
+  {
+   "slug": "ai-visibility-audit",
+   "url": "/ai-visibility-audit/",
+   "title": "AI visibility audit: what to check, step by step, and how to run one yourself",
+   "summary": "A free AI visibility audit: check crawler access, put real buyer questions to AI tools, map which sources the answers cite, and fix the errors you find. No tool can guarantee you a place in an answer.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 2144,
+   "sources": 8
+  },
+  {
+   "slug": "ai-visibility-checker",
+   "url": "/ai-visibility-checker/",
+   "title": "AI visibility checker: what a free check tells you, and how to run your own",
+   "summary": "An AI visibility checker asks AI assistants questions or scans your site, then reports whether you are named or cited. Treat one run as a sample, not a score, and check by hand too.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 1412,
+   "sources": 3
+  },
+  {
+   "slug": "are-google-ai-overviews-accurate",
+   "url": "/are-google-ai-overviews-accurate/",
+   "title": "Are Google AI Overviews accurate? What the studies show, and what to do about errors",
+   "summary": "Often, but not reliably. Google says AI Overviews can and will make mistakes, and the main outside test found right answers about 91% of the time on hard factual questions, with weaker backing from cited sources.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1509,
+   "sources": 5
+  },
+  {
+   "slug": "chatgpt-search",
+   "url": "/chatgpt-search/",
+   "title": "ChatGPT search: what it is, how it works, and how a website appears in it",
+   "summary": "ChatGPT search is the web search feature inside ChatGPT. It pulls current web results into an answer and links the sources. Sites become eligible by allowing OAI-SearchBot, but placement is never guaranteed.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1407,
+   "sources": 5
+  },
+  {
+   "slug": "chatgpt-seo-tools",
+   "url": "/chatgpt-seo-tools/",
+   "title": "ChatGPT SEO tools: using ChatGPT for SEO, and tools that track ChatGPT visibility",
+   "summary": "\"ChatGPT SEO tools\" means two things: using ChatGPT as an assistant for SEO work, or tools that check whether ChatGPT names and cites your site. Each has different limits, and neither can guarantee inclusion.",
+   "category": "choosing",
+   "updated": "2026-10-20",
+   "words": 1526,
+   "sources": 5
+  },
+  {
+   "slug": "competitor-analysis-for-ai-search",
+   "url": "/competitor-analysis-for-ai-search/",
+   "title": "Competitor analysis for AI search: how to see who AI names instead of you, and which tools help",
+   "summary": "Ask real buyer questions across several assistants, record who is named, cited and how they are described, then compare with your own pages. Tools repeat this at scale; no 'best rated' tool can be verified.",
+   "category": "measure",
+   "updated": "2026-10-27",
+   "words": 1539,
+   "sources": 5
+  },
+  {
+   "slug": "do-google-ai-overviews-reduce-clicks",
+   "url": "/do-google-ai-overviews-reduce-clicks/",
+   "title": "Do Google AI Overviews reduce clicks to websites? What the evidence shows",
+   "summary": "On average, yes: every study we checked finds fewer clicks when an AI Overview appears, but estimates vary widely with method and query mix. Google disputes the framing, and no study predicts your site's traffic.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 1879,
+   "sources": 13
+  },
+  {
+   "slug": "does-reddit-help-ai-visibility",
+   "url": "/does-reddit-help-ai-visibility/",
+   "title": "Does Reddit help AI visibility? What is documented, what studies show, and what to do",
+   "summary": "Reddit threads do appear in AI answers, and Google and OpenAI both have Reddit data deals. Nobody can promise posting there gets you cited, and vendor citation figures describe their sample, not yours.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1780,
+   "sources": 12
+  },
+  {
+   "slug": "free-ai-tools-for-seo",
+   "url": "/free-ai-tools-for-seo/",
+   "title": "Free AI tools for SEO: what is genuinely free, what each one is for, and what to skip",
+   "summary": "The most useful free tools for AI-era SEO are the platforms' own: Google Search Console and Bing Webmaster Tools, plus a manual check of AI answers. A free AI assistant helps with drafting, but check its work.",
+   "category": "choosing",
+   "updated": "2026-10-26",
+   "words": 1522,
+   "sources": 14
+  },
+  {
+   "slug": "generative-engine-optimization-agency",
+   "url": "/generative-engine-optimization-agency/",
+   "title": "Generative engine optimisation agency: what to ask before you hire one",
+   "summary": "A GEO agency can do real work on content, crawler access, structured data and measurement, but none can guarantee inclusion in AI answers. Judge one by its method, its measurement and its honesty about limits.",
+   "category": "choosing",
+   "updated": "2026-10-18",
+   "words": 1631,
+   "sources": 8
+  },
+  {
+   "slug": "generative-engine-optimization-checklist",
+   "url": "/generative-engine-optimization-checklist/",
+   "title": "Generative engine optimisation checklist: what to do, in order, and what each item rests on",
+   "summary": "A GEO checklist covers crawler access, indexing, quotable content, identity and measurement. A few steps are platform requirements; the rest is research or sensible practice. None guarantees a citation.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1869,
+   "sources": 9
+  },
+  {
+   "slug": "generative-engine-optimization-statistics",
+   "url": "/generative-engine-optimization-statistics/",
+   "title": "Generative engine optimization statistics: which numbers are real, and which to ignore",
+   "summary": "Few GEO statistics trace back to a study you can check. Platform docs give rules and almost no numbers, a few named studies hold up within their limits, and most headline percentages are vendor or consultancy claims.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 1746,
+   "sources": 8
+  },
+  {
+   "slug": "generative-engine-optimization-strategy",
+   "url": "/generative-engine-optimization-strategy/",
+   "title": "Generative engine optimisation strategy: how to plan one, and what to decide first",
+   "summary": "A GEO strategy is a short set of decisions: which buyer questions matter, which AI platforms your buyers use, what to fix first and how to check progress. Nobody can guarantee inclusion, so plan to iterate.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1657,
+   "sources": 7
+  },
+  {
+   "slug": "generative-engine-optimization-tools",
+   "url": "/generative-engine-optimization-tools/",
+   "title": "Generative engine optimization tools: what they do and how to choose one",
+   "summary": "GEO tools track whether AI answers mention or cite you, audit your site for crawler access, or help with content. Pick by the job you need done, and treat any promise of guaranteed AI inclusion as a red flag.",
+   "category": "choosing",
+   "updated": "2026-10-18",
+   "words": 1738,
+   "sources": 10
+  },
+  {
+   "slug": "geo-vs-seo",
+   "url": "/geo-vs-seo/",
+   "title": "GEO vs SEO: what is actually different, and what is the same?",
+   "summary": "GEO and SEO share most of their foundations: Google and Bing both say SEO basics are what make pages eligible for their AI answers. What changes is the goal (being cited, not only ranked) and how you measure it.",
+   "category": "compare",
+   "updated": "2026-10-18",
+   "words": 1630,
+   "sources": 9
+  },
+  {
+   "slug": "google-ai-mode-seo",
+   "url": "/google-ai-mode-seo/",
+   "title": "Google AI Mode and SEO: what changes, and what to do about it",
+   "summary": "Google says the same SEO foundations apply to AI Mode, with no extra technical requirements. A page must be indexed and eligible to show a snippet to be linked, and nobody can guarantee a citation.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1788,
+   "sources": 6
+  },
+  {
+   "slug": "hide-google-ai-overviews-extension-chrome",
+   "url": "/hide-google-ai-overviews-extension-chrome/",
+   "title": "Is there a Chrome extension to hide Google AI Overviews? What they do and what to check first",
+   "summary": "Yes. Several Chrome extensions hide the AI Overview on your own screen, but none can switch it off, because Google says it cannot be turned off. Check site access, privacy declarations and update dates first.",
+   "category": "platforms",
+   "updated": "2026-10-19",
+   "words": 1382,
+   "sources": 9
+  },
+  {
+   "slug": "how-to-create-an-llms-txt-file",
+   "url": "/how-to-create-an-llms-txt-file/",
+   "title": "How do you create an llms.txt file? A step-by-step guide, and what it can and cannot do",
+   "summary": "Write a plain Markdown file called llms.txt with an H1 title, a short summary and lists of links, and publish it at your site root. It is a proposed convention, and no platform guarantees it affects AI answers.",
+   "category": "technical",
+   "updated": "2026-10-18",
+   "words": 2066,
+   "sources": 11
+  },
+  {
+   "slug": "how-to-improve-ai-visibility",
+   "url": "/how-to-improve-ai-visibility/",
+   "title": "How to improve your AI visibility: what you can influence and what you cannot",
+   "summary": "AI visibility is how often AI answers name, cite and correctly describe your business. You can improve your odds with crawler access, clear pages and consistent details. Nobody can guarantee inclusion.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1897,
+   "sources": 7
+  },
+  {
+   "slug": "how-to-measure-ai-visibility",
+   "url": "/how-to-measure-ai-visibility/",
+   "title": "How do you measure AI visibility? A method you can run and trust",
+   "summary": "Ask each assistant the same set of real buyer questions, repeat every run, and score whether you are named, cited and described correctly. Then cross-check with referral traffic, server logs and platform reports.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 2017,
+   "sources": 10
+  },
+  {
+   "slug": "how-to-rank-in-chatgpt",
+   "url": "/how-to-rank-in-chatgpt/",
+   "title": "How do you rank in ChatGPT? What is documented, what is research, and what is guesswork",
+   "summary": "ChatGPT has no ranking to climb. When it searches the web it picks and cites sources; you can improve your odds by letting OAI-SearchBot in and publishing clear, findable pages, but nobody can guarantee a mention.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1835,
+   "sources": 5
+  },
+  {
+   "slug": "how-to-rank-in-google-ai-overviews",
+   "url": "/how-to-rank-in-google-ai-overviews/",
+   "title": "How do you rank in Google AI Overviews?",
+   "summary": "Google says there is no special optimisation for AI Overviews. A page must be indexed and eligible for a snippet, and the usual helpful-content and technical SEO basics apply. Nobody can guarantee inclusion.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1735,
+   "sources": 5
+  },
+  {
+   "slug": "how-to-show-up-in-claude",
+   "url": "/how-to-show-up-in-claude/",
+   "title": "How do you show up in Claude? What is documented, what is research, and what is guesswork",
+   "summary": "Claude names businesses from its training data or, when it searches the web, from live pages it cites. Anthropic documents its crawlers and search, but nobody can guarantee a mention.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1570,
+   "sources": 7
+  },
+  {
+   "slug": "how-to-show-up-in-gemini",
+   "url": "/how-to-show-up-in-gemini/",
+   "title": "How do you show up in Gemini? What is documented, what is research, and what is guesswork",
+   "summary": "Nobody can guarantee a mention in Gemini. Google documents that AI Overviews and AI Mode draw on Search and that the Gemini app can ground answers in the Search index, so being indexable is the main lever.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1599,
+   "sources": 6
+  },
+  {
+   "slug": "how-to-track-ai-overviews",
+   "url": "/how-to-track-ai-overviews/",
+   "title": "How do you track AI Overviews? What Google reports, what tools estimate, and what you can check yourself",
+   "summary": "Google counts AI Overview clicks inside your normal Search Console web data, with no separate report. Tracking means combining that, your analytics and sampled checks, and none of them gives a complete count.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 1492,
+   "sources": 9
+  },
+  {
+   "slug": "how-to-turn-off-google-ai-overviews",
+   "url": "/how-to-turn-off-google-ai-overviews/",
+   "title": "How do you turn off Google AI Overviews? What Google allows, and what only hides them",
+   "summary": "Google says AI Overviews cannot be turned off. Its Web filter shows results without them, a browser shortcut can make that view your default, and extensions only hide them on your own screen.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1570,
+   "sources": 14
+  },
+  {
+   "slug": "how-to-write-content-for-ai-search",
+   "url": "/how-to-write-content-for-ai-search/",
+   "title": "How do you write content for AI search? What is documented, what is research, and what is folklore",
+   "summary": "Answer the question plainly near the top, make each section stand alone and source your facts. Google says its AI features need no special optimisation, and nobody can guarantee a citation.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1527,
+   "sources": 7
+  },
+  {
+   "slug": "is-ai-content-good-for-seo",
+   "url": "/is-ai-content-good-for-seo/",
+   "title": "Is AI content good for SEO? What Google says, and what actually matters",
+   "summary": "Google judges content on quality, whatever tool made it, and treats mass-produced pages that add no value as spam. AI content can work for SEO when it is fact-checked, original and useful.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1491,
+   "sources": 5
+  },
+  {
+   "slug": "jasper-ai-seo",
+   "url": "/jasper-ai-seo/",
+   "title": "Jasper AI SEO: what Jasper does for SEO, what it cannot do, and what Google says",
+   "summary": "Jasper is an AI marketing platform that drafts and optimises content and, on its Business plan, tracks AI visibility. Google judges content on quality, so no tool can guarantee rankings or citations.",
+   "category": "choosing",
+   "updated": "2026-10-31",
+   "words": 1667,
+   "sources": 10
+  },
+  {
+   "slug": "jasper-ai-surfer-seo",
+   "url": "/jasper-ai-surfer-seo/",
+   "title": "Jasper AI and Surfer SEO: how they differ, how they work together, and whether you need both",
+   "summary": "Jasper mainly generates on-brand marketing copy; Surfer SEO mainly scores a draft against the pages that already rank. When we checked on 30 October 2026, neither vendor documented a live integration between them.",
+   "category": "compare",
+   "updated": "2026-10-30",
+   "words": 1199,
+   "sources": 11
+  },
+  {
+   "slug": "llm-seo",
+   "url": "/llm-seo/",
+   "title": "LLM SEO: what it means and what to actually do",
+   "summary": "LLM SEO is another name for GEO: making your content findable, quotable and accurately described in AI answers. It builds on ordinary SEO, and nobody can guarantee inclusion.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1615,
+   "sources": 8
+  },
+  {
+   "slug": "llms-txt",
+   "url": "/llms-txt/",
+   "title": "What is llms.txt, and does it actually work?",
+   "summary": "llms.txt is a proposed Markdown file that points AI agents to your key pages. It is not a web standard and no major AI search platform documents using it to pick citations, so it is cheap to add but unproven.",
+   "category": "technical",
+   "updated": "2026-10-18",
+   "words": 1955,
+   "sources": 11
+  },
+  {
+   "slug": "perplexity-seo",
+   "url": "/perplexity-seo/",
+   "title": "Perplexity SEO: how to get cited in Perplexity, and what is actually documented",
+   "summary": "Perplexity searches the web and cites its sources with numbered links. The one step it documents is letting PerplexityBot crawl your site. The rest is research or practice, and nobody can guarantee a citation.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1660,
+   "sources": 5
+  },
+  {
+   "slug": "schema-markup-for-ai",
+   "url": "/schema-markup-for-ai/",
+   "title": "Does schema markup help with AI search? What is documented, what is tested, and what to do",
+   "summary": "Google says AI Overviews and AI Mode have no additional technical requirements, so schema is not required. It does help machines read a page, so add accurate markup for the facts you already show.",
+   "category": "technical",
+   "updated": "2026-10-18",
+   "words": 1538,
+   "sources": 9
+  },
+  {
+   "slug": "se-ranking-ai-visibility-tracker",
+   "url": "/se-ranking-ai-visibility-tracker/",
+   "title": "SE Ranking's AI visibility tracker: what it does, what its numbers mean, and how to check them",
+   "summary": "SE Ranking tracks AI answers in two places: the AI Results Tracker inside its SEO platform and SE Visible, a standalone dashboard. Both report on prompts you choose, so treat the figures as samples and check them.",
+   "category": "choosing",
+   "updated": "2026-10-22",
+   "words": 1590,
+   "sources": 7
+  },
+  {
+   "slug": "seo-ai-agents",
+   "url": "/seo-ai-agents/",
+   "title": "SEO AI agents: what they are, what they can do, and where a human still has to decide",
+   "summary": "An SEO AI agent is software that carries out multi-step SEO tasks, such as audits, keyword clustering or drafting, with little prompting. Judge one by what it is allowed to change and the checks you keep.",
+   "category": "choosing",
+   "updated": "2026-10-23",
+   "words": 1500,
+   "sources": 8
+  },
+  {
+   "slug": "seo-vs-geo-vs-aeo",
+   "url": "/seo-vs-geo-vs-aeo/",
+   "title": "SEO vs GEO vs AEO: what is the difference, and do you need all three?",
+   "summary": "SEO aims to rank in search results, AEO to be the direct answer, and GEO to be cited in AI-generated answers. They overlap heavily, no definition is official, and the same sound foundations serve all three.",
+   "category": "compare",
+   "updated": "2026-10-18",
+   "words": 1564,
+   "sources": 5
+  },
+  {
+   "slug": "surfer-seo-ai-content-detector",
+   "url": "/surfer-seo-ai-content-detector/",
+   "title": "Surfer SEO's AI content detector: what it does, how far to trust it, and what Google says",
+   "summary": "Surfer's AI content detector gives a probability score for how likely text is machine-written. Treat it as an estimate: Google's documented guidance judges content on quality and intent, however it was made.",
+   "category": "choosing",
+   "updated": "2026-10-19",
+   "words": 1472,
+   "sources": 8
+  },
+  {
+   "slug": "surfer-seo-ai",
+   "url": "/surfer-seo-ai/",
+   "title": "Surfer SEO AI: what its AI features do, what they cost, and what to check before you pay",
+   "summary": "Yes: Surfer is a paid content tool with AI writing and scoring, plus an AI Tracker for brand mentions in AI answers. Plans start at $49 a month billed yearly (checked 25 October 2026), with a 7-day trial.",
+   "category": "choosing",
+   "updated": "2026-10-26",
+   "words": 1961,
+   "sources": 12
+  },
+  {
+   "slug": "surfer-seo-free-ai-humanizer",
+   "url": "/surfer-seo-free-ai-humanizer/",
+   "title": "Surfer SEO's free AI humanizer: what it does, and does it help your SEO?",
+   "summary": "Surfer's AI humanizer is free up to a word limit and rewrites text so AI detectors score it as human. Google judges pages on helpfulness and its spam policies, so humanising alone will not make weak content rank.",
+   "category": "choosing",
+   "updated": "2026-10-21",
+   "words": 1219,
+   "sources": 6
+  },
+  {
+   "slug": "what-are-google-ai-overviews",
+   "url": "/what-are-google-ai-overviews/",
+   "title": "What are Google AI Overviews?",
+   "summary": "AI Overviews are AI-generated summaries that Google shows on some searches, with links to supporting web pages. Google says no special markup is needed to be included, and no one can guarantee it.",
+   "category": "platforms",
+   "updated": "2026-10-18",
+   "words": 1447,
+   "sources": 9
+  },
+  {
+   "slug": "what-is-ai-seo",
+   "url": "/what-is-ai-seo/",
+   "title": "What is AI SEO, and what is it called?",
+   "summary": "\"AI SEO\" means two things: optimising a site to be found and cited in AI answers, and using AI tools to do SEO work. The first is also called GEO, AEO or AI search optimisation, and no name is an official standard.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1347,
+   "sources": 7
+  },
+  {
+   "slug": "what-is-ai-visibility",
+   "url": "/what-is-ai-visibility/",
+   "title": "What is AI visibility?",
+   "summary": "AI visibility is how often, and how accurately, AI answer tools mention, cite or describe your business when people ask relevant questions. You can check it and improve it, but nobody can guarantee it.",
+   "category": "measure",
+   "updated": "2026-10-18",
+   "words": 1477,
+   "sources": 7
+  },
+  {
+   "slug": "what-is-answer-engine-optimization",
+   "url": "/what-is-answer-engine-optimization/",
+   "title": "What is answer engine optimization (AEO)?",
+   "summary": "Answer engine optimization (AEO) means making your pages easy for AI assistants to reach, understand and quote. It overlaps almost entirely with GEO and good SEO, and nobody can guarantee a place in an answer.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1584,
+   "sources": 8
+  },
+  {
+   "slug": "what-is-generative-engine-optimization",
+   "url": "/what-is-generative-engine-optimization/",
+   "title": "What is generative engine optimization (GEO)?",
+   "summary": "Generative engine optimisation (GEO) is making your content easy for AI answer systems to find, understand and cite. No one can guarantee inclusion; it is sensible practice plus some early research.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1581,
+   "sources": 8
+  },
+  {
+   "slug": "which-ai-optimization-software-improves-visibility",
+   "url": "/which-ai-optimization-software-improves-visibility/",
+   "title": "Which AI optimisation software improves visibility the most?",
+   "summary": "No independent evidence ranks any AI optimisation software by how much visibility it adds. Most tools measure visibility; the improvement comes from changes to your site and content, which you can test for yourself.",
+   "category": "choosing",
+   "updated": "2026-10-25",
+   "words": 1600,
+   "sources": 5
+  },
+  {
+   "slug": "which-ai-search-optimization-tool-is-most-intuitive",
+   "url": "/which-ai-search-optimization-tool-is-most-intuitive/",
+   "title": "Which AI search optimisation tool is most intuitive? How to test any of them yourself",
+   "summary": "We found no independent test that ranks AI search optimisation tools for ease of use, so any 'most intuitive' list is opinion. You can judge it yourself with a fixed task list and a free trial or demo.",
+   "category": "choosing",
+   "updated": "2026-10-22",
+   "words": 1381,
+   "sources": 3
+  },
+  {
+   "slug": "will-ai-replace-seo",
+   "url": "/will-ai-replace-seo/",
+   "title": "Will AI replace SEO?",
+   "summary": "No platform documentation or research we have read says AI search removes the need for SEO. Google says SEO basics still apply to its AI features. What changes is where you appear and how you measure it.",
+   "category": "basics",
+   "updated": "2026-10-18",
+   "words": 1519,
+   "sources": 7
+  },
+  {
+   "slug": "worlds-most-renowned-ai-visibility-expert",
+   "url": "/worlds-most-renowned-ai-visibility-expert/",
+   "title": "Who is the world's most renowned AI visibility expert? The LinkedIn stunt, and what it shows about AI answers",
+   "summary": "Nobody holds an official title like this. It began as a consultant's tongue-in-cheek LinkedIn post that Google's AI Overview reportedly repeated, which shows how easily AI answers echo one confident source.",
+   "category": "choosing",
+   "updated": "2026-10-27",
+   "words": 1432,
+   "sources": 6
+  },
+  {
+   "slug": "yoast-seo-ai",
+   "url": "/yoast-seo-ai/",
+   "title": "Yoast SEO AI: what its AI features do, what they cannot do, and what to check first",
+   "summary": "Yoast's AI features draft titles and meta descriptions, control AI crawler access and llms.txt, and in the AI+ plan report how AI assistants mention your brand. None of them can guarantee you appear in an AI answer.",
+   "category": "choosing",
+   "updated": "2026-10-30",
+   "words": 1631,
+   "sources": 11
+  }
+ ],
+ "guides_total": 60,
+ "article": {
+  "slug": "ai-mode-vs-ai-overviews",
+  "url": "/ai-mode-vs-ai-overviews/",
+  "md": "/ai-mode-vs-ai-overviews.md",
+  "title": "AI Mode vs AI Overviews: what is the difference, and does it change what you do?",
+  "summary": "AI Overviews are a summary Google adds to some ordinary results pages. AI Mode is a separate conversational search. Google's guidance for site owners is the same for both, though the answers and links can differ.",
+  "category": "compare",
+  "category_title": "Comparisons",
+  "updated": "18 October 2026",
+  "read_minutes": 8,
+  "words": 1402,
+  "h2": [
+   "AI Mode vs AI Overviews at a glance",
+   "Where each one appears and how people reach it",
+   "What the two share: query fan-out, links and eligibility",
+   "What Google says may differ",
+   "Are AI Overviews and AI Mode just Gemini?",
+   "Do they cite the same pages? What research says, and its limits",
+   "Do you need a different strategy for each?",
+   "How to see each one in your reporting"
+  ],
+  "sources": [
+   {
+    "label": "Google Search Central: AI features and your website",
+    "url": "https://developers.google.com/search/docs/appearance/ai-features"
+   },
+   {
+    "label": "Google Search Help: AI Overviews in Google Search",
+    "url": "https://support.google.com/websearch/answer/14901683"
+   },
+   {
+    "label": "Google Search Help: AI Mode in Google Search",
+    "url": "https://support.google.com/websearch/answer/16011537"
+   },
+   {
+    "label": "Google: AI Overviews and AI Mode in Search (PDF)",
+    "url": "https://search.google/pdf/google-about-AI-overviews-AI-Mode.pdf"
+   },
+   {
+    "label": "Google Search Central: Robots meta tag, data-nosnippet and X-Robots-Tag specifications",
+    "url": "https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag"
+   },
+   {
+    "label": "Search Console Help: How clicks, impressions and position are counted",
+    "url": "https://support.google.com/webmasters/answer/7042828"
+   },
+   {
+    "label": "Google crawling infrastructure: Google's common crawlers (Google-Extended)",
+    "url": "https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers"
+   }
+  ],
+  "faq": [
+   {
+    "q": "What is the difference between AI Mode and AI Overviews?",
+    "a": "An AI Overview is a summary Google shows on some results pages when its systems judge it useful. AI Mode is a separate experience that people open themselves, where they ask a question and keep asking follow-ups. Google's guidance for site owners is the same for both."
+   },
+   {
+    "q": "Is Google AI Overview just Gemini?",
+    "a": "No. Google says AI Overviews use a customised Gemini model that works alongside its existing Search systems, such as ranking and the Knowledge Graph. AI Mode uses a custom version of Gemini too, but both are features of Google Search and are separate from the Gemini app."
+   },
+   {
+    "q": "Do AI Mode and AI Overviews show the same sources?",
+    "a": "Not necessarily. Google says the two may use different models and techniques, so the responses and links they show will vary, and that a different set of links will likely appear for the same query."
+   },
+   {
+    "q": "Do I need to optimise differently for AI Mode and AI Overviews?",
+    "a": "No. Google says specific optimisation isn't required for either, and the same foundational SEO practices apply. A page needs to be indexed and eligible to show with a snippet, and even then Google does not guarantee it will appear."
+   },
+   {
+    "q": "Can I turn off AI Mode or AI Overviews?",
+    "a": "Searchers cannot switch AI Overviews off, but Google's Web filter shows only text links. Site owners can use nosnippet, max-snippet, data-nosnippet or noindex to limit what both features use, though these also affect ordinary results. Blocking Google-Extended does not affect Search."
+   }
+  ],
+  "related": [
+   "google-ai-mode-seo",
+   "what-are-google-ai-overviews",
+   "how-to-rank-in-google-ai-overviews",
+   "how-to-track-ai-overviews"
+  ],
+  "sources_note": "Reviewed 18 October 2026. General information about how AI search works, not a promise of placement in any AI answer.",
+  "footnote_map_comment": "The article has NO inline citations today; its sources sit in a list at the end. Where a sentence NAMES its source document, you may footnote it to that source (numbers = position in sources, 1-based). Only these mappings are honest; do not footnote any other sentence.",
+  "footnote_map": [
+   {
+    "phrase": "Google's Help page describes it as \"an AI-generated snapshot with key information and links to dig deeper\"",
+    "source": 2
+   },
+   {
+    "phrase": "Search Central adds that AI Overviews are only shown when they are additive to classic Search",
+    "source": 1
+   },
+   {
+    "phrase": "Google's AI Mode Help page lists three ways in",
+    "source": 3
+   },
+   {
+    "phrase": "Google's Search Central guide calls these two features \"AI features\" in Search",
+    "source": 1
+   },
+   {
+    "phrase": "Google's document on the two features says AI Overviews \"use a customized Gemini model",
+    "source": 4
+   },
+   {
+    "phrase": "Google's crawler documentation says the Google-Extended robots.txt token controls use of your content for Gemini Apps and Vertex AI",
+    "source": 7
+   },
+   {
+    "phrase": "Search Central says traffic from both features is included in your overall Search Console data",
+    "source": 6
+   },
+   {
+    "phrase": "Google's robots meta tag documentation says `nosnippet` also prevents content",
+    "source": 5
+   }
+  ]
+ },
+ "related_titles": {
+  "google-ai-mode-seo": {
+   "title": "Google AI Mode and SEO: what changes, and what to do about it",
+   "summary": "Google says the same SEO foundations apply to AI Mode, with no extra technical requirements. A page must be indexed and eligible to show a snippet to be linked, and nobody can guarantee a citation."
+  },
+  "how-to-rank-in-google-ai-overviews": {
+   "title": "How do you rank in Google AI Overviews?",
+   "summary": "Google says there is no special optimisation for AI Overviews. A page must be indexed and eligible for a snippet, and the usual helpful-content and technical SEO basics apply. Nobody can guarantee inclusion."
+  },
+  "how-to-track-ai-overviews": {
+   "title": "How do you track AI Overviews? What Google reports, what tools estimate, and what you can check yourself",
+   "summary": "Google counts AI Overview clicks inside your normal Search Console web data, with no separate report. Tracking means combining that, your analytics and sampled checks, and none of them gives a complete count."
+  },
+  "what-are-google-ai-overviews": {
+   "title": "What are Google AI Overviews?",
+   "summary": "AI Overviews are AI-generated summaries that Google shows on some searches, with links to supporting web pages. Google says no special markup is needed to be included, and no one can guarantee it."
+  }
+ }
+}
