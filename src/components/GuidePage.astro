@@ -1,20 +1,27 @@
 ---
+// One guide, read as the file /<slug>.md serves (design/site/DESIGN.md §4): title, Canonical/Publisher/Updated, the
+// short answer, the body, From the same studio, Questions people ask, Sources — every line numbered. Read next follows
+// the file. Footnotes only where the guide links a source or src/data/footnotes.ts places one (never invented).
 import Base from '../layouts/Base.astro';
+import FileRail from './FileRail.astro';
+import FileBar from './FileBar.astro';
 import { site } from '../data/content';
-import { PRODUCTS } from '../data/products';
-import { render } from '../lib/content';
+import { footnotes } from '../data/footnotes';
+import { renderLines } from '../lib/linefile';
 import { guideBySlug, categoryOf, type Guide } from '../lib/guides';
+import { guideFileOf, guideStats } from '../lib/site-files';
 interface Props { entry: Guide }
 const { entry: g } = Astro.props;
 const cat = categoryOf(g.fm.category);
-const h2s = g.headings.filter(h => h.depth === 2);
-const words = g.raw.split(/\s+/).length;
+const file = guideFileOf(g);
+const doc = renderLines(file.lines, 1, file.count, { sources: g.fm.sources, footnotes: footnotes[g.slug], headingId: file.headingId, leadLine: file.leadLine });
 const related = (g.fm.related ?? []).map(s => guideBySlug(s)!).filter(Boolean);
 const fmtDate = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const fmt = (n: number) => n.toLocaleString('en-GB');
 const url = `${site.url}${g.url}`;
 const org = { '@id': `${site.publisher.url}#organization` };
 const schema = { '@context': 'https://schema.org', '@graph': [
-  { '@type': 'Article', '@id': `${url}#article`, headline: g.fm.title, description: g.fm.summary, mainEntityOfPage: url, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: 'en-GB', datePublished: g.fm.published, dateModified: g.fm.updated, author: org, publisher: org, image: `${site.url}/og.png`, citation: g.fm.sources.map(s => s.url), wordCount: words },
+  { '@type': 'Article', '@id': `${url}#article`, headline: g.fm.title, description: g.fm.summary, mainEntityOfPage: url, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: 'en-GB', datePublished: g.fm.published, dateModified: g.fm.updated, author: org, publisher: org, image: `${site.url}/og.png`, citation: g.fm.sources.map(s => s.url), wordCount: file.words },
   { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: g.fm.faq.map(f => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') } })) },
   { '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'What is GEO', item: `${site.url}/` },
@@ -23,23 +30,24 @@ const schema = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'Organization', '@id': org['@id'], name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt] }
 ] };
 ---
-<Base title={g.fm.seoTitle ?? `${g.fm.title} | What is GEO`} description={g.fm.summary} markdown={g.md}>
+<Base title={g.fm.seoTitle ?? `${g.fm.title} | What is GEO`} description={g.fm.summary} markdown={g.md} current="guides">
   <main id="main">
     <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
-    <header class="guide-head">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">What is GEO</a><span aria-hidden="true">/</span><a href="/guides/">Guides</a><span aria-hidden="true">/</span><a href={`/guides/#${cat.id}`}>{cat.title}</a></nav>
-      <h1>{g.fm.title}</h1>
-      <div class="definition-panel"><p class="eyebrow">The short answer</p><p>{g.fm.summary}</p></div>
-      <p class="guide-meta">Updated {fmtDate(g.fm.updated)} · {Math.max(1, Math.ceil(words / 200))} minute read · By <a href={site.publisher.url}>{site.publisher.name}</a> · <a href={g.md}>Text version</a></p>
-    </header>
-    <div class="guide-shell guide-body">
-      <aside class="toc">{h2s.length > 1 && <><p class="eyebrow">On this page</p><ol>{h2s.map((h, i) => <li><a href={'#' + h.slug}><span>{String(i + 1).padStart(2, '0')}</span>{h.text}</a></li>)}<li><a href="#questions"><span>{String(h2s.length + 1).padStart(2, '0')}</span>Questions</a></li></ol></>}<p class="read-note"><a href="/">Start with the full GEO guide ↗</a></p></aside>
-      <div class="chapters">
-        <div class="prose guide-prose"><g.Content /></div>
-        {g.fm.ours?.length ? <section class="ours" aria-labelledby="ours-title"><p class="eyebrow" id="ours-title">From the same studio</p><p class="ours-note">Made by {site.publisher.name}, which publishes this guide. Listed because it fits the question; nothing here depends on it.</p><ul>{g.fm.ours.map(o => <li><a href={PRODUCTS[o.product].url}>{PRODUCTS[o.product].name} ↗</a><span>{o.why}</span></li>)}</ul></section> : null}
-        <section class="chapter guide-faq" id="questions" aria-labelledby="questions-title"><div class="chapter-meta"><b>Questions people ask</b></div><h2 id="questions-title">Questions people ask</h2><div class="faq-list">{g.fm.faq.map(f => <details><summary>{f.q}</summary><div class="prose" set:html={render(f.a)} /></details>)}</div></section>
-        <section class="sources" aria-labelledby="sources-title"><h3 id="sources-title">Sources</h3><ol>{g.fm.sources.map(s => <li><a href={s.url}>{s.label} ↗</a></li>)}</ol><p>Reviewed {fmtDate(g.fm.updated)}. General information about how AI search works, not a promise of placement in any AI answer.</p></section>
-        {related.length > 0 && <nav class="related" aria-labelledby="related-title"><p class="eyebrow" id="related-title">Read next</p><ul>{related.map(r => <li><a href={r.url}><b>{r.fm.title}</b><span>{r.fm.summary}</span></a></li>)}</ul></nav>}
+    <div class="lf-shell" data-page="article">
+      <FileRail page="article" guide={g} />
+      <div class="lf-pane" data-lf-file={file.count}>
+        <nav class="ds-breadcrumb lf-crumbs" aria-label="Breadcrumb"><ol class="ds-breadcrumb__list">
+          <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href="/guides/">Guides</a><span class="ds-breadcrumb__sep" aria-hidden="true"></span></li>
+          <li class="ds-breadcrumb__item"><a class="ds-breadcrumb__link" href={`/guides/#${cat.id}`}>{cat.title}</a><span class="ds-breadcrumb__sep" aria-hidden="true"></span></li>
+          <li class="ds-breadcrumb__item"><span class="ds-breadcrumb__leaf" aria-current="page">{g.slug}.md</span></li>
+        </ol></nav>
+        <FileBar name={`${g.slug}.md`} meta={[`${file.count} lines`, `${fmt(file.words)} words`, `${file.minutes} min read`, `Updated ${fmtDate(g.fm.updated)}`]} href={g.md} />
+        <article class="lf-doc" aria-labelledby="L1-title" set:html={doc.html.replace('<h1 class="lf-t"', '<h1 class="lf-t" id="L1-title"')} />
+        <p class="lf-in lf-note lf-disclaimer">Reviewed {fmtDate(g.fm.updated)}. General information about how AI search works, not a promise of placement in any AI answer. New to this? <a class="ds-text-link" href="/guide/">Start with the full guide</a>.</p>
+        {related.length > 0 && <nav class="lf-sec lf-in" aria-labelledby="next-title">
+          <h2 class="lf-h2" id="next-title">Read next</h2>
+          <ul class="lf-rows">{related.map(r => { const s = guideStats(r); return <li class="lf-row" data-kind="next"><a class="lf-row__t" href={r.url}>{r.fm.title}</a><p class="lf-row__s">{r.fm.summary}</p><span class="lf-row__m">{r.slug}.md · {fmt(s.words)} words · {s.sources} sources</span></li>; })}</ul>
+        </nav>}
       </div>
     </div>
   </main>

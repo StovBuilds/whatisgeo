@@ -94,7 +94,7 @@ Neither tool guarantees rankings or citations in AI answers. Jasper's GEO page h
 
 Google's documentation for AI Overviews and AI Mode says there are "no additional requirements" to appear and no special optimisation is needed. A page has to be indexed and eligible to show with a snippet. Google also says that meeting its requirements does not guarantee your content will be crawled, indexed or shown.
 
-A high Surfer score means your page looks similar to pages that already rank. A polished Jasper draft means the copy reads well and matches your voice. Google documents neither as a ranking signal. Use them to help your judgement. For the AI search side, see [how to write content for AI search](/how-to-write-content-for-ai-search/) and the [principles section of our main guide](/#principles).
+A high Surfer score means your page looks similar to pages that already rank. A polished Jasper draft means the copy reads well and matches your voice. Google documents neither as a ranking signal. Use them to help your judgement. For the AI search side, see [how to write content for AI search](/how-to-write-content-for-ai-search/) and the [principles section of our main guide](/guide/#principles).
 
 ## What Google says about AI-assisted content
 

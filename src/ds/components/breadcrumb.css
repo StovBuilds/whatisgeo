@@ -1,0 +1,272 @@
+/* ============================================================================
+   breadcrumb — where am I, as a text run          (taxonomy §A · common · S0)
+   Root: <nav class="ds-breadcrumb" aria-label="Breadcrumb">
+   Parts: __list (ol) · __item (li) · __link (parent crumb, <a>) · __leaf (aria-current="page")
+          __sep (data-sep="slash|chevron|plus" on the root) · __icon (entity icon square)
+          __control (leaf as a bordered select trigger) · __edit (pencil) · __badge (LIVE / DRAFT)
+          __star (favourite toggle, aria-pressed) · __ellipsis (collapsed middle)
+   Variants: navattic-interactive-leaf · hsaj-breadcrumb-as-h1 · clickup-icon-square ·
+             manychat-editable-leaf-badge · perplexity-collection-untitled ·
+             luma-admin-single-level
+   The unmarked root is the CORPUS DEFAULT: parents muted 400, leaf ink 500, one body size.
+   The house page-header composes hsaj-breadcrumb-as-h1 (taxonomy JSTOV: breadcrumb-as-H1).
+   Private knobs: --_size --_gap --_leaf-weight --_sep-glyph.
+   ========================================================================== */
+
+/* stroke icons: components/_base.css paints svg { fill: currentColor }, which beats the fill="none"
+   presentation attribute — restate it by attribute so line icons stay hollow */
+.ds-breadcrumb svg[fill="none"] { fill: none; }
+
+.ds-breadcrumb {
+  --_size: var(--ds-text-md);
+  --_gap: var(--ds-space-2);
+  --_leaf-weight: var(--ds-weight-medium);
+  --_sep-glyph: "/";
+  min-width: 0;
+  font-size: var(--_size);
+  line-height: var(--ds-lh-list);
+  color: var(--ds-ink-muted);
+}
+.ds-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--_gap);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--_gap);
+  min-width: 0;
+  flex: 0 1 auto;
+}
+/* data-wrap="nowrap" (inside a bar): one line, the leaf truncates; default wraps (a page header) */
+.ds-breadcrumb[data-wrap="nowrap"] .ds-breadcrumb__list { flex-wrap: nowrap; }
+/* parents keep their words (up to half the row); the leaf is the crumb that truncates */
+.ds-breadcrumb__item:has(> .ds-breadcrumb__link) { flex-shrink: 0; max-inline-size: 100%; }
+/* parent crumb: muted, regular, becomes ink on hover — never underlined at rest */
+.ds-breadcrumb__link {
+  color: var(--ds-ink-muted);
+  font-weight: var(--ds-weight-regular);
+  text-decoration: none;
+  border-radius: var(--ds-radius-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-breadcrumb__link:hover,
+.ds-breadcrumb__link[data-state="hover"] { color: var(--ds-ink); text-decoration: underline; text-underline-offset: .2em; }
+/* the leaf: ink, one weight up, the only crumb that is not a link */
+.ds-breadcrumb__leaf {
+  color: var(--ds-ink);
+  font-weight: var(--_leaf-weight);
+  font-size: inherit;            /* the leaf may be an <h1>: the ROOT owns the size */
+  line-height: inherit;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* separator glyph — data-sep on the root picks / › + ; aria-hidden in markup */
+.ds-breadcrumb__sep {
+  flex: none;
+  color: var(--ds-ink-faint);          /* decorative — faint is allowed */
+  font-weight: var(--ds-weight-regular);
+  user-select: none;
+}
+.ds-breadcrumb__sep::before { content: var(--_sep-glyph); }
+.ds-breadcrumb[data-sep="chevron"] { --_sep-glyph: "›"; }
+.ds-breadcrumb[data-sep="plus"]    { --_sep-glyph: "+"; }
+.ds-breadcrumb__sep svg { inline-size: 12px; block-size: 12px; display: block; }   /* glyph geometry, not spacing */
+.ds-breadcrumb__sep:has(svg)::before { content: none; }
+
+/* collapsed middle (mobile / deep paths): an … button that reveals the hidden crumbs */
+.ds-breadcrumb__ellipsis {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--ds-icon-size-rail);
+  block-size: var(--ds-icon-size-rail);
+  padding: 0 var(--ds-space-1);
+  border: 0;
+  border-radius: var(--ds-radius-xs);
+  background: transparent;
+  color: var(--ds-ink-muted);
+  font: inherit;
+  cursor: pointer;
+}
+.ds-breadcrumb__ellipsis:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+
+/* entity icon square (clickup): a data-hue tile that type-codes the object */
+.ds-breadcrumb__icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ds-icon-size-row);
+  block-size: var(--ds-icon-size-row);
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-data-1-tint);
+  color: var(--ds-data-1-ink);
+}
+.ds-breadcrumb__icon[data-hue="2"] { background: var(--ds-data-2-tint); color: var(--ds-data-2-ink); }
+.ds-breadcrumb__icon[data-hue="7"] { background: var(--ds-data-7-tint); color: var(--ds-data-7-ink); }
+.ds-breadcrumb__icon svg { inline-size: 12px; block-size: 12px; }
+
+/* leaf-as-control (navattic): a bordered select trigger for saved views */
+.ds-breadcrumb__control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-block-size: var(--ds-control-h-sm);
+  padding-inline: var(--ds-space-3) var(--ds-space-2);
+  font: inherit;
+  font-weight: var(--ds-weight-medium);
+  color: var(--ds-ink);
+  background: var(--ds-surface);
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--ds-radius-sm);
+  box-shadow: var(--ds-shadow-lip);
+  cursor: pointer;
+  white-space: nowrap;
+  max-inline-size: 100%;
+}
+.ds-breadcrumb__control svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); color: var(--ds-ink-muted); flex: none; }
+.ds-breadcrumb__control:hover { border-color: var(--ds-border-strong); background: var(--ds-hover-bg); }
+.ds-breadcrumb__control[aria-expanded="true"] { border-color: var(--ds-border-strong); background: var(--ds-surface-selected); }
+.ds-breadcrumb__control:disabled { color: var(--ds-ink-faint); background: var(--ds-surface-3); border-color: var(--ds-rule); box-shadow: none; }
+
+/* inline edit affordance (manychat): a pencil after the leaf; the leaf is dotted-underlined = editable */
+.ds-breadcrumb__edit {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ds-icon-size-rail);
+  block-size: var(--ds-icon-size-rail);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-xs);
+  background: transparent;
+  color: var(--ds-ink-muted);
+  cursor: pointer;
+}
+.ds-breadcrumb__edit svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); }
+.ds-breadcrumb__edit:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.ds-breadcrumb__leaf[data-editable="true"] { text-decoration: underline dotted; text-decoration-color: var(--ds-rule-strong); text-underline-offset: .25em; }
+/* an unnamed leaf: the "null = italic word" house data rule, in the readable muted lane */
+.ds-breadcrumb__leaf[data-state="empty"] { color: var(--ds-ink-muted); font-style: italic; font-weight: var(--ds-weight-regular); padding-inline-end: .12em; }   /* italic overhang must not clip */
+
+/* status badge on the leaf (LIVE / DRAFT) — tint + same-hue ink, never white-on-colour */
+.ds-breadcrumb__badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  block-size: var(--ds-icon-size-row);      /* a badge is row-icon tall (20px), never a space step */
+  padding-inline: var(--ds-space-2);
+  border-radius: var(--ds-radius-xs);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-semibold);
+  letter-spacing: .06em;
+  text-transform: uppercase;      /* badges are the one uppercase component (R8) */
+  background: var(--ds-surface-2);
+  color: var(--ds-ink-2);
+  border: var(--ds-border-width) solid var(--ds-rule);
+}
+.ds-breadcrumb__badge[data-tone="live"]  { background: var(--ds-danger-tint);  color: var(--ds-danger-ink);  border-color: transparent; }
+.ds-breadcrumb__badge[data-tone="draft"] { background: var(--ds-surface-2);    color: var(--ds-ink-muted);   border-color: var(--ds-rule); }
+
+/* favourite toggle (clickup): a ghost star; pressed = filled accent (a boolean-on spends the accent) */
+.ds-breadcrumb__star {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--ds-icon-size-rail);
+  block-size: var(--ds-icon-size-rail);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-xs);
+  background: transparent;
+  color: var(--ds-ink-muted);
+  cursor: pointer;
+}
+.ds-breadcrumb__star svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); fill: none; stroke: currentColor; }
+.ds-breadcrumb__star:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.ds-breadcrumb__star[aria-pressed="true"] { color: var(--ds-accent); }
+.ds-breadcrumb__star[aria-pressed="true"] svg { fill: currentColor; }
+
+/* -- variants ------------------------------------------------------------- */
+/* hsaj: the breadcrumb IS the H1 — 26px, parent 400 muted, leaf 600, no separate title */
+.ds-breadcrumb[data-variant="hsaj-breadcrumb-as-h1"] {
+  --_size: var(--ds-text-2xl);
+  --_gap: var(--ds-space-4);
+  --_leaf-weight: var(--ds-heading-weight);
+  --_sep-glyph: "›";
+  line-height: var(--ds-lh-heading);
+  letter-spacing: var(--ds-heading-tracking);
+}
+.ds-breadcrumb[data-variant="hsaj-breadcrumb-as-h1"] .ds-breadcrumb__leaf { color: var(--ds-ink); white-space: normal; overflow: visible; text-overflow: clip; text-wrap: balance; }   /* an H1 wraps; it is never ellipsised */
+.ds-breadcrumb[data-variant="hsaj-breadcrumb-as-h1"] .ds-breadcrumb__sep { font-size: var(--ds-text-lg); color: var(--ds-ink-faint); }
+
+/* navattic: parent plain, "/" separator with 12px gaps, leaf is a bordered view-switcher select */
+.ds-breadcrumb[data-variant="navattic-interactive-leaf"] { --_gap: var(--ds-space-3); }
+
+/* clickup: entity icon square + muted parent / ink current (600) + chevron + star */
+.ds-breadcrumb[data-variant="clickup-icon-square"] { --_leaf-weight: var(--ds-weight-semibold); }
+
+/* manychat: parent › Untitled + pencil + LIVE/DRAFT badge, in a 60px chrome bar */
+.ds-breadcrumb[data-variant="manychat-editable-leaf-badge"] { --_sep-glyph: "›"; }
+.ds-breadcrumb[data-variant="manychat-editable-leaf-badge"] .ds-breadcrumb__sep { color: var(--ds-accent); }   /* the reference paints the chevron in the accent */
+.ds-breadcrumb[data-variant="manychat-editable-leaf-badge"] .ds-breadcrumb__leaf { font-weight: var(--ds-weight-regular); }
+
+/* perplexity: "+ Collection / Untitled" entirely in the muted lane — the crumb is an affordance */
+.ds-breadcrumb[data-variant="perplexity-collection-untitled"] { --_leaf-weight: var(--ds-weight-regular); }
+.ds-breadcrumb[data-variant="perplexity-collection-untitled"] .ds-breadcrumb__link,
+.ds-breadcrumb[data-variant="perplexity-collection-untitled"] .ds-breadcrumb__leaf { color: var(--ds-ink-muted); }
+.ds-breadcrumb[data-variant="perplexity-collection-untitled"] .ds-breadcrumb__leaf { font-style: italic; padding-inline-end: .12em; }
+.ds-breadcrumb[data-variant="perplexity-collection-untitled"] .ds-breadcrumb__link::before { content: "+ "; color: var(--ds-ink-faint); }
+
+/* luma: a single parent with a trailing chevron ("Personal ›"), 14px ink-2 */
+.ds-breadcrumb[data-variant="luma-admin-single-level"] { --_sep-glyph: "›"; --_gap: var(--ds-space-1); }
+.ds-breadcrumb[data-variant="luma-admin-single-level"] .ds-breadcrumb__link { color: var(--ds-ink-2); }
+
+/* -- label lane policy: breadcrumbs are navigation, never uppercased (R8) ------- */
+.ds-breadcrumb, .ds-breadcrumb__link, .ds-breadcrumb__leaf { text-transform: none; }
+
+/* -- mobile: the leaf keeps its width; parents may collapse behind the … --------- */
+@media (max-width: 720px) {
+  .ds-breadcrumb[data-collapse="mobile"] .ds-breadcrumb__item[data-collapsible] { display: none; }
+  .ds-breadcrumb[data-collapse="mobile"] .ds-breadcrumb__item[data-role="ellipsis"] { display: inline-flex; }
+}
+.ds-breadcrumb__item[data-role="ellipsis"] { display: none; }
+
+/* ============================================================================
+   J15 — "you always know where you landed". Root states (all variants below carry them):
+     rest · data-state="collapsed" (deep path: workspace + … + the last two parents + leaf; the … names what it hides) ·
+     data-state="switched" (the workspace crumb changed: it holds a tint until the next navigation, and __live says it)
+   New parts: __initials (workspace initials inside __icon) · __live (visible announcement, role=status)
+   Variants added: jstov · frame-space-icon (clickup-icon-square and hsaj-breadcrumb-as-h1 gained the J15 states)
+   ========================================================================== */
+.ds-breadcrumb__initials { font-size: var(--ds-text-xs); font-weight: var(--ds-weight-bold); line-height: 1; letter-spacing: 0; }
+.ds-breadcrumb__icon:has(.ds-breadcrumb__initials) { font-size: var(--ds-text-xs); }
+.ds-breadcrumb[data-state="collapsed"] .ds-breadcrumb__item[data-role="ellipsis"] { display: inline-flex; }
+.ds-breadcrumb[data-state="collapsed"] .ds-breadcrumb__item[data-collapsible] { display: none; }
+.ds-breadcrumb[data-state="collapsed"] .ds-breadcrumb__leaf { max-inline-size: 32ch; }
+.ds-breadcrumb__live { display: none; }
+.ds-breadcrumb[data-state="switched"] { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-2) var(--ds-space-3); }
+.ds-breadcrumb[data-state="switched"] .ds-breadcrumb__item[data-role="workspace"] > .ds-breadcrumb__link { color: var(--ds-accent-ink); background: var(--ds-accent-tint); padding-inline: var(--ds-space-1); }
+.ds-breadcrumb[data-state="switched"] .ds-breadcrumb__live { display: inline-flex; align-items: center; min-height: var(--ds-icon-size-row); padding-inline: var(--ds-space-2); border-radius: var(--ds-radius-pill); background: var(--ds-surface-2); color: var(--ds-ink-2); font-size: var(--ds-text-xs); font-weight: var(--ds-weight-regular); letter-spacing: 0; }
+/* jstov: workspace initials square (inverse) as the first crumb, chevrons, parents muted, leaf semibold; the path
+   is one line inside a bar (nowrap) and the LEAF is what truncates */
+.ds-breadcrumb[data-variant="jstov"] { --_leaf-weight: var(--ds-weight-semibold); --_gap: var(--ds-space-1-5); font-size: var(--ds-text-sm); }
+.ds-breadcrumb[data-variant="jstov"] .ds-breadcrumb__icon { background: var(--ds-surface-inverse); color: var(--ds-ink-inverse); border-radius: var(--ds-radius-xs); }
+.ds-breadcrumb[data-variant="jstov"] .ds-breadcrumb__link { padding-inline: var(--ds-space-0-5); }
+/* frame-space-icon: a building glyph before the space, › chevrons, the leaf bold and followed by nothing; tight 12 px
+   run in the card header [mobbin-frame-search 05] */
+.ds-breadcrumb[data-variant="frame-space-icon"] { --_size: var(--ds-text-xs); --_gap: var(--ds-space-1-5); --_leaf-weight: var(--ds-weight-semibold); }
+.ds-breadcrumb[data-variant="frame-space-icon"] .ds-breadcrumb__icon { background: transparent; color: var(--ds-ink-muted); }
+/* hsaj in a deep path: parents shrink to the body size so the H1 leaf stays the headline */
+.ds-breadcrumb[data-variant="hsaj-breadcrumb-as-h1"] .ds-breadcrumb__icon { display: none; }
+.ds-breadcrumb[data-variant="hsaj-breadcrumb-as-h1"][data-state="collapsed"] .ds-breadcrumb__link { font-size: var(--ds-text-md); }

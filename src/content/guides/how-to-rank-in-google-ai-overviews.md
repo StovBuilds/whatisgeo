@@ -32,7 +32,7 @@ status: "published"
 ---
 There is no position inside an AI Overview to climb, and no tag, form or setting that asks Google to include you. What you can control is whether a page qualifies to be used as a supporting link, and Google spells out those conditions in its own documentation.
 
-Most popular guides on this topic present guesses and correlation studies as proven tactics. This page keeps three kinds of claim apart and labels each one: what Google documents, what research suggests, and what we recommend. For background on how AI answers are put together in general, start with [how AI answers happen](/#how-it-works).
+Most popular guides on this topic present guesses and correlation studies as proven tactics. This page keeps three kinds of claim apart and labels each one: what Google documents, what research suggests, and what we recommend. For background on how AI answers are put together in general, start with [how AI answers happen](/guide/#how-it-works).
 
 ## What Google itself documents
 
@@ -57,7 +57,7 @@ Google's wording turns into a short checklist. Each item comes from the AI featu
 | Working page | Google receives an HTTP 200 status and the page has indexable content. |
 | Text available | Important content is available in textual form. |
 
-None of this is glamorous, but it is the only part with documented rules. For which crawlers to allow and why, see [crawler access](/#crawler-access).
+None of this is glamorous, but it is the only part with documented rules. For which crawlers to allow and why, see [crawler access](/guide/#crawler-access).
 
 ## What Google says about content and page experience
 
@@ -70,7 +70,7 @@ Google's May 2025 post, by John Mueller of Google Search Relations, and the AI f
 - Structured data that follows Google's guidelines and matches the visible text on the page.
 - Up-to-date Merchant Center and Business Profile information, which matters mainly if you sell products or serve a local area.
 
-Notice what is missing. Google does not ask for a particular word count, a question-and-answer layout, a special file or a new type of markup. Some of those may still help readers, but Google has not documented any of them as a requirement for AI features, so treat claims that they are required as unverified. The overlap with ordinary SEO is covered in [GEO vs SEO](/#geo-vs-seo).
+Notice what is missing. Google does not ask for a particular word count, a question-and-answer layout, a special file or a new type of markup. Some of those may still help readers, but Google has not documented any of them as a requirement for AI features, so treat claims that they are required as unverified. The overlap with ordinary SEO is covered in [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## How AI Overviews choose sources: query fan-out
 
@@ -106,7 +106,7 @@ This section is our opinion, built on Google's guidance above. It is not a Googl
 4. **Keep structured data honest.** If you use it, make sure it matches what is visible and validate it.
 5. **Keep business listings current.** If you sell products or serve a local area, keep Merchant Center and Business Profile up to date.
 
-The thinking behind these is set out in [our GEO principles](/#principles).
+The thinking behind these is set out in [our GEO principles](/guide/#principles).
 
 ## Controls: nosnippet, data-nosnippet, max-snippet and noindex
 
@@ -132,7 +132,7 @@ Two further points from Google's documentation:
 - **Search Console.** Google says sites appearing in AI features are included in overall search traffic in the Performance report, under the "Web" search type. Its AI features page does not describe a separate AI Overviews report, so expect AI clicks and impressions to sit inside your existing totals.
 - **Your own analytics.** Google suggests tracking conversions and time on site as well as clicks. It also says clicks from results pages with AI Overviews are "higher quality", meaning people are more likely to spend more time on the site. That is Google's own observation, and the page does not publish data behind it.
 
-Be wary of any tool that claims to split AI Overview traffic out of Search Console totals without explaining how. More on tracking in [measuring progress](/#measurement).
+Be wary of any tool that claims to split AI Overview traffic out of Search Console totals without explaining how. More on tracking in [measuring progress](/guide/#measurement).
 
 ## What not to believe
 

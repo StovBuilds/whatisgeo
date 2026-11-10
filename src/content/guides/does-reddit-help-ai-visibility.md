@@ -120,7 +120,7 @@ For a business, the differences look like this:
 | What it is good for | Real users' experiences and comparisons | Your facts: prices, products, policies |
 | Main risk | Removal, bans, backlash if promotion is spotted | Pages going out of date |
 
-We recommend keeping your own site as the source of truth. If a thread describes your product wrongly, publish a clear, accurate page of your own that anyone, including an AI system, can find. An honest reply on the thread can help too, if the community allows it. For the wider work, see [how to improve AI visibility](/how-to-improve-ai-visibility/), [how to rank in ChatGPT](/how-to-rank-in-chatgpt/) and the [principles](/#principles) in our main guide.
+We recommend keeping your own site as the source of truth. If a thread describes your product wrongly, publish a clear, accurate page of your own that anyone, including an AI system, can find. An honest reply on the thread can help too, if the community allows it. For the wider work, see [how to improve AI visibility](/how-to-improve-ai-visibility/), [how to rank in ChatGPT](/how-to-rank-in-chatgpt/) and the [principles](/guide/#principles) in our main guide.
 
 ## What to do, and what to avoid
 
@@ -154,4 +154,4 @@ An industry-wide percentage cannot tell you about your own market. Test it yours
 4. Read those threads. Are they accurate about you? Is there a genuine question you could help with, within the community's rules?
 5. Keep dated records, change one thing at a time, and distrust any result you cannot repeat.
 
-If Reddit threads keep appearing for your questions, that is worth acting on, carefully and honestly. If they do not, you have saved yourself the effort. Our guide to [measuring AI visibility](/how-to-measure-ai-visibility/) sets out a fuller method, and the [measurement section](/#measurement) of the main guide covers the basics.
+If Reddit threads keep appearing for your questions, that is worth acting on, carefully and honestly. If they do not, you have saved yourself the effort. Our guide to [measuring AI visibility](/how-to-measure-ai-visibility/) sets out a fuller method, and the [measurement section](/guide/#measurement) of the main guide covers the basics.

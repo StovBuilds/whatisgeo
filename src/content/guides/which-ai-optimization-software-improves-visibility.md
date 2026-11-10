@@ -127,4 +127,4 @@ Put in your own time before you spend money.
 
 Check that the crawlers you want can reach your site, using the platform documentation above. Get the ordinary SEO basics right, since Google says those are what its AI features rely on. Write your prompt set and run a baseline by hand; a spreadsheet will do. Then change one thing and watch what happens.
 
-Software can come later, once you know which question you need it to answer. Saving time on recording and reporting is a fair reason to buy a tool. "It will raise our visibility" is a claim you cannot check before you pay, so do not buy on that promise alone. The home guide's section on [measuring progress](/#measurement) has more on setting up a routine you can repeat.
+Software can come later, once you know which question you need it to answer. Saving time on recording and reporting is a fair reason to buy a tool. "It will raise our visibility" is a claim you cannot check before you pay, so do not buy on that promise alone. The home guide's section on [measuring progress](/guide/#measurement) has more on setting up a routine you can repeat.

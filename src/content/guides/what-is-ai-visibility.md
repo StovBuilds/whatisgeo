@@ -41,7 +41,7 @@ status: "published"
 ---
 Put simply, when someone asks ChatGPT, Perplexity, Claude or Google's AI features a question your business could answer, AI visibility covers whether you appear in the reply and whether the reply gets you right. The useful way to look at it is in three separate parts, because each one goes wrong for different reasons and needs a different fix.
 
-Most pages on this topic are written by vendors and define the term around their own dashboard. This guide splits it into parts you can check yourself. For the wider field it belongs to, see [what GEO is](/#what-is-geo).
+Most pages on this topic are written by vendors and define the term around their own dashboard. This guide splits it into parts you can check yourself. For the wider field it belongs to, see [what GEO is](/guide/#what-is-geo).
 
 ## The short definition, and what it covers
 
@@ -67,13 +67,13 @@ A search ranking is a position. You are third or tenth for a query, and two peop
 
 An AI answer is written text put together for that question. It may name five businesses, one or none, so there is no position three to hold. When a tool gives you an AI visibility score, it is summarising something with no fixed scale underneath.
 
-SEO still matters. Google's documentation says that to be eligible as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible to show in Google Search with a snippet, and that there are no additional technical requirements. It also says specific optimisation is not required for these features and that existing SEO fundamentals still apply. For the longer comparison, see [GEO vs SEO](/#geo-vs-seo).
+SEO still matters. Google's documentation says that to be eligible as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible to show in Google Search with a snippet, and that there are no additional technical requirements. It also says specific optimisation is not required for these features and that existing SEO fundamentals still apply. For the longer comparison, see [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## Why AI visibility is hard to pin down
 
 Google says AI Overviews and AI Mode may use different models and techniques, so the responses and links they show will vary, and that AI Overviews only appear when Google's systems judge them useful, so they often do not trigger. That is a documented reason why one result tells you little.
 
-Beyond Google, our working assumption (a recommendation, not a documented rule) is that answers can change between runs, between platforms and when the wording changes. A single screenshot from one tool on one day is an anecdote. Treat AI visibility as a pattern you build up over many questions, tools and dates. Anyone promising a precise, stable figure is claiming more certainty than the thing being measured allows. For how to track it over time, see [measuring progress](/#measurement).
+Beyond Google, our working assumption (a recommendation, not a documented rule) is that answers can change between runs, between platforms and when the wording changes. A single screenshot from one tool on one day is an anecdote. Treat AI visibility as a pattern you build up over many questions, tools and dates. Anyone promising a precise, stable figure is claiming more certainty than the thing being measured allows. For how to track it over time, see [measuring progress](/guide/#measurement).
 
 ## What affects it: documented requirements, research findings and sensible practice
 
@@ -86,7 +86,7 @@ These are three different kinds of evidence. Bad advice often starts when they g
 - **Perplexity:** PerplexityBot surfaces and links sites in Perplexity search results, and Perplexity says it is not used to crawl content for AI foundation models. Perplexity-User fetches pages when a user asks a question, and because a user requested the fetch it generally ignores robots.txt.
 - **Anthropic:** ClaudeBot collects content that may be used for training. Claude-User fetches pages when people ask Claude questions. Claude-SearchBot indexes content to improve search results. Anthropic says its bots honour robots.txt, and that blocking Claude-User or Claude-SearchBot may reduce your visibility in user searches.
 
-In practice, blocking a search crawler is a decision about that tool. Check your robots.txt, and any firewall or CDN rules, before you assume something else is wrong. There is more on this under [crawler access](/#crawler-access). Bear in mind that robots.txt (RFC 9309) is a set of rules crawlers are asked to follow. The standard itself says those rules are not a form of access authorisation.
+In practice, blocking a search crawler is a decision about that tool. Check your robots.txt, and any firewall or CDN rules, before you assume something else is wrong. There is more on this under [crawler access](/guide/#crawler-access). Bear in mind that robots.txt (RFC 9309) is a set of rules crawlers are asked to follow. The standard itself says those rules are not a form of access authorisation.
 
 ### Research findings
 
@@ -96,7 +96,7 @@ This is useful evidence that content choices can matter under test conditions. I
 
 ### Sensible practice
 
-This is our recommendation and is not sourced: write clear pages that answer the questions your buyers ask, keep your facts consistent across your own site and profiles, and state what you want an AI tool to say about you somewhere it can read. None of this guarantees anything. It is basic housekeeping that also helps human visitors. For how the pieces connect, see [how AI answers happen](/#how-it-works).
+This is our recommendation and is not sourced: write clear pages that answer the questions your buyers ask, keep your facts consistent across your own site and profiles, and state what you want an AI tool to say about you somewhere it can read. None of this guarantees anything. It is basic housekeeping that also helps human visitors. For how the pieces connect, see [how AI answers happen](/guide/#how-it-works).
 
 ## How to check your own AI visibility without a tool
 

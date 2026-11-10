@@ -49,7 +49,7 @@ Most "SEO is dead" posts mix three kinds of claim in one paragraph. On this page
 - **The channel question:** what happens to search when AI answers sit above or beside the usual results?
 - **The job question:** which of the tasks an SEO does can a tool now do?
 
-They have different answers. A channel can change shape while the work inside it stays busy, and a task can be partly automated while the channel grows. Treating them as one question is how a headline manages to sound alarming and tell you nothing. For the wider comparison of classic search work and AI answer work, see [GEO vs SEO](/#geo-vs-seo).
+They have different answers. A channel can change shape while the work inside it stays busy, and a task can be partly automated while the channel grows. Treating them as one question is how a headline manages to sound alarming and tell you nothing. For the wider comparison of classic search work and AI answer work, see [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## What platforms document about AI answers and ordinary search
 
@@ -65,7 +65,7 @@ Google's Search Central blog post on succeeding in its AI experiences (May 2025)
 | Perplexity | PerplexityBot | Used to "surface and link websites in search results"; Perplexity recommends allowing it in robots.txt |
 | Anthropic (Claude) | Claude-SearchBot (ClaudeBot is separate, for training) | Disabling it "may reduce your site's visibility and accuracy in user search results" |
 
-None of these pages says the crawler will choose your page, rank it or send you visitors. What they show is that a page the bot cannot reach is out of the running before quality comes into it. OpenAI also documents that its search and training settings are independent, so you can allow one and block the other. More on this under [crawler access](/#crawler-access).
+None of these pages says the crawler will choose your page, rank it or send you visitors. What they show is that a page the bot cannot reach is out of the running before quality comes into it. OpenAI also documents that its search and training settings are independent, so you can allow one and block the other. More on this under [crawler access](/guide/#crawler-access).
 
 ## What research says about visibility in AI answers
 
@@ -86,7 +86,7 @@ Two things are documented: where visibility shows up, and how you measure it.
 
 **Where it shows up.** Google says AI Overviews and AI Mode may use a "query fan-out" technique, running several related searches to build a response, and can display "a wider and more diverse set of helpful links" than a classic results page. It also says AI Overviews appear only when its systems judge them additive to classic Search, "and as such, often don't trigger." So a page can be used inside an answer, shown as a supporting link, or left out entirely, and each of those looks different in a report.
 
-**How you measure it.** Google documents that sites appearing in AI Overviews and AI Mode are counted in the overall search traffic in the Search Console Performance report, under the "Web" search type. The page we read describes no separate AI-only report, so what you see is the combined figure. Google also says clicks from results pages with AI Overviews are "higher quality". That is Google's own observation, and the page publishes no figures behind it. For ChatGPT, Perplexity and Claude, none of the crawler pages we read offers a reporting tool. The [measurement](/#measurement) section covers practical ways to check.
+**How you measure it.** Google documents that sites appearing in AI Overviews and AI Mode are counted in the overall search traffic in the Search Console Performance report, under the "Web" search type. The page we read describes no separate AI-only report, so what you see is the combined figure. Google also says clicks from results pages with AI Overviews are "higher quality". That is Google's own observation, and the page publishes no figures behind it. For ChatGPT, Perplexity and Claude, none of the crawler pages we read offers a reporting tool. The [measurement](/guide/#measurement) section covers practical ways to check.
 
 On the platforms' own account, the dependency on pages that are reachable, indexed and eligible is unchanged.
 
@@ -113,7 +113,7 @@ A person still needs to make the judgement calls. Is this page factually right? 
 2. Whether the documented crawlers can actually reach the pages that matter. Your server logs show which user agents visit.
 3. What Search Console can and cannot tell you, given that AI feature traffic is reported inside the overall Web figures.
 
-None of this comes with a timeline or a guarantee, and nobody can promise inclusion in an AI answer. For background on how answers are put together, see [how AI answers happen](/#how-it-works). For where AI fits into SEO work more generally, see [what AI SEO means](/what-is-ai-seo/).
+None of this comes with a timeline or a guarantee, and nobody can promise inclusion in an AI answer. For background on how answers are put together, see [how AI answers happen](/guide/#how-it-works). For where AI fits into SEO work more generally, see [what AI SEO means](/what-is-ai-seo/).
 
 ## How to judge the next "SEO is dead" headline
 

@@ -42,7 +42,7 @@ status: "published"
 ---
 Before you talk to any agency, know that the work is mostly ordinary website work you can check, and the platforms decide the outcome. Google says plainly that "indexing and serving isn't guaranteed" even for pages that meet all its requirements, so a good agency sells a method and a way of measuring it, and a bad one sells certainty.
 
-This page ranks no agencies. It sets out what the work consists of, which parts rest on platform documentation, which on research and which on practice, and how to check an agency's claims yourself. If you want the background first, start with [what GEO is](/#what-is-geo).
+This page ranks no agencies. It sets out what the work consists of, which parts rest on platform documentation, which on research and which on practice, and how to check an agency's claims yourself. If you want the background first, start with [what GEO is](/guide/#what-is-geo).
 
 ## What a GEO agency can and cannot promise
 
@@ -55,11 +55,11 @@ What an agency can promise is effort in defined areas, on a schedule you can see
 Strip away the branding and the work falls into four jobs.
 
 1. **Content.** Making pages answer real questions plainly, with sources, quotations and figures where they genuinely belong.
-2. **Crawler access.** Making sure the bots that feed AI products can read your site, and that you have chosen deliberately which ones to allow. See [crawler access](/#crawler-access).
+2. **Crawler access.** Making sure the bots that feed AI products can read your site, and that you have chosen deliberately which ones to allow. See [crawler access](/guide/#crawler-access).
 3. **Structured data.** Marking up pages so machines can read what they are about. This is useful practice, though Google says no special schema.org markup is needed for its AI features.
-4. **Measurement.** Working out whether any of it changed anything. See [measuring progress](/#measurement).
+4. **Measurement.** Working out whether any of it changed anything. See [measuring progress](/guide/#measurement).
 
-If a proposal contains a fifth job it cannot explain in a sentence, ask about it. Much of the rest is relabelled SEO. That is no bad thing, because the fundamentals matter, but you should know what you are paying for. The [GEO vs SEO](/#geo-vs-seo) section covers the overlap.
+If a proposal contains a fifth job it cannot explain in a sentence, ask about it. Much of the rest is relabelled SEO. That is no bad thing, because the fundamentals matter, but you should know what you are paying for. The [GEO vs SEO](/guide/#geo-vs-seo) section covers the overlap.
 
 ## What is documented, what is researched, what is just practice
 
@@ -87,7 +87,7 @@ Everything else: prompt tracking, entity work, which page formats seem to get qu
 
 Possibly not, and sales pages never say so. If you have someone who owns your site's content and someone who can edit robots.txt and markup, you already have most of the skills. Checking robots.txt against the crawler names above, reading Google's AI features page and rewriting key pages so they answer questions clearly is ordinary work for a capable in-house team.
 
-An agency can earn its fee when you have a large site and no capacity, no technical help, or you want an outside view on measurement. If your SEO basics are shaky, fix those first: Google says they still apply, and a new layer on a weak foundation is poor value. The [30-day plan](/#getting-started) is a reasonable way to try the basics yourself before deciding.
+An agency can earn its fee when you have a large site and no capacity, no technical help, or you want an outside view on measurement. If your SEO basics are shaky, fix those first: Google says they still apply, and a new layer on a weak foundation is poor value. The [30-day plan](/guide/#getting-started) is a reasonable way to try the basics yourself before deciding.
 
 ## Questions to ask before you hire
 

@@ -58,7 +58,7 @@ A classic SEO audit asks whether your pages can rank in a list of links. This au
 
 For Google, the overlap is close to total. Google says that to be eligible as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible to show in Google Search with a snippet, and that there are no additional technical requirements (documented). Bing says its Bing and Copilot search experiences rely on the same crawling, indexing and ranking foundation as traditional search (documented). So an indexing problem found in an SEO audit is an AI visibility problem too.
 
-Measurement is the other neighbour. An audit runs once, with a start and an end. Tracking the same questions on a schedule is a separate job, covered in the [measurement section](/#measurement) of our main guide.
+Measurement is the other neighbour. An audit runs once, with a start and an end. Tracking the same questions on a schedule is a separate job, covered in the [measurement section](/guide/#measurement) of our main guide.
 
 ## Step 1: Check access (robots.txt, blocking, rendering, indexing)
 
@@ -89,7 +89,7 @@ Then check four more things:
 3. **Indexing.** Confirm your important pages are indexed in Google Search Console and Bing Webmaster Tools (recommendation, building on the documented indexing requirement above).
 4. **Meta directives.** Google says `nosnippet`, `data-nosnippet`, `max-snippet` and `noindex` limit what is shown from your pages in Search. Bing says `NOARCHIVE` stops content being used in Copilot responses and `NOCACHE` limits Copilot to the URL, title and snippet (documented). Make sure any of these on your key pages are there on purpose.
 
-More on crawler rules is in the [crawler access section](/#crawler-access).
+More on crawler rules is in the [crawler access section](/guide/#crawler-access).
 
 ## Step 2: Build a buyer prompt set
 
@@ -162,10 +162,10 @@ Give each line an owner and a rough effort. Fixes make you easier to find and de
 
 Doing it by hand costs time and teaches you the most: reading many answers about your own business shows things a dashboard summary hides.
 
-Tools save effort when you have many prompts or several platforms, because they automate the running and logging. Judge them on whether they show you the raw answers and cited URLs as well as any summary number. Hiring someone makes sense when you lack time or want an outside view; apply the same test and ask to see the underlying answers. Whichever route you take, the method above is the same. The [how AI answers happen](/#how-it-works) section shows where each step fits.
+Tools save effort when you have many prompts or several platforms, because they automate the running and logging. Judge them on whether they show you the raw answers and cited URLs as well as any summary number. Hiring someone makes sense when you lack time or want an outside view; apply the same test and ask to see the underlying answers. Whichever route you take, the method above is the same. The [how AI answers happen](/guide/#how-it-works) section shows where each step fits.
 
 ## When to repeat the audit
 
 Repeat it after meaningful changes (recommendation): a site migration, a robots.txt or firewall change, a rebrand, a big content push, or a fix to the errors you found. Those are the moments the snapshot goes out of date.
 
-If you want a regular rhythm with the same prompts, you have moved from auditing into tracking. The [measurement section](/#measurement) covers that.
+If you want a regular rhythm with the same prompts, you have moved from auditing into tracking. The [measurement section](/guide/#measurement) covers that.

@@ -146,4 +146,4 @@ They cannot give you a stable AI visibility score from one check, and free check
 
 They cannot judge which customers, pages and claims matter to your business.
 
-And no tool, free or paid, can guarantee you a place in an AI answer. For the fuller measurement method, see the [measuring progress section](/#measurement) of our main guide.
+And no tool, free or paid, can guarantee you a place in an AI answer. For the fuller measurement method, see the [measuring progress section](/guide/#measurement) of our main guide.

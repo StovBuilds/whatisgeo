@@ -1,0 +1,21 @@
+---
+// A page's sources as the numbered reference list the footnote pills point at (#src-n), each saying which lines cite it.
+import { domainOf, type Src } from '../lib/linefile';
+interface Props { sources: Src[]; cited: Map<number, number[]>; note: string; base?: string }
+const { sources, cited, note, base = '' } = Astro.props;
+const lines = (k: number) => [...cited].filter(([, ks]) => ks.includes(k)).map(([n]) => n);
+---
+<section class="ds-citation-sources lf-sources" data-variant="copilot-numbered-reference-list" data-mark="mono" aria-labelledby="sources-title" id="sources">
+  <header class="ds-citation-sources__header"><h2 class="ds-citation-sources__title" id="sources-title">Sources</h2><span class="ds-citation-sources__count">{sources.length}</span></header>
+  <ol class="ds-citation-sources__grid">
+    {sources.map((s, i) => { const by = lines(i + 1); return (
+      <li class="ds-citation-sources__card" id={`src-${i + 1}`}>
+        <a class="ds-citation-sources__link" href={s.url} rel="noopener">
+          <span class="ds-citation-sources__meta"><span class="ds-citation-sources__index">{i + 1}</span><span class="ds-citation-sources__domain">{domainOf(s.url)}</span></span>
+          <span class="ds-citation-sources__name">{s.label}</span>
+        </a>
+        {by.length > 0 && <p class="lf-sources__where">cited on line{by.length > 1 ? 's' : ''} {by.map((n, j) => <>{j > 0 && ', '}<a href={`${base}#L${n}`}>{n}</a></>)}</p>}
+      </li>); })}
+  </ol>
+  <p class="lf-note">{note}</p>
+</section>

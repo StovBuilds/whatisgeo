@@ -59,7 +59,7 @@ The term is young, and agencies and tool vendors define it slightly differently.
 | AEO (answer engine optimization) | Being the source a system quotes when it answers a question directly | AI answers, assistants, answer boxes |
 | GEO (generative engine optimisation) | Being used and cited when a generative AI system composes an answer | AI answers from ChatGPT, Perplexity, Claude, Gemini, AI Overviews |
 
-AEO and GEO describe nearly the same target, and you will see them used interchangeably. Both rest on SEO foundations: a page that cannot be crawled or indexed cannot be quoted. Arguing about the label will not change a single answer, so spend the time on the pages. For the longer version, see [what GEO is](/#what-is-geo) and [how GEO compares with SEO](/#geo-vs-seo).
+AEO and GEO describe nearly the same target, and you will see them used interchangeably. Both rest on SEO foundations: a page that cannot be crawled or indexed cannot be quoted. Arguing about the label will not change a single answer, so spend the time on the pages. For the longer version, see [what GEO is](/guide/#what-is-geo) and [how GEO compares with SEO](/guide/#geo-vs-seo).
 
 ## What answer engines are and how they produce answers
 
@@ -67,7 +67,7 @@ An answer engine replies to a question with a written answer, usually with links
 
 The detail differs by platform, but the broad shape is the same. The system has to reach your page, either through its own index or by fetching it when a user asks. Then it has to read the page and decide whether to use it.
 
-**Platform documentation:** Google says AI Overviews and AI Mode may use "query fan-out", issuing multiple related searches across subtopics and data sources to build a response, which lets them show a wider set of supporting links. The mechanics are covered in [how AI answers happen](/#how-it-works).
+**Platform documentation:** Google says AI Overviews and AI Mode may use "query fan-out", issuing multiple related searches across subtopics and data sources to build a response, which lets them show a wider set of supporting links. The mechanics are covered in [how AI answers happen](/guide/#how-it-works).
 
 ## What the platforms themselves say you need to do
 
@@ -81,7 +81,7 @@ These points are all **platform documentation**, taken from each company's own p
 
 **Anthropic (Claude).** Anthropic lists three bots. ClaudeBot collects content that may be used for training. Claude-User fetches pages when people ask Claude questions. Claude-SearchBot indexes content to improve search results. Anthropic says that blocking Claude-User or Claude-SearchBot may reduce your site's visibility in user search results.
 
-The pattern is clear: most platforms separate the bot that finds pages for answers from the bot that collects training data. That gives you a real choice. You can stay visible in answers while opting out of training. robots.txt is the shared mechanism, and it is now a standard (RFC 9309). The RFC itself says its rules "are not a form of access authorization": they ask crawlers to behave, they do not lock anyone out. The practical set-up is in [crawler access](/#crawler-access).
+The pattern is clear: most platforms separate the bot that finds pages for answers from the bot that collects training data. That gives you a real choice. You can stay visible in answers while opting out of training. robots.txt is the shared mechanism, and it is now a standard (RFC 9309). The RFC itself says its rules "are not a form of access authorization": they ask crawlers to behave, they do not lock anyone out. The practical set-up is in [crawler access](/guide/#crawler-access).
 
 **On llms.txt:** llmstxt.org describes it as "a proposal to standardise on using an /llms.txt file" to help AI agents use a website. None of the platform pages above say they require one, and Google says outright that AI text files are not needed for its AI features. Adding one is optional.
 
@@ -99,7 +99,7 @@ Read the paper as evidence that content choices can change visibility in AI answ
 
 ## A practical AEO checklist (our recommendations)
 
-These are **our recommendations**, based on the documentation and research above. None of them guarantees inclusion. The thinking behind them is in [principles](/#principles).
+These are **our recommendations**, based on the documentation and research above. None of them guarantees inclusion. The thinking behind them is in [principles](/guide/#principles).
 
 1. **Let the search crawlers in.** Check your robots.txt, and any firewall or bot protection, for OAI-SearchBot, PerplexityBot, Claude-SearchBot and Googlebot. Decide separately whether to allow the training bots (GPTBot, ClaudeBot).
 2. **Be indexable.** Confirm in Google Search Console that your key pages are indexed and can show a snippet. Google says nothing more is required for its AI features.
@@ -118,7 +118,7 @@ No platform gives you a single report of how often you were quoted. Google count
 - Check your server logs for visits from the search bots you allowed, which confirms that access is working.
 - Watch referral traffic from AI tools in your analytics, alongside your normal search performance.
 
-Answers change from one asking to the next, so one appearance tells you little. A pattern over several checks tells you more. More on this in [measuring progress](/#measurement).
+Answers change from one asking to the next, so one appearance tells you little. A pattern over several checks tells you more. More on this in [measuring progress](/guide/#measurement).
 
 ## What AEO cannot promise
 

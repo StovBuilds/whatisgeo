@@ -1,0 +1,68 @@
+---
+// The site as a file list (design/site/DESIGN.md §2): guide.md and its chapters, the guides by category, the files for
+// machines. sidebar-nav-panel (lloyds-inline-disclosure: a "Files" row on phones) + nav-item rows. Rows with
+// data-from/data-to (a line range) or data-target (an element id) are tracked by src/scripts/linefile.ts: the one in
+// view gets aria-current="location" and the .lf-marker slides to it.
+import { guideFile, guideFileOf, guides, guidesIn, categoriesWithGuides } from '../lib/site-files';
+import type { Guide } from '../lib/guides';
+interface Props { page: 'home' | 'guide' | 'article' | 'guides' | 'mcp' | 'other'; guide?: Guide; mcp?: { count: number; sections: { title: string; from: number; to: number }[] } }
+const { page, guide, mcp } = Astro.props;
+const gf = guideFile();
+const onGuide = page === 'guide';
+const gbase = onGuide ? '' : '/guide/';
+const cats = categoriesWithGuides();
+const art = guide ? guideFileOf(guide) : undefined;
+const fileName = page === 'guide' || page === 'home' ? 'guide.md' : page === 'article' && guide ? `${guide.slug}.md` : page === 'mcp' ? 'mcp-server.md' : page === 'guides' ? 'guides/' : 'whatisgeo.app/';
+const lineTotal = page === 'guide' ? gf.count : page === 'article' && art ? art.count : page === 'mcp' && mcp ? mcp.count : 0;
+const ICON_DOC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>';
+const ICON_DIR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h6l2 2h8v11H4z"/></svg>';
+const CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+---
+<div class="lf-rail" data-density="compact">
+  <button class="ds-sidebar-nav-panel__toggle" data-kind="disclosure" type="button" aria-controls="lf-files" aria-expanded="false"><span class="ds-sidebar-nav-panel__toggle-label">Files</span><span class="ds-sidebar-nav-panel__toggle-count"><span>{fileName}</span>{lineTotal > 0 && <span class="lf-where" data-lf-where hidden></span>}</span><span class="ds-sidebar-nav-panel__toggle-chevron" set:html={CHEV} /></button>
+  <aside class="ds-sidebar-nav-panel" id="lf-files" data-variant="lloyds-inline-disclosure" aria-label="Files on this site">
+    <div class="ds-sidebar-nav-panel__header"><p class="ds-sidebar-nav-panel__title">whatisgeo.app/</p></div>
+    <div class="ds-sidebar-nav-panel__body lf-rail__body">
+      <span class="lf-marker" aria-hidden="true"></span>
+      <div class="ds-sidebar-nav-panel__group">
+        <ul class="ds-sidebar-nav-panel__list">
+          <li><a class="ds-nav-item" href="/guide/" aria-current={onGuide ? 'page' : undefined}><span class="ds-nav-item__icon" set:html={ICON_DOC} /><span class="ds-nav-item__label">guide.md</span><span class="ds-nav-item__trailing"><span class="ds-nav-item__count" data-lf-count={onGuide ? gf.count : undefined}>{gf.count} lines</span></span></a></li>
+        </ul>
+        {(page === 'home' || onGuide) && <ul class="ds-sidebar-nav-panel__tree lf-tree" aria-label="Chapters of guide.md">
+          {gf.chapters.map(c => <li><a class="ds-nav-item" href={`${gbase}#${c.id}`} data-from={onGuide ? c.from : undefined} data-to={onGuide ? c.to : undefined}><span class="ds-nav-item__label">{c.title}</span><span class="ds-nav-item__trailing"><span class="ds-nav-item__count">{c.from}</span></span></a></li>)}
+        </ul>}
+      </div>
+      <div class="ds-sidebar-nav-panel__group">
+        <p class="ds-sidebar-nav-panel__group-label">Guides, {guides.length} files</p>
+        <ul class="ds-sidebar-nav-panel__list">
+          {cats.map(c => {
+            const open = page === 'article' && guide?.fm.category === c.id;
+            const list = guidesIn(c.id);
+            return <>
+<li>
+              <a class="ds-nav-item" href={`/guides/#${c.id}`} data-target={page === 'guides' ? c.id : undefined}><span class="ds-nav-item__icon" set:html={ICON_DIR} /><span class="ds-nav-item__label">{c.title}</span><span class="ds-nav-item__trailing"><span class="ds-nav-item__count">{list.length}</span></span></a>
+            </li>
+              {open && art && <li class="lf-sub"><ul class="lf-files" aria-label={c.title}>
+                {list.map(g => g.slug === guide!.slug
+                  ? <li class="lf-file" data-current><a href={g.url} aria-current="page" title={g.fm.title}><span>{g.slug}.md</span><span class="lf-file__n" data-lf-count={art.count}>{art.count} lines</span></a>
+                      <ul class="lf-files lf-files--sec" aria-label="Sections of this guide">{art.sections.map(s => <li class="lf-file"><a href={`#L${s.from}`} data-from={s.from} data-to={s.to}><span>{s.title}</span><span class="lf-file__n">{s.from}</span></a></li>)}</ul></li>
+                  : <li class="lf-file"><a href={g.url} title={g.fm.title}><span>{g.slug}.md</span></a></li>)}
+              </ul></li>}
+            </>;
+          })}
+        </ul>
+      </div>
+      <div class="ds-sidebar-nav-panel__group">
+        <p class="ds-sidebar-nav-panel__group-label">For machines</p>
+        <ul class="ds-sidebar-nav-panel__list">
+          <li><a class="ds-nav-item" href="/llms.txt"><span class="ds-nav-item__icon" set:html={ICON_DOC} /><span class="ds-nav-item__label">llms.txt</span></a></li>
+          <li><a class="ds-nav-item" href="/llms-full.txt"><span class="ds-nav-item__icon" set:html={ICON_DOC} /><span class="ds-nav-item__label">llms-full.txt</span></a></li>
+          <li><a class="ds-nav-item" href="/mcp-server/" aria-current={page === 'mcp' ? 'page' : undefined}><span class="ds-nav-item__icon" set:html={ICON_DOC} /><span class="ds-nav-item__label">mcp-server.md</span>{page === 'mcp' && mcp && <span class="ds-nav-item__trailing"><span class="ds-nav-item__count" data-lf-count={mcp.count}>{mcp.count} lines</span></span>}</a></li>
+        </ul>
+        {page === 'mcp' && mcp && <ul class="lf-files lf-files--sec lf-files--mcp" aria-label="Sections of mcp-server.md">
+          {mcp.sections.map(s => <li class="lf-file"><a href={`#L${s.from}`} data-from={s.from} data-to={s.to}><span>{s.title}</span><span class="lf-file__n">{s.from}</span></a></li>)}
+        </ul>}
+      </div>
+    </div>
+  </aside>
+</div>

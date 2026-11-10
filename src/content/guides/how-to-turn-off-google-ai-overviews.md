@@ -132,7 +132,7 @@ Read the Labs row closely: it is documented and it lasts, but it does not remove
 
 ## What hiding AI Overviews does not change
 
-This section is our reading. Every method above changes what you see and nothing else. The Web filter applies to your own search, a shortcut lives in your browser, and an extension edits the page on your device. People searching the same thing still get whatever Google shows them. If what you want is for AI Overviews to go away for everyone, none of these will do it. For background on the feature itself, see [what Google AI Overviews are](/what-are-google-ai-overviews/) and our overview of [how AI answers are put together](/#how-it-works).
+This section is our reading. Every method above changes what you see and nothing else. The Web filter applies to your own search, a shortcut lives in your browser, and an extension edits the page on your device. People searching the same thing still get whatever Google shows them. If what you want is for AI Overviews to go away for everyone, none of these will do it. For background on the feature itself, see [what Google AI Overviews are](/what-are-google-ai-overviews/) and our overview of [how AI answers are put together](/guide/#how-it-works).
 
 ## If you run a website: what this means for you
 

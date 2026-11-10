@@ -1,0 +1,327 @@
+/* ============================================================================
+   components/text-input/text-input.css — Text input (core · S1)
+   Root `.ds-text-input` is the BOX (border, radius, height); the native
+   <input class="ds-text-input__control"> inside is chromeless. Variants on
+   data-variant; states via native pseudo-classes read through :has() on the
+   root, with a fallback ring on the bare control for engines without :has().
+   Tokens only (tools/lint-tokens.mjs). Private knobs: --_h --_pad-x --_radius
+   --_w --_align --_icon.
+   ========================================================================== */
+
+.ds-text-input {
+  --_h:      var(--ds-size-h);           /* 36 · 32 sm · 44 lg · ×density        */
+  --_pad-x:  var(--ds-size-pad-x);       /* 12 · 10 sm · 16 lg                    */
+  --_ti-text: var(--ds-size-text);       /* 14 · 13 sm · 16 lg (the size hook's text) */
+  --_radius: var(--ds-radius-sm);        /* controls step (6 × radius-scale)      */
+  --_w:      auto;                       /* instance width: style="--_w: 312px"  */
+  --_align:  start;                      /* value alignment (descript = end)     */
+  --_icon:   var(--ds-icon-size);        /* 16; origin uses the 20 row size      */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  width: var(--_w);
+  max-width: 100%;
+  min-width: 0;
+  min-height: var(--_h);
+  padding-inline: var(--_pad-x);
+  font-size: var(--_ti-text);
+  line-height: var(--ds-lh-list);
+  color: var(--ds-ink);
+  background: var(--ds-surface);
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--_radius);
+  transition: border-color var(--ds-dur-fast) var(--ds-ease-standard),
+              background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-text-input:hover { border-color: var(--ds-border-strong); }
+
+/* ---- the native control: chromeless, fills the box ------------------------ */
+.ds-text-input__control {
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: var(--_align);
+  text-overflow: ellipsis;
+}
+.ds-text-input__control::placeholder { color: var(--ds-ink-muted); opacity: 1; }   /* readable, ≥4.5:1 (R1) */
+.ds-text-input__control::-webkit-search-decoration,
+.ds-text-input__control::-webkit-search-cancel-button { appearance: none; }
+
+/* fallback ring when :has() is unavailable: drawn on the bare control */
+.ds-text-input__control:focus-visible {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+  border-radius: var(--ds-radius-xs);
+}
+
+/* ---- leading icon · inline label prefix · trailing affordances ------------- */
+.ds-text-input__icon,
+.ds-text-input__clear,
+.ds-text-input__chevron { flex: none; color: var(--ds-ink-muted); }
+.ds-text-input__icon { display: inline-flex; width: var(--_icon); height: var(--_icon); }
+.ds-text-input__icon svg,
+.ds-text-input__clear svg {
+  width: 100%; height: 100%;
+  fill: none; stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.ds-text-input__prefix { flex: none; color: var(--ds-ink-muted); white-space: nowrap; }
+
+/* conditional clear ✕ — shown only once the control has a value (needs a
+   placeholder attribute, even placeholder=" ", for :placeholder-shown to work) */
+.ds-text-input__clear {
+  display: inline-flex; align-items: center; justify-content: center;
+  width:  calc(var(--ds-icon-size) + var(--ds-space-2));
+  height: calc(var(--ds-icon-size) + var(--ds-space-2));
+  margin-inline-end: calc(-1 * var(--ds-space-1));
+  padding: var(--ds-space-1);
+  border: 0; background: transparent; border-radius: var(--ds-radius-xs);
+  cursor: pointer;
+}
+.ds-text-input__clear:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.ds-text-input:has(> .ds-text-input__control:placeholder-shown) .ds-text-input__clear { display: none; }
+
+/* unit segment: tinted trailing cell ("kg", "%", "/mo") welded to the edge */
+.ds-text-input__unit {
+  flex: none; align-self: stretch;
+  display: inline-flex; align-items: center;
+  margin-inline-end: calc(-1 * var(--_pad-x));
+  padding-inline: var(--ds-space-3);
+  border-inline-start: var(--ds-border-width) solid var(--ds-border);
+  border-start-end-radius: calc(var(--_radius) - var(--ds-border-width));
+  border-end-end-radius:   calc(var(--_radius) - var(--ds-border-width));
+  background: var(--ds-surface-2);
+  color: var(--ds-ink-muted);
+  font-size: var(--ds-text-sm);
+  white-space: nowrap;
+}
+
+/* chevron drawn from borders (no asset); rotates when the field is a picker */
+.ds-text-input__chevron {
+  width:  calc(var(--ds-icon-size) * .45);
+  height: calc(var(--ds-icon-size) * .45);
+  margin-inline-end: var(--ds-space-0-5);
+  border: 0 solid currentColor;
+  border-inline-end-width: var(--ds-icon-stroke);
+  border-block-end-width:  var(--ds-icon-stroke);
+  transform: translateY(-25%) rotate(45deg);
+}
+
+/* message line under the box: hint by default, error when data-tone="error" */
+.ds-text-input__message {
+  display: block;
+  margin-block-start: var(--ds-space-1);
+  font-size: var(--ds-text-sm);
+  line-height: var(--ds-lh-body);
+  color: var(--ds-ink-muted);
+}
+/* error messages are composed .ds-validation-marks[data-kind="error"] roots (2026-09-20); __message keeps hint typography + placement */
+
+/* ---- states (root reads the native control through :has) ----------------- */
+@supports selector(:has(a)) {
+  .ds-text-input__control:focus-visible { outline: none; }
+  /* focus-visible: 2px --ds-ring drawn at −1px so it covers the 1px border and the
+     box never grows out of its toolbar row (the _base.css input convention) */
+  .ds-text-input:has(> .ds-text-input__control:focus-visible) {
+    border-color: var(--ds-ring);
+    outline: var(--ds-ring-width) solid var(--ds-ring);
+    outline-offset: calc(-1 * var(--ds-border-width));
+  }
+  /* read-only = the descript tint idiom repurposed: tint fill, no border, ink value */
+  .ds-text-input:has(> .ds-text-input__control[readonly]) {
+    background: var(--ds-surface-2);
+    border-color: transparent;
+  }
+  .ds-text-input:has(> .ds-text-input__control[readonly]) .ds-text-input__control { cursor: default; }
+  /* disabled: faint ink on surface-3, still visible, not-allowed cursor */
+  .ds-text-input:has(> .ds-text-input__control:disabled) {
+    color: var(--ds-ink-faint);
+    background: var(--ds-surface-3);
+    border-color: var(--ds-rule);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+  .ds-text-input:has(> .ds-text-input__control:disabled) .ds-text-input__control { cursor: not-allowed; }
+  .ds-text-input:has(> .ds-text-input__control:disabled) .ds-text-input__control::placeholder,
+  .ds-text-input:has(> .ds-text-input__control:disabled) :is(.ds-text-input__icon, .ds-text-input__prefix, .ds-text-input__unit, .ds-text-input__chevron) { color: var(--ds-ink-faint); }
+  /* error: danger border; the focus ring turns danger too so the error stays visible while typing */
+  .ds-text-input:has(> .ds-text-input__control[aria-invalid="true"]) { border-color: var(--ds-danger); }
+  .ds-text-input:has(> .ds-text-input__control[aria-invalid="true"]:focus-visible) {
+    border-color: var(--ds-danger);
+    outline-color: var(--ds-danger);
+  }
+}
+/* attribute twins for engines without :has() and for static demos */
+.ds-text-input[data-state="error"] { border-color: var(--ds-danger); }
+.ds-text-input[data-state="hover"] { border-color: var(--ds-border-strong); }
+.ds-text-input[data-state="focus"] {
+  border-color: var(--ds-ring);
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: calc(-1 * var(--ds-border-width));
+}
+
+/* loading: inline spinner in the trailing slot, no layout jump (aria-busy on the root) */
+.ds-text-input[aria-busy="true"]::after {
+  content: "";
+  flex: none;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  border: 2px solid var(--ds-rule);
+  border-block-start-color: var(--ds-ink-muted);
+  border-radius: var(--ds-radius-pill);
+  animation: ds-text-input-spin calc(var(--ds-dur-slow) * 3) linear infinite;
+}
+.ds-text-input[aria-busy="true"] .ds-text-input__clear { display: none; }
+@keyframes ds-text-input-spin { to { transform: rotate(360deg); } }
+
+/* ---- sizes: data-size on the root (or an ancestor toolbar) ----------------- */
+.ds-text-input[data-size] { --_h: var(--ds-size-h); --_pad-x: var(--ds-size-pad-x); }
+/* self-contained (DESK-373): the same ladder as components/_base.css §4, restated on the root, so a host that skips
+   _base.css (a Tailwind app) still gets sm / lg; where _base.css loads the values are identical. */
+.ds-text-input[data-size="sm"] { --_h: var(--ds-control-h-sm); --_pad-x: calc(var(--ds-control-pad-x) - 2px); --_ti-text: var(--ds-text-sm); }
+.ds-text-input[data-size="md"] { --_h: var(--ds-control-h); --_pad-x: var(--ds-control-pad-x); --_ti-text: var(--ds-text-md); }
+.ds-text-input[data-size="lg"] { --_h: var(--ds-control-h-lg); --_pad-x: calc(var(--ds-control-pad-x) + 4px); --_ti-text: var(--ds-text-lg); }
+
+/* ============================================================================
+   VARIANTS — each reference designer's approach, kept by name.
+   Unmarked root = data-variant="jstov" (house): --ds-border hairline (one grade
+   below --ds-rule in every preset), radius-sm, 36/32/44, value left, placeholder
+   at --ds-ink-muted, specified 2px ring, read-only = tint fill.
+   ========================================================================== */
+
+/* descript-editing-profile-00-03 — 312×36 borderless tint, r6, value right-aligned
+   to the row's action edge, no placeholder */
+.ds-text-input[data-variant="descript-tint-fill-right-aligned"] {
+  --_align: end;
+  background: var(--ds-surface-2);
+  border-color: transparent;
+}
+.ds-text-input[data-variant="descript-tint-fill-right-aligned"]:hover { background: var(--ds-surface-hover); border-color: transparent; }
+
+/* retool-web-25 / retool-web-12 — white, 1px rule, r4, 12px text, 32 tall;
+   icon-left for date, chevron-right for select */
+.ds-text-input[data-variant="retool-hairline-32"] {
+  --_h: var(--ds-control-h-sm);
+  --_pad-x: calc(var(--ds-control-pad-x) - 2px);
+  --_radius: var(--ds-radius-xs);
+  font-size: var(--ds-text-sm);
+}
+
+/* navattic-web-174 / navattic-web-153 — 32 tall, 1px border + the 1px lip shadow
+   shared with the secondary button so inputs and buttons align on a row */
+.ds-text-input[data-variant="navattic-hairline-lip"] {
+  --_h: var(--ds-control-h-sm);
+  --_pad-x: calc(var(--ds-control-pad-x) - 2px);
+  box-shadow: var(--ds-shadow-lift);
+}
+
+/* origin-connecting-an-account-00-04 — 700×68 r16, darker 1px border, 20px
+   placeholder, 20px icon: the consumer hero field */
+.ds-text-input[data-variant="origin-large-rounded"] {
+  --_h: calc(var(--ds-control-h-lg) + var(--ds-space-6));   /* 44 + 24 = 68 */
+  --_pad-x: var(--ds-space-6);
+  --_radius: var(--ds-radius-lg);
+  --_icon: var(--ds-icon-size-row);
+  --_w: 100%;
+  gap: var(--ds-space-4);
+  font-size: var(--ds-text-xl);
+  border-color: var(--ds-border-strong);
+}
+
+/* hsajlzkwuaagtdc — 47–48 tall r10, 1px border, 16px text, every input full
+   width even for 2-digit values */
+.ds-text-input[data-variant="hsaj-full-width-48"] {
+  --_h: calc(var(--ds-control-h) + var(--ds-space-3));       /* 36 + 12 = 48 */
+  --_pad-x: var(--ds-space-4);
+  --_radius: var(--ds-radius-md);
+  --_w: 100%;
+  font-size: var(--ds-text-lg);
+}
+
+/* hsajlzjwgaajrfp — "Subject:" muted + value 600, one 56px row, hairline below,
+   no box: the editor's inline-label row */
+.ds-text-input[data-variant="hsajl-inline-label-row"] {
+  --_h: calc(var(--ds-row-h) + var(--ds-space-4));            /* 40 + 16 = 56 */
+  --_pad-x: var(--ds-space-5);
+  --_radius: 0;
+  --_w: 100%;
+  gap: var(--ds-space-6);
+  font-size: var(--ds-text-lg);
+  background: transparent;
+  border-width: 0 0 var(--ds-border-width);
+  border-color: var(--ds-rule);
+}
+.ds-text-input[data-variant="hsajl-inline-label-row"]:hover { border-color: var(--ds-rule-strong); }
+.ds-text-input[data-variant="hsajl-inline-label-row"] .ds-text-input__control { font-weight: var(--ds-weight-semibold); }
+.ds-text-input[data-variant="hsajl-inline-label-row"] .ds-text-input__control::placeholder { font-weight: var(--ds-weight-regular); }
+
+/* luma-creating-an-event-04-07 — 962×49 white r10 on a tinted modal ground,
+   conditional ✕ clear; needs a tinted parent (.ds-well) to hold its edge */
+.ds-text-input[data-variant="luma-modal-white-with-clear"] {
+  --_h: calc(var(--ds-control-h-lg) + var(--ds-space-1));     /* 44 + 4 = 48 */
+  --_pad-x: var(--ds-space-4);
+  --_radius: var(--ds-radius-md);
+  --_w: 100%;
+  font-size: var(--ds-text-lg);
+  border-color: transparent;
+}
+.ds-text-input[data-variant="luma-modal-white-with-clear"]:hover { border-color: var(--ds-rule); }
+
+/* perplexity-asking-a-question-05-09 — inputs get a darker rule than cards plus
+   a 2–4px soft bottom shadow so the box holds against the sheet */
+.ds-text-input[data-variant="perplexity-composer-strong-rule"] {
+  --_h: var(--ds-control-h-lg);
+  --_pad-x: var(--ds-space-4);
+  font-size: var(--ds-text-lg);
+  border-color: var(--ds-border-strong);
+  box-shadow: var(--ds-shadow-lift);
+}
+
+/* ---- data-form: multiline (textarea) and native select (DESK-371, found by Forematter) -----------------------------
+   Self-contained: neither form needs components/_base.css, so a host that skips the base resets (a Tailwind app)
+   still gets a finished field. Same box, same states (hover / :focus-within ring / :disabled / aria-invalid).
+     <div class="ds-text-input" data-form="multiline"><textarea class="ds-text-input__control" rows="4"></textarea></div>
+     <div class="ds-text-input" data-form="select"><select class="ds-text-input__control">…</select>
+       <span class="ds-text-input__chevron" aria-hidden="true"></span></div>   (the chevron is border-drawn, empty)
+   Knob: --_rows (multiline minimum height in lines, default 4). */
+.ds-text-input[data-form="multiline"] {
+  --_rows: 4;
+  align-items: stretch;
+  padding-block: calc(var(--_pad-x) * 0.66);
+  width: var(--_w, 100%);
+}
+.ds-text-input[data-form="multiline"] > .ds-text-input__control {
+  min-height: calc(var(--_rows) * 1lh);
+  line-height: var(--ds-lh-body, 1.5);
+  resize: vertical;
+  text-overflow: clip;
+  white-space: pre-wrap;
+  appearance: none;
+}
+.ds-text-input[data-form="select"] { position: relative; padding-inline-end: 0; }
+.ds-text-input[data-form="select"] > .ds-text-input__control {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-inline-end: calc(var(--_pad-x) + var(--ds-icon-size));
+  min-height: calc(var(--_h) - 2 * var(--ds-border-width));
+}
+.ds-text-input[data-form="select"] > .ds-text-input__chevron {
+  position: absolute;
+  inset-inline-end: var(--_pad-x);
+  top: 50%;
+  margin: 0;
+  transform: translateY(-75%) rotate(45deg);   /* the border-drawn chevron above, centred on the box */
+  pointer-events: none;
+}
+.ds-text-input[data-form] > .ds-text-input__control:disabled { cursor: not-allowed; color: var(--ds-ink-faint); }

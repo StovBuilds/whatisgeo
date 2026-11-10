@@ -45,7 +45,7 @@ status: "published"
 ---
 Short answer: if a page cannot be crawled, indexed and understood, it will struggle in both classic search and AI answers, so the SEO basics come first. GEO adds a different target on top of them. You want to be named, quoted or described accurately inside an answer, and you need a different way to check whether that is happening.
 
-Most pages on this topic blend three kinds of claim. Here each one is labelled: **documented** (a platform's own documentation says so), **research** (a named study, with its limits) or **our recommendation** (sensible practice, nothing more). For the wider background, start with [what GEO is](/#what-is-geo).
+Most pages on this topic blend three kinds of claim. Here each one is labelled: **documented** (a platform's own documentation says so), **research** (a named study, with its limits) or **our recommendation** (sensible practice, nothing more). For the wider background, start with [what GEO is](/guide/#what-is-geo).
 
 ## The short answer: mostly the same foundations, a different goal
 
@@ -68,7 +68,7 @@ GEO aims at inclusion. A generative engine takes a question, gathers sources and
 | Crawler decisions | Mainly search crawlers | Search, training and user-triggered agents, controlled separately |
 | Measurement | Rankings, traffic, conversions | Asking buyer questions and checking the answers, plus search data |
 
-The middle rows barely change. The differences sit at the top and bottom: what you want, and how you check whether you got it. For how an AI answer is put together, see [how AI answers happen](/#how-it-works).
+The middle rows barely change. The differences sit at the top and bottom: what you want, and how you check whether you got it. For how an AI answer is put together, see [how AI answers happen](/guide/#how-it-works).
 
 ## What each platform says about eligibility
 
@@ -84,7 +84,7 @@ Everything in this section is documented behaviour. Where a platform says nothin
 
 **Anthropic (Claude).** Anthropic lists three bots. ClaudeBot collects content that may be used for model training. Claude-User fetches pages when people ask Claude questions. Claude-SearchBot indexes content to improve search results. Anthropic says its bots honour robots.txt, and that blocking Claude-User or Claude-SearchBot may reduce your visibility in Claude's search answers.
 
-**A caveat for all of them.** robots.txt is defined in RFC 9309, and the RFC is explicit that its rules "are not a form of access authorization." Crawlers are asked to follow them; nothing forces them to. Setup details are in [crawler access](/#crawler-access).
+**A caveat for all of them.** robots.txt is defined in RFC 9309, and the RFC is explicit that its rules "are not a form of access authorization." Crawlers are asked to follow them; nothing forces them to. Setup details are in [crawler access](/guide/#crawler-access).
 
 ## What the research says (and its limits)
 
@@ -115,7 +115,7 @@ None of this is exotic. It is an extra layer on top of normal SEO.
 
 No. Google says AI Overviews and AI Mode need nothing beyond being indexed and eligible for a snippet. Bing says Copilot runs on the same foundation as its search. OpenAI, Perplexity and Anthropic all point site owners to robots.txt, the same access layer SEO has always relied on. Nothing in the documentation we read suggests the foundations stopped mattering.
 
-What nobody can guarantee is a particular outcome. Bing puts it plainly: "SEO does not guarantee rankings or traffic, and GEO does not guarantee grounding or citations in AI experiences." Google likewise says it cannot guarantee that content will be crawled, indexed or served. If someone promises you a guaranteed place in AI answers, ask for their source. The home guide's [GEO vs SEO section](/#geo-vs-seo) has the short version.
+What nobody can guarantee is a particular outcome. Bing puts it plainly: "SEO does not guarantee rankings or traffic, and GEO does not guarantee grounding or citations in AI experiences." Google likewise says it cannot guarantee that content will be crawled, indexed or served. If someone promises you a guaranteed place in AI answers, ask for their source. The home guide's [GEO vs SEO section](/guide/#geo-vs-seo) has the short version.
 
 ## GEO, AEO and 'search everywhere' optimisation: are they different?
 
@@ -127,7 +127,7 @@ One related question comes up often: is Google Ads part of SEO? No. Ads are paid
 
 SEO measurement is mature: rankings, organic traffic and conversions. Google says traffic from AI Overviews and AI Mode is counted within the "Web" search type in Search Console's Performance report, so your existing reports already include it (documented). Bing notes that content can appear as impressions, citations or grounding references in Copilot, and that "a decline in clicks does not always indicate a loss of visibility" (documented).
 
-For the AI side, our recommendation is to keep a fixed list of buyer questions, ask them in the AI tools your customers use, and record what comes back. Is your business named? Is it described correctly? Which sources are cited? Repeat this on a schedule, because answers vary between runs and change over time. More on this in [measuring progress](/#measurement).
+For the AI side, our recommendation is to keep a fixed list of buyer questions, ask them in the AI tools your customers use, and record what comes back. Is your business named? Is it described correctly? Which sources are cited? Repeat this on a schedule, because answers vary between runs and change over time. More on this in [measuring progress](/guide/#measurement).
 
 ## What to do first
 
@@ -139,4 +139,4 @@ This sequence is our recommendation:
 4. Ask AI tools your buyers' questions and note what they say about you.
 5. Track those answers alongside your search data, without relying on rankings alone.
 
-For a fuller plan, see [getting started](/#getting-started).
+For a fuller plan, see [getting started](/guide/#getting-started).

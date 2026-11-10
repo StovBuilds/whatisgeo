@@ -53,7 +53,7 @@ In practice GEO covers three things:
 
 It does not cover buying a place in an answer. None of the platform documentation we read for this page describes a paid route into AI answers.
 
-Every claim below is one of three kinds, and we say which: a platform's documented behaviour, a named research finding with its limits, or our own recommendation. Where we had no source, we left the point out. The home guide has a shorter version of this definition in [what is GEO](/#what-is-geo).
+Every claim below is one of three kinds, and we say which: a platform's documented behaviour, a named research finding with its limits, or our own recommendation. Where we had no source, we left the point out. The home guide has a shorter version of this definition in [what is GEO](/guide/#what-is-geo).
 
 ## Where the term came from
 
@@ -82,7 +82,7 @@ Different systems work differently, so we only describe what the platforms thems
 
 The practical point is that search and training are controlled separately. OpenAI, for example, says sites that opt out of OAI-SearchBot are left out of ChatGPT search answers. Blocking GPTBot only signals that your content should not be used for training. If you block every AI bot by reflex, you may take yourself out of AI search results as well.
 
-Access is the first gate. If a system cannot fetch or index your page, it cannot cite it, and everything else in GEO depends on that. The [crawler access](/#crawler-access) section covers the robots.txt detail, and [how it works](/#how-it-works) gives the wider picture.
+Access is the first gate. If a system cannot fetch or index your page, it cannot cite it, and everything else in GEO depends on that. The [crawler access](/guide/#crawler-access) section covers the robots.txt detail, and [how it works](/guide/#how-it-works) gives the wider picture.
 
 ## What GEO involves in practice
 
@@ -93,7 +93,7 @@ This section is our recommendation. No platform confirms that these steps lead t
 3. **Keep important text crawlable.** Words that only appear after scripts run may not be seen by every crawler. Plain text in the page is the safer choice.
 4. **Describe your business consistently across the web.** Use the same name, description and facts wherever you appear.
 
-Most of this is good editorial practice under a new label, which is why it is worth doing even as the AI products change. The [principles](/#principles) section goes through each one in more depth.
+Most of this is good editorial practice under a new label, which is why it is worth doing even as the AI products change. The [principles](/guide/#principles) section goes through each one in more depth.
 
 Which crawlers you let in is your decision, and robots.txt is how you state it. The standard, RFC 9309, says its rules "are not a form of access authorization"; crawlers are "requested to honor" them. Anthropic says its bots honour robots.txt directives. OpenAI and Perplexity say their user-triggered fetchers may not follow it. Decide which bots to allow based on each company's own description of what they do.
 
@@ -121,7 +121,7 @@ If an agency promises a guaranteed spot in ChatGPT or AI Overviews, ask them for
 
 These labels overlap. Wikipedia lists answer engine optimisation (AEO), large language model optimisation (LLMO) and "AI SEO" as other terms for the same concept. In our reading, different writers use them for similar and sometimes identical practices, and no standards body defines any of them.
 
-Our working view is that GEO is the only one of these terms with a named research origin, while the others are common in industry writing. For how GEO relates to traditional search work, see [GEO vs SEO](/#geo-vs-seo). We will compare AEO in detail on a separate page.
+Our working view is that GEO is the only one of these terms with a named research origin, while the others are common in industry writing. For how GEO relates to traditional search work, see [GEO vs SEO](/guide/#geo-vs-seo). We will compare AEO in detail on a separate page.
 
 ## Where to start
 
@@ -133,4 +133,4 @@ A short, honest list, in this order:
 4. Make sure the important text is in the page itself, not only rendered by scripts.
 5. Make sure your business is described the same way on your site, profiles and listings.
 
-The full 30-day version is in [getting started](/#getting-started). To check whether any of it shows up in AI answers, see [measuring progress](/#measurement).
+The full 30-day version is in [getting started](/guide/#getting-started). To check whether any of it shows up in AI answers, see [measuring progress](/guide/#measurement).

@@ -58,13 +58,13 @@ You can measure:
 - crawler and user-triggered visits from AI companies in your server logs
 - the figures Google and Bing report to site owners
 
-You cannot measure a stable position. Google says AI Mode and AI Overviews "may use different models and techniques, so the set of responses and links they show will vary", and that AI Overviews often don't appear at all. Bing says its own AI Performance report "does not measure rankings, authority, performance, or importance". Treat every figure as a sample from a system that keeps moving. For how these answers get put together in the first place, see [how AI answers happen](/#how-it-works).
+You cannot measure a stable position. Google says AI Mode and AI Overviews "may use different models and techniques, so the set of responses and links they show will vary", and that AI Overviews often don't appear at all. Bing says its own AI Performance report "does not measure rankings, authority, performance, or importance". Treat every figure as a sample from a system that keeps moving. For how these answers get put together in the first place, see [how AI answers happen](/guide/#how-it-works).
 
 ## Step 1: Build a fixed prompt set from real buyer questions
 
 Start with questions your customers actually ask. Pull them from sales calls, support emails, contact form messages, reviews and the search terms you already see. Write them the way a buyer would type them, messy phrasing included. A prompt that reads like a marketing brief won't behave like a real question.
 
-**Our recommendation:** aim for 15 to 30 prompts. That is a suggestion, not a research finding. It is enough to cover your main services and buying stages, and few enough that a small team will actually finish each round. The [30-day plan](/#getting-started) on our home guide starts with 3 to 5 prompts, which is a good first look. Widen the set once the routine sticks.
+**Our recommendation:** aim for 15 to 30 prompts. That is a suggestion, not a research finding. It is enough to cover your main services and buying stages, and few enough that a small team will actually finish each round. The [30-day plan](/guide/#getting-started) on our home guide starts with 3 to 5 prompts, which is a good first look. Widen the set once the routine sticks.
 
 Mix three types:
 
@@ -128,7 +128,7 @@ Your own data is the cross-check. It doesn't depend on which prompts you wrote.
 | Anthropic | Claude-SearchBot | Indexes content to improve search results |
 | Anthropic | Claude-User | Fetches pages when people ask Claude questions |
 
-OpenAI, Perplexity and Anthropic each publish the IP addresses their bots use. Check against those lists before you trust a user-agent string, because anyone can copy one. If these bots can't reach your pages at all, fix that first: see [crawler access](/#crawler-access).
+OpenAI, Perplexity and Anthropic each publish the IP addresses their bots use. Check against those lists before you trust a user-agent string, because anyone can copy one. If these bots can't reach your pages at all, fix that first: see [crawler access](/guide/#crawler-access).
 
 ### What to treat with caution
 
@@ -153,7 +153,7 @@ Keep one sheet with one row per run:
 
 Summarise each prompt and assistant as a rate: named in *x* of *y* runs, cited in *x* of *y*, accurate in *x* of *y*. **Our recommendation** is to report rates or ranges and never a single result, and to run a round at a steady interval, monthly for most small businesses.
 
-Only compare like with like: the same prompt set version, the same assistants, the same conditions. If any of those change, note it in the sheet and don't draw a trend line across the break. Small moves between rounds are often noise. Before you call something a trend, look for a change that holds across several rounds and several prompts, and that your referral and log data agree with. More on reading progress is in [measuring progress](/#measurement).
+Only compare like with like: the same prompt set version, the same assistants, the same conditions. If any of those change, note it in the sheet and don't draw a trend line across the break. Small moves between rounds are often noise. Before you call something a trend, look for a change that holds across several rounds and several prompts, and that your referral and log data agree with. More on reading progress is in [measuring progress](/guide/#measurement).
 
 ## Doing it by hand or with a tool
 
@@ -165,4 +165,4 @@ A tool can save time by running prompts on a schedule, across more assistants an
 
 A good result is modest and steady. You are named in a fair share of unbranded answers, citations point to the right pages, descriptions are accurate, and that holds across rounds as well as in one lucky run.
 
-No measurement can promise inclusion, and nobody can guarantee that an assistant will name you. What you can do is make your site easy to crawl, easy to understand and accurate, then use this method to see whether things move. The [core principles](/#principles) cover the first part. The rest is careful, repeated sampling.
+No measurement can promise inclusion, and nobody can guarantee that an assistant will name you. What you can do is make your site easy to crawl, easy to understand and accurate, then use this method to see whether things move. The [core principles](/guide/#principles) cover the first part. The rest is careful, repeated sampling.

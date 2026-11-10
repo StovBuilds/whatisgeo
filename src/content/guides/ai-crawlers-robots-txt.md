@@ -180,13 +180,13 @@ These are our recommendations; the vendors document the details they rely on.
 4. **Verify identity.** A user agent is just text and can be faked. OpenAI, Anthropic and Perplexity publish IP lists to check requests against. Google says its crawlers can be identified by user agent, source IP and reverse DNS.
 5. **Give it time.** OpenAI mentions around 24 hours for search. Google says recrawling can take days to months.
 
-For turning this into a regular routine, see [measuring progress](/#measurement).
+For turning this into a regular routine, see [measuring progress](/guide/#measurement).
 
 ## Blocking at server or CDN level when robots.txt is not enough
 
 If logs show a bot ignoring your file, or you have content that must not be fetched at all, robots.txt is the wrong tool. Firewall, server or CDN rules actually refuse requests. Perplexity's documentation shows how to write firewall rules that match both the user agent and the published IP ranges. It uses them to allow its bots, but the same matching works for blocking.
 
-Two cautions. Anthropic says blocking its IP addresses may not reliably opt you out, because it stops its bots reading your robots.txt, so keep the robots.txt rule as well. And bot protection can cut both ways: Google's AI features guide lists making sure your CDN or hosting allows crawling among its basics, and OpenAI and Perplexity ask you to allow their search bots' IP ranges. Check that a security setting is not turning away the search bots you meant to welcome. The home guide's [crawler access](/#crawler-access) section has the short version.
+Two cautions. Anthropic says blocking its IP addresses may not reliably opt you out, because it stops its bots reading your robots.txt, so keep the robots.txt rule as well. And bot protection can cut both ways: Google's AI features guide lists making sure your CDN or hosting allows crawling among its basics, and OpenAI and Perplexity ask you to allow their search bots' IP ranges. Check that a security setting is not turning away the search bots you meant to welcome. The home guide's [crawler access](/guide/#crawler-access) section has the short version.
 
 ## How to decide: a short framework for small businesses
 
@@ -200,4 +200,4 @@ This is our recommendation, not a vendor requirement.
 6. **Check your logs**, then escalate to firewall or CDN rules only if a bot ignores you.
 7. **Revisit now and then.** Vendors add and rename bots, and their pages say so first.
 
-The reasoning behind this approach is in our [GEO principles](/#principles).
+The reasoning behind this approach is in our [GEO principles](/guide/#principles).

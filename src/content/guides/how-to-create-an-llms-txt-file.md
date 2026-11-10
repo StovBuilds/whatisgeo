@@ -159,7 +159,7 @@ You do not need a validator tool. A browser and ten minutes are enough. This che
 2. Check the first line is an H1 (`# Name`), followed by the `>` summary if you wrote one.
 3. Check that the only headings after that are H2s (`##`), and that each list item starts with a `[name](url)` link.
 4. Open every link. Each should load the page you meant and should not return an error.
-5. Check that robots.txt does not block those pages for the crawlers you care about. Our [crawler access](/#crawler-access) section covers the main user agents.
+5. Check that robots.txt does not block those pages for the crawlers you care about. Our [crawler access](/guide/#crawler-access) section covers the main user agents.
 6. Reread the notes. Do they still describe each page accurately?
 7. Run the spec's own test: give an AI assistant only your llms.txt and ask it questions about your business.
 
@@ -178,7 +178,7 @@ No one can guarantee that this file changes whether or how an AI assistant cites
 - **OpenAI, Anthropic and Perplexity** describe their bots and robots.txt controls in their crawler documentation. None of those pages says the crawlers read a website's llms.txt. OpenAI and Perplexity publish llms.txt files for their own developer docs. That shows the format in use for documentation. It does not show that ChatGPT or Perplexity read your file when answering.
 - **Webflow** calls the format "experimental", says it "doesn't guarantee your site will be read by LLMs", and says its effects on AI-driven search "are unclear".
 
-So treat llms.txt as cheap and low-risk, and do not mistake it for a ranking lever. Whether assistants describe you well depends on the wider work covered in [what GEO is](/#what-is-geo) and [what AI visibility means](/what-is-ai-visibility/). To find out whether anything you change makes a difference, see our section on [measurement](/#measurement).
+So treat llms.txt as cheap and low-risk, and do not mistake it for a ranking lever. Whether assistants describe you well depends on the wider work covered in [what GEO is](/guide/#what-is-geo) and [what AI visibility means](/what-is-ai-visibility/). To find out whether anything you change makes a difference, see our section on [measurement](/guide/#measurement).
 
 ## Keeping the file up to date
 

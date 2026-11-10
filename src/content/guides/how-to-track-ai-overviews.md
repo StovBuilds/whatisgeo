@@ -54,7 +54,7 @@ There are three separate questions, and each method answers a different one.
 | Are people clicking through to my site? | Search Console and GA4 | AI Overview clicks are mixed in with other Google organic clicks |
 | How often does this happen across my market? | A third-party tracker | Its keyword list and settings decide the answer |
 
-None of these gives you a complete count of every AI Overview a real person saw. For how this fits with measuring AI answers more widely, see [measuring progress](/#measurement).
+None of these gives you a complete count of every AI Overview a real person saw. For how this fits with measuring AI answers more widely, see [measuring progress](/guide/#measurement).
 
 ## What Google itself reports about AI features
 
@@ -141,4 +141,4 @@ Weekly is usually enough. Day-to-day movement in AI results is easy to over-read
 - **A missing citation is a single observation.** You may not have checked the right search, place or moment.
 - **Click-loss statistics need scrutiny.** Many published figures come from vendors. Ask who ran the study, on which queries, in which country and over what period, and treat a vendor's number as that vendor's claim.
 
-For how AI answers are put together in the first place, see [how AI answers happen](/#how-it-works). Common questions about GEO are answered in [questions](/#questions), and the rest of our guides are in [all guides](/guides/).
+For how AI answers are put together in the first place, see [how AI answers happen](/guide/#how-it-works). Common questions about GEO are answered in [questions](/guide/#questions), and the rest of our guides are in [all guides](/guides/).

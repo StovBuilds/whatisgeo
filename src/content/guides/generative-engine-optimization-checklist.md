@@ -171,4 +171,4 @@ The method, and what to do with the results, is in [how to measure AI visibility
 | 5 | Add schema or llms.txt only if you have your own reason | Optional |
 | 6 | Re-run a fixed question set on a schedule | Mostly recommendation |
 
-Steps one and two carry the strongest evidence, so do them first. For the wider plan these steps sit inside, the home guide has a [30-day getting-started plan](/#getting-started).
+Steps one and two carry the strongest evidence, so do them first. For the wider plan these steps sit inside, the home guide has a [30-day getting-started plan](/guide/#getting-started).

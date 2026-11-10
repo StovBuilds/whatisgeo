@@ -1,9 +1,29 @@
 ---
-// MCP server help page. Copy: src/content/pages/mcp-server.md (shared with /mcp-server.md).
-// Not listed in llms.txt by hand: tools/build-mcp-index.mjs appends its "AI agents" lines to dist.
+// MCP server help page, read as the file /mcp-server.md serves (design/site/DESIGN.md §4). Copy:
+// src/content/pages/mcp-server.md. Not listed in llms.txt by hand: tools/build-mcp-index.mjs appends its "AI agents" lines.
 import Base from '../layouts/Base.astro';
-import { sitePage } from '../lib/pages';
+import FileRail from '../components/FileRail.astro';
+import FileBar from '../components/FileBar.astro';
+import { site } from '../data/content';
+import { sitePage, sitePageMarkdown } from '../lib/pages';
+import { renderLines, chaptersOf, lineCount } from '../lib/linefile';
 const page = sitePage('mcp-server');
-const { Content } = page;
+const text = sitePageMarkdown('mcp-server', site.url);
+const lines = text.split('\n');
+const count = lineCount(text);
+const doc = renderLines(lines, 1, count, { frontMatterNote: 'Front matter: the title, this address and the date it was last checked.', tableLabel: () => 'The three tools' });
+const sections = chaptersOf(lines);
+const fmtDate = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 ---
-<Base title={page.fm.title} description={page.fm.description} markdown={page.md}><main class="utility-page" id="main"><p class="eyebrow">For AI assistants</p><h1>{page.fm.title}</h1><div class="prose"><Content /></div><a class="pill" href="/">Back to the guide ↗</a></main></Base>
+<Base title={page.fm.title} description={page.fm.description} markdown={page.md}>
+  <main id="main">
+    <div class="lf-shell" data-page="mcp">
+      <FileRail page="mcp" mcp={{ count, sections }} />
+      <div class="lf-pane" data-lf-file={count}>
+        <FileBar name="mcp-server.md" meta={[`${count} lines`, ...(page.fm.updated ? [`Updated ${fmtDate(page.fm.updated)}`] : []), 'Read-only', 'No account or key']} href="/.well-known/mcp.json" label="Discovery card" />
+        <article class="lf-doc" aria-label="mcp-server.md" set:html={doc.html} />
+        <p class="lf-in lf-note">The same page as Markdown: <a class="ds-text-link" href={page.md}>{page.md}</a>.</p>
+      </div>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,725 @@
+/* ============================================================================
+   marketing-nav — Marketing site top nav
+   taxonomy-components.md §A · common · S1  ·  sections L-NAV-01
+
+   Root: <header class="ds-marketing-nav" data-variant="…">  (one per page)
+   Parts: __inner · __brand (__mark, __wordmark) · __divider · __drawer ·
+          __links > li > __link (+ __chevron) · __utilities (__icon-btn, __meta,
+          __status, __clock, __avatar, __account) · __actions > __cta[data-cta] ·
+          __menu-toggle
+   Variants (data-variant): jstov (default) · vercel-button-trio · intercom-dual-cta ·
+          attio-dual-cta · fibery-cta-trio · heron-table-nav ·
+          synara-three-cluster-outlined-cta · luma-transparent-app-nav · airbnb-account-pill
+   States: aria-current="page" · aria-expanded (menu trigger) · aria-disabled · aria-busy ·
+          data-state="scrolled" · data-sticky · drawer open (menu-toggle[aria-expanded=true]
+          or data-state="open")
+   Axes:   data-collapse="cta" — below 1024 px only the links collapse; the primary CTA stays beside the toggle
+   Tokens only (tools/lint-tokens.mjs). Private knobs are --_*.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   0. ROOT — knobs, container, base type
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav {
+  /* bar height: the topbar rung (56). Variants step it with space tokens:
+     52 = -space-1 (synara) · 60 = +space-1 (heron) · 64 = +space-2 (attio, fibery,
+     intercom, house) · 80 = +space-6 (vercel, airbnb). All ladder-derived. */
+  --_h: var(--ds-topbar-h);
+  --_cta-h: var(--ds-size-h);                   /* CTA height; vercel lifts to control-h-lg */
+  --_gap: var(--ds-space-4);                    /* between clusters (16 · 32 on an 8 px unit) */
+  --_link-gap: var(--ds-space-1);               /* between links */
+  --_max: var(--ds-container-max);              /* inner max-width; luma/klarna set none */
+  --_spin: var(--ds-ink);                       /* loading spinner colour */
+  position: relative;
+  z-index: 1;
+  container-type: inline-size;
+  background: transparent;
+  color: var(--ds-ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-lh-list);
+}
+.ds-marketing-nav[data-sticky] {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--ds-z-sticky);
+}
+/* the scrolled state no reference defined: ground made 88 % opaque + blur + rule */
+.ds-marketing-nav[data-state="scrolled"] {
+  background: color-mix(in srgb, var(--ds-ground) 88%, transparent);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur));
+  backdrop-filter: blur(var(--ds-glass-blur));
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+  transition: background-color var(--ds-dur-base) var(--ds-ease-standard),
+              border-color var(--ds-dur-base) var(--ds-ease-standard);
+}
+
+.ds-marketing-nav__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--_gap);
+  min-height: var(--_h);
+  width: 100%;
+  max-width: var(--_max);
+  margin-inline: auto;
+  padding-inline: var(--ds-gutter-page);
+  min-width: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   1. BRAND
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__brand {
+  order: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  flex: none;
+  min-height: var(--ds-control-h-sm);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-ink);
+  text-decoration: none;
+  font-weight: var(--ds-weight-semibold);
+  font-size: var(--ds-text-lg);
+  letter-spacing: var(--ds-heading-tracking);
+}
+.ds-marketing-nav__mark {
+  width: var(--ds-icon-size-rail);
+  height: var(--ds-icon-size-rail);
+  flex: none;
+  fill: currentColor;
+}
+.ds-marketing-nav__wordmark { white-space: nowrap; }
+/* only a brand: push everything else right */
+.ds-marketing-nav__inner:not(:has(.ds-marketing-nav__links)) .ds-marketing-nav__brand { margin-inline-end: auto; }
+
+/* fibery: hairline after the logo */
+.ds-marketing-nav__divider {
+  order: 0;
+  width: var(--ds-border-width);
+  align-self: stretch;
+  margin-block: var(--ds-space-4);
+  margin-inline: calc(-1 * var(--ds-space-2));
+  background: var(--ds-rule-strong);
+  flex: none;
+}
+
+/* ---------------------------------------------------------------------------
+   2. DRAWER (display: contents on desktop; a stacked panel on phones)
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__drawer { display: contents; }
+
+/* ---------------------------------------------------------------------------
+   3. LINKS
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__links {
+  order: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--_link-gap);
+  margin: 0;
+  margin-inline-end: auto;                 /* links hug the brand; clusters go right */
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+.ds-marketing-nav[data-align="center"] .ds-marketing-nav__links { margin-inline: auto; }
+
+.ds-marketing-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  min-height: var(--ds-control-h-sm);
+  padding-inline: var(--ds-control-pad-x);   /* density-scaled, not unit-scaled: stable on an 8 px unit */
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  background: transparent;
+  color: var(--ds-ink-2);
+  font-weight: var(--ds-weight-medium);
+  font-size: inherit;
+  text-decoration: none;
+  text-transform: var(--ds-control-case);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-marketing-nav__link:hover,
+.ds-marketing-nav__link[data-state="hover"] {
+  color: var(--ds-ink);
+  background: var(--ds-hover-bg);
+  text-decoration: none;
+}
+.ds-marketing-nav__link[aria-current="page"] {
+  color: var(--ds-ink);
+  font-weight: var(--ds-selected-weight);
+}
+/* underline selection (page-nav grammar): 2 px line in the selected colour */
+[data-selection="underline"] .ds-marketing-nav__link[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--ds-selected-line);
+  text-underline-offset: .55em;
+}
+[data-selection="bar"] .ds-marketing-nav__link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--ds-space-3);
+  inset-block-end: 0;
+  height: 2px;
+  background: var(--ds-selected-line);
+}
+.ds-marketing-nav__link[aria-expanded="true"] {
+  color: var(--ds-ink);
+  background: var(--ds-surface-selected);
+}
+.ds-marketing-nav__link[aria-disabled="true"] {
+  color: var(--ds-ink-faint);
+  pointer-events: none;
+}
+.ds-marketing-nav__chevron {
+  width: 12px;
+  height: 12px;
+  color: var(--ds-ink-muted);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  transition: transform var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-marketing-nav__link[aria-expanded="true"] .ds-marketing-nav__chevron { transform: rotate(180deg); }
+/* luma: icon + label routes */
+.ds-marketing-nav__link-icon {
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------------------------------------------------------------------------
+   4. UTILITIES — icon buttons, GitHub count, live status token, clock, avatar
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__utilities {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  flex: none;
+}
+.ds-marketing-nav__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-control-h-sm);
+  height: var(--ds-control-h-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  background: transparent;
+  color: var(--ds-ink-2);
+  text-decoration: none;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-marketing-nav__icon-btn:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.ds-marketing-nav__icon-btn[aria-pressed="true"] { background: var(--ds-surface-selected); color: var(--ds-ink); }
+.ds-marketing-nav__icon-btn[aria-disabled="true"], .ds-marketing-nav__icon-btn:disabled { color: var(--ds-ink-faint); }
+.ds-marketing-nav__icon {
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ds-marketing-nav__icon--fill { fill: currentColor; stroke: none; }
+
+/* GitHub icon + star count (synara social proof) */
+.ds-marketing-nav__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  min-height: var(--ds-control-h-sm);
+  padding-inline: var(--ds-space-2);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-ink-2);
+  font-weight: var(--ds-weight-medium);
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+.ds-marketing-nav__meta:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+
+/* house: live status token — presence dot + mono caps, the page's first mono */
+.ds-marketing-nav__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: var(--ds-control-h-sm);
+  padding-inline: var(--ds-space-2);
+  border-radius: var(--ds-radius-sm);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-xs);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ds-ink-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ds-marketing-nav__status:hover { color: var(--ds-ink); background: var(--ds-hover-bg); }
+.ds-marketing-nav__status::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-presence);
+  flex: none;
+}
+.ds-marketing-nav__status[data-status="degraded"]::before { background: var(--ds-warning); }
+.ds-marketing-nav__status[data-status="down"]::before { background: var(--ds-danger); }
+/* a version token instead of a status: no dot, case kept ("v1.28") */
+.ds-marketing-nav__status[data-status="version"] { text-transform: none; }
+.ds-marketing-nav__status[data-status="version"]::before { display: none; }
+/* below 600 px the token keeps its dot and its accessible name; the text is clipped */
+@container (max-width: 600px) {
+  .ds-marketing-nav__status:not([data-status="version"]) { padding-inline: var(--ds-space-1); }
+  .ds-marketing-nav__status:not([data-status="version"]) .ds-marketing-nav__status-text {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+/* luma: live clock + timezone (content promoted into chrome) */
+.ds-marketing-nav__clock {
+  color: var(--ds-ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* avatar (28) — a placeholder for .ds-avatar until that sibling ships */
+.ds-marketing-nav__avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface-2);
+  border: var(--ds-border-width) solid var(--ds-rule);
+  color: var(--ds-ink-2);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  overflow: hidden;
+  flex: none;
+}
+.ds-marketing-nav__avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+/* airbnb: bordered account pill (hamburger + avatar), always round */
+.ds-marketing-nav__account {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: var(--ds-control-h-lg);
+  padding-inline: var(--ds-space-3) var(--ds-space-1);
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  transition: box-shadow var(--ds-dur-fast) var(--ds-ease-standard), border-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-marketing-nav__account:hover { border-color: var(--ds-border-strong); box-shadow: var(--ds-shadow-lift); }
+.ds-marketing-nav__account .ds-marketing-nav__avatar { width: 32px; height: 32px; }
+
+/* ---------------------------------------------------------------------------
+   5. ACTIONS — the CTA cluster (0–3, at most ONE data-cta="primary")
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__actions {
+  order: 3;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  flex: none;
+}
+.ds-marketing-nav__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-2);
+  min-height: var(--_cta-h);
+  padding-inline: var(--ds-size-pad-x);
+  border: var(--ds-border-width) solid transparent;
+  border-radius: var(--ds-radius-button);
+  background: transparent;
+  color: var(--ds-ink);
+  font-size: var(--ds-size-text);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  text-decoration: none;
+  text-transform: var(--ds-control-case);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              border-color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-marketing-nav__cta .ds-marketing-nav__icon { width: var(--ds-icon-size); height: var(--ds-icon-size); }
+
+/* primary — THE filled button. A nav that carries it documents that the hero does not. */
+.ds-marketing-nav__cta[data-cta="primary"] {
+  --_spin: var(--ds-ink-on-primary);
+  background: var(--ds-primary-fill);
+  border-color: var(--ds-primary-border);
+  color: var(--ds-ink-on-primary);
+  box-shadow: var(--ds-shadow-lip);
+}
+.ds-marketing-nav__cta[data-cta="primary"]:hover { background: var(--ds-primary-fill-hover); }
+
+/* secondary — surface + hairline (vercel, attio "Sign in", intercom arrow, synara outline) */
+.ds-marketing-nav__cta[data-cta="secondary"],
+.ds-marketing-nav__cta[data-cta="outline-arrow"] {
+  background: var(--ds-surface);
+  border-color: var(--ds-border);
+  color: var(--ds-ink);
+  box-shadow: var(--ds-shadow-lip);
+}
+.ds-marketing-nav__cta[data-cta="secondary"]:hover,
+.ds-marketing-nav__cta[data-cta="outline-arrow"]:hover {
+  border-color: var(--ds-border-strong);
+  background: var(--ds-hover-bg);
+}
+/* outlined on the ground (synara): transparent fill, hairline only */
+.ds-marketing-nav__cta[data-cta="outline"] {
+  background: transparent;
+  border-color: var(--ds-border);
+  color: var(--ds-ink);
+}
+.ds-marketing-nav__cta[data-cta="outline"]:hover { border-color: var(--ds-border-strong); background: var(--ds-hover-bg); }
+
+/* light — one tint step, no border (fibery "Log in") */
+.ds-marketing-nav__cta[data-cta="light"] { background: var(--ds-surface-2); color: var(--ds-ink); }
+.ds-marketing-nav__cta[data-cta="light"]:hover { background: var(--ds-surface-3); }
+
+/* ghost — text only in a control box */
+.ds-marketing-nav__cta[data-cta="ghost"] { color: var(--ds-ink-2); }
+.ds-marketing-nav__cta[data-cta="ghost"]:hover { color: var(--ds-ink); background: var(--ds-hover-bg); }
+
+/* text — a plain text link that sits in the cluster (fibery "Book a demo", luma "Create Event") */
+.ds-marketing-nav__cta[data-cta="text"] {
+  padding-inline: var(--ds-space-1);
+  color: var(--ds-ink-2);
+  border-radius: var(--ds-radius-xs);
+}
+.ds-marketing-nav__cta[data-cta="text"]:hover { color: var(--ds-ink); text-decoration: underline; text-underline-offset: .2em; }
+
+/* disabled + loading (specified — 0/51 references show them) */
+.ds-marketing-nav__cta[aria-disabled="true"],
+.ds-marketing-nav__cta:disabled {
+  background: var(--ds-surface-3);
+  border-color: var(--ds-rule);
+  color: var(--ds-ink-faint);
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.ds-marketing-nav__cta[aria-busy="true"] { color: transparent; pointer-events: none; }
+.ds-marketing-nav__cta[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--ds-icon-size);
+  height: var(--ds-icon-size);
+  border: 2px solid var(--_spin);
+  border-inline-end-color: transparent;
+  border-radius: var(--ds-radius-pill);
+  animation: ds-marketing-nav-spin calc(var(--ds-dur-slow) * 3) linear infinite;
+}
+@keyframes ds-marketing-nav-spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------------------
+   6. MENU TOGGLE (phones only; shown only once JS enhances the root)
+   ------------------------------------------------------------------------- */
+.ds-marketing-nav__menu-toggle {
+  order: 4;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--ds-control-h);
+  height: var(--ds-control-h);
+  padding: 0;
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--ds-radius-button);
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  flex: none;
+}
+.ds-marketing-nav__menu-toggle:hover { border-color: var(--ds-border-strong); background: var(--ds-hover-bg); }
+.ds-marketing-nav__menu-toggle .ds-marketing-nav__icon--close { display: none; }
+.ds-marketing-nav__menu-toggle[aria-expanded="true"] .ds-marketing-nav__icon--menu { display: none; }
+.ds-marketing-nav__menu-toggle[aria-expanded="true"] .ds-marketing-nav__icon--close { display: block; }
+
+/* ---------------------------------------------------------------------------
+   7. VARIANTS
+   ------------------------------------------------------------------------- */
+
+/* jstov (house, default) — Synara's withheld-CTA three-cluster on Heron's grid:
+   brand cell | links (centred) | utilities cell, cells drawn by the frame's
+   hairline; the nav's action is OUTLINED; a live status token in the utility
+   cluster; the page's one primary fill belongs to the hero. 64 px.           */
+.ds-marketing-nav:not([data-variant]),
+.ds-marketing-nav[data-variant="jstov"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-2));
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}
+.ds-marketing-nav:not([data-variant]) .ds-marketing-nav__links,
+.ds-marketing-nav[data-variant="jstov"] .ds-marketing-nav__links { margin-inline: auto; }
+.ds-marketing-nav:not([data-variant]) .ds-marketing-nav__brand,
+.ds-marketing-nav[data-variant="jstov"] .ds-marketing-nav__brand {
+  align-self: stretch;
+  padding-inline-end: var(--_gap);
+  border-inline-end: var(--ds-border-width) solid var(--ds-rule);
+  border-radius: 0;
+}
+.ds-marketing-nav:not([data-variant]) .ds-marketing-nav__utilities,
+.ds-marketing-nav[data-variant="jstov"] .ds-marketing-nav__utilities {
+  align-self: stretch;
+  padding-inline-start: var(--_gap);
+  border-inline-start: var(--ds-border-width) solid var(--ds-rule);
+}
+
+/* vercel-button-trio — mark only, 4 links (chevrons), three EQUAL 40 px buttons
+   (secondary, secondary, primary) — hierarchy by fill alone. 80 px, no rule.  */
+.ds-marketing-nav[data-variant="vercel-button-trio"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-6));
+  --_cta-h: var(--ds-control-h-lg);
+  --_link-gap: var(--ds-space-2);
+}
+.ds-marketing-nav[data-variant="vercel-button-trio"] .ds-marketing-nav__cta {
+  border-radius: var(--ds-radius-md);
+  padding-inline: var(--ds-space-4);
+}
+.ds-marketing-nav[data-variant="vercel-button-trio"] .ds-marketing-nav__link { font-size: var(--ds-text-lg); }
+
+/* intercom-dual-cta — text links + 3 utility text links + black primary + an
+   outline-with-arrow for a second product. No rule, sits on the ground. 64 px. */
+.ds-marketing-nav[data-variant="intercom-dual-cta"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-2));
+}
+.ds-marketing-nav[data-variant="intercom-dual-cta"] .ds-marketing-nav__cta { border-radius: var(--ds-radius-xs); }
+.ds-marketing-nav[data-variant="intercom-dual-cta"] .ds-marketing-nav__cta[data-cta="outline-arrow"] {
+  background: transparent;
+  border-color: var(--ds-ink);
+}
+
+/* attio-dual-cta — hairline "Sign in" + solid "Start for free"; the same two
+   words recur at every CTA on the page. 64 px, surface bar, 1 px rule below.  */
+.ds-marketing-nav[data-variant="attio-dual-cta"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-2));
+  background: var(--ds-surface);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}
+.ds-marketing-nav[data-variant="attio-dual-cta"] .ds-marketing-nav__link { font-size: var(--ds-text-sm); }
+.ds-marketing-nav[data-variant="attio-dual-cta"] .ds-marketing-nav__cta { border-radius: var(--ds-radius-md); font-size: var(--ds-text-sm); }
+
+/* fibery-cta-trio — hairline divider after the logo; text link / light button /
+   dark button: three tiers in one bar. Transparent on the ground, no rule. 64 px. */
+.ds-marketing-nav[data-variant="fibery-cta-trio"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-2));
+  --_link-gap: var(--ds-space-2);
+}
+
+/* heron-table-nav — the nav is the first row of the page's hairline table:
+   logo cell + 5 equal bordered link cells (label lane: mono caps under
+   data-labels="upper"), last cell = accent CTA with → pinned bottom-right. 60 px. */
+.ds-marketing-nav[data-variant="heron-table-nav"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-1));
+  --_gap: 0px;
+  --_max: none;
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__inner {
+  padding-inline: 0;
+  flex-wrap: nowrap;
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__brand {
+  flex: 1 1 50%;
+  align-self: stretch;
+  padding-inline: var(--ds-gutter-page);
+  border-radius: 0;
+  min-width: 0;
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__links {
+  flex: 1 1 50%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0;
+  align-self: stretch;
+  margin: 0;
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  min-height: var(--_h);
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border-radius: 0;
+  border-inline-start: var(--ds-border-width) solid var(--ds-rule);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  letter-spacing: var(--ds-label-tracking);
+  text-transform: var(--ds-label-case);
+  color: var(--ds-ink);
+  white-space: normal;
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link[aria-haspopup]::after {
+  /* the ⌟ registration-mark bracket on menu cells */
+  content: "";
+  position: absolute;
+  inset-inline-end: var(--ds-space-2);
+  inset-block-end: var(--ds-space-2);
+  width: 6px;
+  height: 6px;
+  border-inline-end: var(--ds-border-width) solid var(--ds-rule-strong);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule-strong);
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link[data-cta] {
+  color: var(--ds-ink-link);
+  grid-column: span 1;
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link[data-cta] .ds-marketing-nav__icon {
+  position: absolute;
+  inset-inline-end: var(--ds-space-3);
+  inset-block-end: var(--ds-space-2);
+}
+.ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link:hover { background: var(--ds-hover-bg); }
+
+/* synara-three-cluster-outlined-cta — brand | links | utilities on a flat ground,
+   no rule; theme toggle + GitHub star count as social proof; CTA outlined so the
+   hero owns the viewport's only solid fill. 52 px.                              */
+.ds-marketing-nav[data-variant="synara-three-cluster-outlined-cta"] {
+  --_h: calc(var(--ds-topbar-h) - var(--ds-space-1));
+  --_link-gap: var(--ds-space-2);
+}
+.ds-marketing-nav[data-variant="synara-three-cluster-outlined-cta"] .ds-marketing-nav__links { margin-inline: auto; }
+.ds-marketing-nav[data-variant="synara-three-cluster-outlined-cta"] .ds-marketing-nav__link { color: var(--ds-ink); }
+.ds-marketing-nav[data-variant="synara-three-cluster-outlined-cta"] .ds-marketing-nav__cta { border-radius: var(--ds-radius-pill); }
+
+/* luma-transparent-app-nav — brand outside the container, icon+label routes,
+   utilities carry a live datum (clock + tz), text CTA, search, bell, avatar.
+   Transparent; bridges marketing and app. 64 px (66 in the capture).             */
+.ds-marketing-nav[data-variant="luma-transparent-app-nav"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-2));
+  --_max: none;
+  --_link-gap: var(--ds-space-1);
+}
+.ds-marketing-nav[data-variant="luma-transparent-app-nav"] .ds-marketing-nav__inner { padding-inline: var(--ds-space-6); }
+.ds-marketing-nav[data-variant="luma-transparent-app-nav"] .ds-marketing-nav__link { color: var(--ds-ink-muted); }
+.ds-marketing-nav[data-variant="luma-transparent-app-nav"] .ds-marketing-nav__link[aria-current="page"] { color: var(--ds-ink); }
+
+/* airbnb-account-pill — logo · one text link · globe · bordered pill (hamburger +
+   avatar). Full-bleed surface bar, 1 px rule, 80 px.                              */
+.ds-marketing-nav[data-variant="airbnb-account-pill"] {
+  --_h: calc(var(--ds-topbar-h) + var(--ds-space-6));
+  background: var(--ds-surface);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}
+.ds-marketing-nav[data-variant="airbnb-account-pill"] .ds-marketing-nav__cta[data-cta="text"] {
+  font-weight: var(--ds-weight-semibold);
+  color: var(--ds-ink);
+  padding-inline: var(--ds-space-3);
+  min-height: var(--ds-control-h);
+  border-radius: var(--ds-radius-pill);
+}
+.ds-marketing-nav[data-variant="airbnb-account-pill"] .ds-marketing-nav__cta[data-cta="text"]:hover { background: var(--ds-hover-bg); text-decoration: none; }
+.ds-marketing-nav[data-variant="airbnb-account-pill"] .ds-marketing-nav__icon-btn { border-radius: var(--ds-radius-pill); width: var(--ds-control-h); height: var(--ds-control-h); }
+
+/* ---------------------------------------------------------------------------
+   8. PHONES + TABLETS (container ≤ 1024 px): the drawer stacks under the bar
+   ------------------------------------------------------------------------- */
+@container (max-width: 1024px) {
+  .ds-marketing-nav__inner { gap: var(--ds-space-2) var(--ds-space-3); }
+  .ds-marketing-nav__drawer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ds-space-3);
+    flex-basis: 100%;
+    order: 5;
+    padding-block: var(--ds-space-3) var(--ds-space-4);
+    border-block-start: var(--ds-border-width) solid var(--ds-rule);
+  }
+  .ds-marketing-nav__links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: 0 !important;      /* beats the centred/auto margins of the desktop layouts */
+  }
+  .ds-marketing-nav__link {
+    width: 100%;
+    min-height: var(--ds-row-h);
+    justify-content: space-between;
+    white-space: normal;
+  }
+  .ds-marketing-nav__actions { flex-direction: column; align-items: stretch; gap: var(--ds-space-2); }
+  .ds-marketing-nav__cta { width: 100%; }
+  .ds-marketing-nav__brand { margin-inline-end: auto; }   /* one auto margin: everything else goes right */
+  .ds-marketing-nav__utilities { margin-inline-start: 0; }
+  .ds-marketing-nav__divider { display: none; }
+  .ds-marketing-nav__menu-toggle { display: inline-flex; }
+  /* house / heron cells lose their vertical rules when stacked */
+  .ds-marketing-nav__brand,
+  .ds-marketing-nav__utilities { border: 0 !important; padding-inline: 0 !important; }
+  .ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__inner { flex-wrap: wrap; padding-inline: var(--ds-gutter-page); }
+  .ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__brand { flex: 1 1 auto; padding-inline: 0; }
+  .ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__links { display: flex; }
+  .ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link {
+    height: auto;
+    min-height: var(--ds-row-h);
+    align-items: center;
+    border-inline-start: 0;
+    border-block-end: var(--ds-border-width) solid var(--ds-rule);
+  }
+  .ds-marketing-nav[data-variant="heron-table-nav"] .ds-marketing-nav__link[data-cta] .ds-marketing-nav__icon { position: static; }
+  .ds-marketing-nav[data-variant="luma-transparent-app-nav"] .ds-marketing-nav__inner { padding-inline: var(--ds-gutter-page); }
+}
+/* JS-enhanced: the drawer is collapsed until the toggle opens it */
+@container (max-width: 1024px) {
+  .ds-marketing-nav[data-js] .ds-marketing-nav__drawer { display: none; }
+  .ds-marketing-nav[data-js]:has(.ds-marketing-nav__menu-toggle[aria-expanded="true"]) .ds-marketing-nav__drawer,
+  .ds-marketing-nav[data-js][data-state="open"] .ds-marketing-nav__drawer { display: flex; }
+}
+/* no JS: never show a toggle that does nothing (the drawer is simply visible) */
+.ds-marketing-nav:not([data-js]) .ds-marketing-nav__menu-toggle { display: none; }
+
+/* ---------------------------------------------------------------------------
+   9. data-collapse="cta" (additive, 2026-09-20 · L-NAV-01 / try.cloudflare fidelity)
+      Below 1024 px only the LINKS collapse behind the toggle; the actions cluster stays in the bar
+      row beside the toggle and shows the ONE data-cta="primary" (the rest are hidden, not moved); a cluster
+      without a primary keeps its single control (the house's outlined action).
+      Markup is unchanged: __drawer keeps display: contents, so __actions is still a flex item of __inner.
+   ------------------------------------------------------------------------- */
+@container (max-width: 1024px) {
+  .ds-marketing-nav[data-collapse="cta"] .ds-marketing-nav__drawer,
+  .ds-marketing-nav[data-collapse="cta"][data-js] .ds-marketing-nav__drawer,
+  .ds-marketing-nav[data-collapse="cta"][data-js]:has(.ds-marketing-nav__menu-toggle[aria-expanded="true"]) .ds-marketing-nav__drawer,
+  .ds-marketing-nav[data-collapse="cta"][data-js][data-state="open"] .ds-marketing-nav__drawer { display: contents; }
+  .ds-marketing-nav[data-collapse="cta"] .ds-marketing-nav__links {
+    flex-basis: 100%;
+    order: 5;
+    padding-block: var(--ds-space-3) var(--ds-space-4);
+    border-block-start: var(--ds-border-width) solid var(--ds-rule);
+  }
+  .ds-marketing-nav[data-collapse="cta"] .ds-marketing-nav__actions { flex-direction: row; align-items: center; order: 3; flex: none; gap: var(--ds-space-2); }
+  .ds-marketing-nav[data-collapse="cta"] .ds-marketing-nav__cta { width: auto; }
+  /* with a primary in the cluster the rest hide; a cluster with no primary (house: one outlined action) keeps its one control */
+  .ds-marketing-nav[data-collapse="cta"] .ds-marketing-nav__actions:has(.ds-marketing-nav__cta[data-cta="primary"]) .ds-marketing-nav__cta:not([data-cta="primary"]) { display: none; }
+  /* JS-enhanced: the links (not the drawer) collapse behind the toggle */
+  .ds-marketing-nav[data-collapse="cta"][data-js] .ds-marketing-nav__links { display: none; }
+  .ds-marketing-nav[data-collapse="cta"][data-js]:has(.ds-marketing-nav__menu-toggle[aria-expanded="true"]) .ds-marketing-nav__links,
+  .ds-marketing-nav[data-collapse="cta"][data-js][data-state="open"] .ds-marketing-nav__links { display: flex; }
+}

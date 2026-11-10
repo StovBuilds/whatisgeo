@@ -119,7 +119,7 @@ One of these may just mean a badly written proposal. Several together suggest a 
 
 ## How to judge whether it is working
 
-Agree on the measures before work starts. For standard SEO, that means search visibility, clicks, and the pages that bring the outcomes you care about. Google says traffic from AI Overviews and AI Mode is included in the Search Console Performance report under the Web search type, so no separate AI figure exists for a provider to point to. Our home guide covers [measurement](/#measurement) in more detail.
+Agree on the measures before work starts. For standard SEO, that means search visibility, clicks, and the pages that bring the outcomes you care about. Google says traffic from AI Overviews and AI Mode is included in the Search Console Performance report under the Web search type, so no separate AI figure exists for a provider to point to. Our home guide covers [measurement](/guide/#measurement) in more detail.
 
 For other AI answers, it is harder. Answers vary between runs and between platforms, so one screenshot proves very little. As a sensible practice, track a fixed set of buyer questions over time. Note whether your business is named and whether it is described accurately. Compare against a baseline you recorded before the work began. Our guide on [how to measure AI visibility](/how-to-measure-ai-visibility/) walks through the method.
 

@@ -107,16 +107,16 @@ The first item is Google's documented advice. The rest are our recommendation; t
 5. **Check the "why".** Would you publish this page for your existing readers if search engines did not exist?
 6. **Do not bulk-publish without review.** No batch of pages should go live until a person has read each one.
 
-The [GEO principles](/#principles) in our main guide apply the same thinking to search and AI answers together.
+The [GEO principles](/guide/#principles) in our main guide apply the same thinking to search and AI answers together.
 
 ## Does this change for AI Overviews, ChatGPT and Perplexity?
 
 For Google, no. Google's page on AI features says the same foundational SEO best practices apply to AI Overviews and AI Mode as to Search overall, including creating helpful, reliable, people-first content. To be shown as a supporting link, a page must be indexed and eligible to appear in Search with a snippet, and "there are no additional technical requirements". It also says "specific optimization isn't required". Our guide to [Google AI Overviews](/how-to-rank-in-google-ai-overviews/) goes into more detail.
 
-For ChatGPT, Perplexity and other assistants, this page quotes no documentation on AI-written content, and we will not invent any. As practice and no more: accurate, clearly sourced pages with a named author seem sensible to aim for if you want to be cited, and nothing guarantees a mention. For how the two disciplines overlap, see [GEO vs SEO](/#geo-vs-seo) and our guide to [LLM SEO](/llm-seo/).
+For ChatGPT, Perplexity and other assistants, this page quotes no documentation on AI-written content, and we will not invent any. As practice and no more: accurate, clearly sourced pages with a named author seem sensible to aim for if you want to be cited, and nothing guarantees a mention. For how the two disciplines overlap, see [GEO vs SEO](/guide/#geo-vs-seo) and our guide to [LLM SEO](/llm-seo/).
 
 ## What nobody can tell you
 
 Nobody can promise that an AI-assisted page will rank, or that it will not. Google publishes its policies and its intent, never a formula, so treat any claim of certainty as a sales line, whoever makes it.
 
-What you can do is publish carefully, then watch your own results and adjust. The [measurement section](/#measurement) of our main guide explains how to track progress in search and in AI answers.
+What you can do is publish carefully, then watch your own results and adjust. The [measurement section](/guide/#measurement) of our main guide explains how to track progress in search and in AI answers.

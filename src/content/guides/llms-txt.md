@@ -117,7 +117,7 @@ Notice what the file does not do. It grants no permissions, blocks nothing and c
 | sitemap.xml | Gives search engines details about your pages | Sitemaps protocol (sitemaps.org) | No; the protocol says search engines "may use" the information |
 | llms.txt | A curated overview for agents, used on demand while answering | Informal proposal | No; nothing obliges any tool to read it |
 
-The proposal itself says llms.txt is meant to sit alongside the other two: a sitemap lists everything indexable, while llms.txt is a short, curated path that can also include external links. If your real question is whether AI crawlers can reach your pages at all, that is a robots.txt and crawler question, covered in [crawler access](/#crawler-access).
+The proposal itself says llms.txt is meant to sit alongside the other two: a sitemap lists everything indexable, while llms.txt is a short, curated path that can also include external links. If your real question is whether AI crawlers can reach your pages at all, that is a robots.txt and crawler question, covered in [crawler access](/guide/#crawler-access).
 
 ## Is llms.txt actually used? What is documented and what is not
 
@@ -149,7 +149,7 @@ We found no controlled experiment with published results showing that adding llm
 
 Google's guidance on AI features in Search (AI Overviews and AI Mode) is direct: "You don't need to create new machine readable files, AI text files, or markup to appear in these features." It also says there is no special schema.org structured data to add. To be eligible, a page must be indexed and eligible to be shown in Google Search with a snippet, and "there are no additional technical requirements".
 
-The page does not name llms.txt, but its wording covers it, since it says no AI text file is needed. So for Google, the documented route is ordinary indexing, which is the same ground covered in [GEO vs SEO](/#geo-vs-seo).
+The page does not name llms.txt, but its wording covers it, since it says no AI text file is needed. So for Google, the documented route is ordinary indexing, which is the same ground covered in [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## Should you add one? A sensible-practice checklist
 
@@ -171,9 +171,9 @@ Writing the file has one benefit you can count on: it forces you to decide which
 
 Do the documented things before the speculative one.
 
-1. **Make sure the right crawlers can reach you.** Every platform above documents robots.txt controls, so start with [crawler access](/#crawler-access).
-2. **Understand how assistants find and use pages**, explained in [how AI answers happen](/#how-it-works).
-3. **Get the content right.** Clear, specific, well structured pages are what the GEO research worked on; see [principles](/#principles).
-4. **Measure.** Check how AI assistants describe you before and after any change, including adding llms.txt, so you work from your own results instead of someone else's claim. [Measuring progress](/#measurement) covers how.
+1. **Make sure the right crawlers can reach you.** Every platform above documents robots.txt controls, so start with [crawler access](/guide/#crawler-access).
+2. **Understand how assistants find and use pages**, explained in [how AI answers happen](/guide/#how-it-works).
+3. **Get the content right.** Clear, specific, well structured pages are what the GEO research worked on; see [principles](/guide/#principles).
+4. **Measure.** Check how AI assistants describe you before and after any change, including adding llms.txt, so you work from your own results instead of someone else's claim. [Measuring progress](/guide/#measurement) covers how.
 
 llms.txt can sit alongside all of that. It should not come first.

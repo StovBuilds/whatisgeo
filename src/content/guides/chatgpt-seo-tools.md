@@ -95,7 +95,7 @@ Its limits:
 4. **Your customers may see something else.** Documented: OpenAI says ChatGPT may use an approximate location based on the user's IP address, and saved memories if memory is on, when it rewrites a search query. A tool's results show one view among many.
 5. **It cannot guarantee inclusion.** Documented: OpenAI's help article says ChatGPT ranks search results using multiple factors and that placement is not guaranteed. No tool can change that.
 
-Our guide on [how to measure AI visibility](/how-to-measure-ai-visibility/) sets out a method, and the [measurement section](/#measurement) of our main guide is the short version.
+Our guide on [how to measure AI visibility](/how-to-measure-ai-visibility/) sets out a method, and the [measurement section](/guide/#measurement) of our main guide is the short version.
 
 What can move visibility at all? Researched: Aggarwal et al. (GEO: Generative Engine Optimization, KDD 2024) tested content changes such as adding citations, quotations and statistics. They reported visibility gains of up to 40% on GEO-bench, their benchmark of 10,000 queries, and up to 37% in a test on Perplexity.ai. The main experiments used a generative engine the authors built from the top five Google results, ChatGPT was not the engine tested, and the effects varied by domain. The study suggests what tends to help; it does not predict what a given change will do in ChatGPT today.
 

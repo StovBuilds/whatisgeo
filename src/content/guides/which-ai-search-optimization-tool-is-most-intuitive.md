@@ -97,7 +97,7 @@ The same tool can get different verdicts from different people, so score it as t
 
 A smooth interface tells you nothing about whether the numbers are right. A tool can be pleasant to use and give you a thin picture, and an awkward one can collect its data well.
 
-Run the usability test first, then check accuracy separately: ask which engines it queries, how many runs sit behind each number and where the prompts come from. Our page on [AI search optimisation tool data accuracy](/ai-search-optimization-tool-data-accuracy/) covers those questions, and [measuring progress](/#measurement) explains how to read results over time.
+Run the usability test first, then check accuracy separately: ask which engines it queries, how many runs sit behind each number and where the prompts come from. Our page on [AI search optimisation tool data accuracy](/ai-search-optimization-tool-data-accuracy/) covers those questions, and [measuring progress](/guide/#measurement) explains how to read results over time.
 
 Keep in mind that no tool can get you into an AI answer. Google says there are "no additional technical requirements" to appear in AI Overviews or AI Mode, so any tool that promises inclusion is overselling.
 

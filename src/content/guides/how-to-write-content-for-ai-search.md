@@ -44,7 +44,7 @@ No platform documents a special writing style for AI search. What Google and Ope
 
 Google documents that AI Overviews and AI Mode may use a "query fan-out" technique: they run several related searches across subtopics and data sources, then build one response that can link to a wider set of pages than a classic results page. OpenAI says its OAI-SearchBot crawler is used to surface websites in ChatGPT's search features.
 
-The documentation does not say how passages are picked. Our working model, which is a recommendation and not a documented fact, is that one part of your page may be used next to parts of other pages. So each part should make sense on its own, say something specific and be easy to check. The home guide's [principles](/#principles) set out the same idea for the whole site.
+The documentation does not say how passages are picked. Our working model, which is a recommendation and not a documented fact, is that one part of your page may be used next to parts of other pages. So each part should make sense on its own, say something specific and be easy to check. The home guide's [principles](/guide/#principles) set out the same idea for the whole site.
 
 ## What the platforms document about content
 

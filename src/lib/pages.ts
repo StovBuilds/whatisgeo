@@ -7,3 +7,9 @@ export function sitePage(slug: 'mcp-server') {
   if (!m) throw new Error(`missing src/content/pages/${slug}.md`);
   return { slug, fm: m.frontmatter, raw: stripComments(m.rawContent()).trim(), Content: m.Content as any, url: `/${slug}/`, md: `/${slug}.md` };
 }
+
+/** The page's .md twin exactly as /<slug>.md serves it (front matter, H1, body), so the HTML page can number its lines. */
+export function sitePageMarkdown(slug: 'mcp-server', siteUrl: string) {
+  const page = sitePage(slug);
+  return ['---', `title: ${JSON.stringify(page.fm.title)}`, `url: ${siteUrl}${page.url}`, ...(page.fm.updated ? [`updated: ${page.fm.updated}`] : []), '---', '', `# ${page.fm.title}`, '', page.raw, ''].join('\n');
+}

@@ -137,4 +137,4 @@ If it does not fit on one page, it is too long. Write down:
 6. **Measurement.** How and how often you will run the questions, and what you will record.
 7. **Review rhythm.** When you will review, and what changes you are prepared to make.
 
-If you are starting from nothing, the 30-day plan in [getting started](/#getting-started) turns this template into a first month of work.
+If you are starting from nothing, the 30-day plan in [getting started](/guide/#getting-started) turns this template into a first month of work.

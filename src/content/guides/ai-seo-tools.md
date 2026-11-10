@@ -132,4 +132,4 @@ This is our recommendation, not platform guidance.
 
 **Skipping the free tools.** Search Console already shows your queries, clicks and impressions. Paying for a dashboard before looking at that is backwards.
 
-**Skipping a baseline.** Without one, you can't tell whether anything worked. The [measurement section of our guide](/#measurement) is a good place to start.
+**Skipping a baseline.** Without one, you can't tell whether anything worked. The [measurement section of our guide](/guide/#measurement) is a good place to start.

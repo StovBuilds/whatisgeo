@@ -41,7 +41,7 @@ Most of the top results on this topic are agency and vendor listicles: confident
 
 ChatGPT can answer from what its model learned in training, or it can search the web first. OpenAI's help centre says ChatGPT may search automatically when a question would benefit from current information, and users can also choose Search themselves. Responses that use web search may include citations, and a **Sources** view lists the cited pages and other relevant links.
 
-This split matters because only the search route gives your page a citation someone can click. Content can also reach a model through training, which OpenAI's GPTBot crawler collects for. That route is slow and you cannot see it: you have no way to check what a model learned from you, or when. If you want a named, linked mention, prepare for the search route. For the wider picture of how AI answers are put together, see [how AI answers happen](/#how-it-works).
+This split matters because only the search route gives your page a citation someone can click. Content can also reach a model through training, which OpenAI's GPTBot crawler collects for. That route is slow and you cannot see it: you have no way to check what a model learned from you, or when. If you want a named, linked mention, prepare for the search route. For the wider picture of how AI answers are put together, see [how AI answers happen](/guide/#how-it-works).
 
 ## What OpenAI documents
 
@@ -81,13 +81,13 @@ Disallow: /
 3. **Check your host or CDN.** Bot protection or firewall rules can turn away a crawler that robots.txt allows. OpenAI publishes the search bot's IP ranges at openai.com/searchbot.json and asks that they be allowed.
 4. **Allow around a day** for OpenAI's search systems to pick up a change, as its documentation says.
 
-One caveat about robots.txt in general. RFC 9309, the standard behind it, says its rules "are not a form of access authorization". Listing a path in robots.txt also makes that path public. If something must stay private, protect it with real access control, such as a login. Our guide to [AI crawler access](/#crawler-access) covers the other platforms' bots.
+One caveat about robots.txt in general. RFC 9309, the standard behind it, says its rules "are not a form of access authorization". Listing a path in robots.txt also makes that path public. If something must stay private, protect it with real access control, such as a login. Our guide to [AI crawler access](/guide/#crawler-access) covers the other platforms' bots.
 
 ## Step 2: be easy to find and read in ordinary search
 
 OpenAI's help centre says ChatGPT search sometimes works with other search providers. It usually rewrites the user's question into one or more targeted queries and sends those to the provider. The article lists Microsoft's privacy statement among the providers' policies. Our reading, which OpenAI does not state in so many words, is that pages ordinary search engines can find and understand give this process more to retrieve.
 
-That makes the groundwork familiar: pages that can be crawled and indexed, a clear title and topic for each page, and important text in the HTML itself rather than loaded later by scripts. Where this overlaps with traditional SEO and where it differs is covered in [GEO vs SEO](/#geo-vs-seo).
+That makes the groundwork familiar: pages that can be crawled and indexed, a clear title and topic for each page, and important text in the HTML itself rather than loaded later by scripts. Where this overlaps with traditional SEO and where it differs is covered in [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## What research suggests about content that gets cited
 
@@ -117,7 +117,7 @@ OpenAI does not document the points below, and the paper did not test them on Ch
 3. **Keep facts consistent.** Your site and your profiles elsewhere should describe what you do in the same way. Contradictions confuse people first and machines second.
 4. **Test, then record what you find.** See the next section.
 
-None of this is clever, and it helps human readers whether or not a model ever cites the page. The reasoning behind these points is set out in our [GEO principles](/#principles).
+None of this is clever, and it helps human readers whether or not a model ever cites the page. The reasoning behind these points is set out in our [GEO principles](/guide/#principles).
 
 ## What you cannot control, and claims to ignore
 
@@ -143,7 +143,7 @@ You do not need a tool for a first look.
 4. **Open the cited sources.** OpenAI's help centre warns that citations can be incomplete, outdated or wrong, and you may find ChatGPT describing you from someone else's out-of-date page.
 5. **Repeat with the same list later.** Answers vary between runs, so one check proves little. A pattern across many questions tells you more.
 
-To turn this into a regular routine, see [measuring progress](/#measurement).
+To turn this into a regular routine, see [measuring progress](/guide/#measurement).
 
 ## Where to go next
 

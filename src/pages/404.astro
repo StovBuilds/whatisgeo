@@ -1,4 +1,28 @@
 ---
+// Branded 404: a file that isn't there. The two numbered lines are this page's own text, not a quote from a file.
 import Base from '../layouts/Base.astro';
+import FileRail from '../components/FileRail.astro';
+import FileBar from '../components/FileBar.astro';
+import { guideFile } from '../lib/site-files';
+import { guides } from '../lib/guides';
+const gf = guideFile();
 ---
-<Base title="Page not found | What is GEO" description="This page isn't here. Return to the What is GEO guide." noindex suggest={false}><main class="utility-page" id="main"><p class="eyebrow">404 / A missing source</p><h1>Well, this page didn’t optimise for anything.</h1><p>The page you’re after isn’t here, so let’s get you back to something that is.</p><a class="pill" href="/">Back to the guide ↗</a></main></Base>
+<Base title="Page not found | What is GEO" description="This page isn't here. Return to the What is GEO guide." noindex suggest={false}>
+  <main id="main">
+    <div class="lf-shell" data-page="404">
+      <FileRail page="other" />
+      <div class="lf-pane">
+        <FileBar name="404" meta={['No such file']} />
+        <div class="lf-doc">
+          <div class="lf-l" data-kind="h1"><span class="lf-n" aria-hidden="true">1</span><span class="lf-m" aria-hidden="true">#</span><h1 class="lf-t lf-h1">There is no page at this address</h1></div>
+          <div class="lf-l" data-kind="p"><span class="lf-n" aria-hidden="true">3</span><span class="lf-m" aria-hidden="true"></span><p class="lf-t">The link may be old, or the address may have a typo. Everything on this site is in two places:</p></div>
+          <ul class="lf-list">
+            <li class="lf-l" data-kind="li"><span class="lf-n" aria-hidden="true">5</span><span class="lf-m" aria-hidden="true">-</span><p class="lf-t"><a class="ds-text-link lf-a" href="/guide/">guide.md</a>, the whole guide, {gf.count} lines</p></li>
+            <li class="lf-l" data-kind="li"><span class="lf-n" aria-hidden="true">6</span><span class="lf-m" aria-hidden="true">-</span><p class="lf-t"><a class="ds-text-link lf-a" href="/guides/">guides/</a>, {guides.length} shorter guides by topic</p></li>
+          </ul>
+        </div>
+        <p class="lf-in lf-more"><a class="ds-button-secondary" data-variant="jstov" href="/"><span class="ds-button-secondary__label">Back to the home page</span></a></p>
+      </div>
+    </div>
+  </main>
+</Base>

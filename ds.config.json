@@ -1,15 +1,30 @@
 {
-  "$comment": "Design-system vendoring for whatisgeo.app: the 'stage' hero (design-system concepts/hero-stage, worked up for this site in _work/hero-reuse, option stage-whatisgeo; Jack's go 2026-11-10). Theme whatisgeo = the live site's own colours and fonts. Run: node ~/repos/design-system/tools/loop.mjs sync --config ds.config.json. CSS lands in src/ds (never edit by hand) and is imported by src/pages/index.astro only (the home page), before Base.astro so the site's own global.css still wins on equal specificity. The hero's layout glue is src/styles/stage.css.",
+  "$comment": "Design-system vendoring for whatisgeo.app: the 'stage' hero (design-system concepts/hero-stage, worked up for this site in _work/hero-reuse, option stage-whatisgeo; Jack's go 2026-11-10). Theme whatisgeo = the live site's own colours and fonts. Run: node ~/repos/design-system/tools/loop.mjs sync --config ds.config.json. CSS lands in src/ds (never edit by hand) and is imported by src/layouts/Base.astro on every page (the linefile redesign, Jack's pick 2026-11-10), before the site's own layout glue (src/styles/linefile.css). The hero's layout glue is src/styles/stage.css.",
   "theme": "whatisgeo",
   "out": "src/ds",
-  "scan": ["src"],
+  "scan": [
+    "src"
+  ],
   "components": [
+    "breadcrumb",
     "button-primary",
+    "button-secondary",
+    "checkbox",
     "citation-sources",
+    "code-snippet",
+    "data-table",
+    "footer",
+    "marketing-nav",
+    "nav-item",
     "segmented-control",
+    "sidebar-nav-panel",
     "suggestion-chips",
+    "text-input",
     "text-link"
   ],
-  "sections": [],
+  "sections": [
+    "l-nav-01-marketing-top-nav",
+    "l-foot-01-sitemap-footer"
+  ],
   "order": "ranked"
 }

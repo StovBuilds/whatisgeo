@@ -42,7 +42,7 @@ status: "published"
 ---
 Only a handful of the numbers quoted about GEO lead back to something you can open and check. Even those describe one benchmark, one browsing panel or one survey at one point in time, so use them as context for your own measurements and never as a forecast for your site. Nobody can guarantee that a page will be included in an AI answer, and no statistic changes that.
 
-If you are new to the topic, start with [what GEO is](/#what-is-geo) and [how it differs from SEO](/#geo-vs-seo).
+If you are new to the topic, start with [what GEO is](/guide/#what-is-geo) and [how it differs from SEO](/guide/#geo-vs-seo).
 
 ## How to grade a GEO statistic before you quote it
 
@@ -132,7 +132,7 @@ This section is our recommendation, not a research finding. Your own numbers wil
 2. **Referrals in your analytics.** Look for visits referred by AI assistants and note how they change over time.
 3. **A fixed set of buyer questions, checked on a schedule.** Write down the questions your customers actually ask, run them on the platforms you care about, and log whether your business is named, cited and described accurately.
 
-Keep the question set fixed so the comparison means something, and record the date, platform, location and exact wording each time. Do the same for any outside statistic you quote: write down its sample size, date, platform, prompt set and location. More on setting this up is in the [measurement section](/#measurement) of our guide and in [what AI visibility means](/what-is-ai-visibility/). For Google specifically, see [how to appear in AI Overviews](/how-to-rank-in-google-ai-overviews/).
+Keep the question set fixed so the comparison means something, and record the date, platform, location and exact wording each time. Do the same for any outside statistic you quote: write down its sample size, date, platform, prompt set and location. More on setting this up is in the [measurement section](/guide/#measurement) of our guide and in [what AI visibility means](/what-is-ai-visibility/). For Google specifically, see [how to appear in AI Overviews](/how-to-rank-in-google-ai-overviews/).
 
 ## How to use statistics in a business case without overclaiming
 

@@ -108,7 +108,7 @@ Before you publish, ask these questions in place of checking a detector score. T
 4. Would a named person put their name to it?
 5. Is it one useful page, or one of many near-identical pages made to catch searches?
 
-If the answer to all five is yes, the detector score matters very little for search. If any answer is no, a rewrite will not fix it. The [principles in our main guide](/#principles) start from the same place: write for the reader first, then check the facts.
+If the answer to all five is yes, the detector score matters very little for search. If any answer is no, a rewrite will not fix it. The [principles in our main guide](/guide/#principles) start from the same place: write for the reader first, then check the facts.
 
 ## How this fits with AI search visibility
 

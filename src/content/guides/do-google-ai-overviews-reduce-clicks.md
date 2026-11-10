@@ -113,7 +113,7 @@ This is our recommended approach, not a Google procedure.
 5. **Check position before blaming AI.** If your average position fell, a ranking change may explain the drop on its own.
 6. **Note other changes.** Write down Google updates and your own site changes (migrations, redesigns, removed pages) in the same period.
 
-If impressions and position hold steady while clicks fall on informational, non-branded queries for pages that get AI impressions, that fits an AI Overview effect. It does not prove one. Our [measuring progress](/#measurement) section covers how this fits with tracking AI answers more widely.
+If impressions and position hold steady while clicks fall on informational, non-branded queries for pages that get AI impressions, that fits an AI Overview effect. It does not prove one. Our [measuring progress](/guide/#measurement) section covers how this fits with tracking AI answers more widely.
 
 ## What to do if your clicks have fallen
 

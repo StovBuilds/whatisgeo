@@ -1,0 +1,40 @@
+---
+// /guide/: the long-form guide, as the file /guide.md serves (design/site/DESIGN.md §4). It lived at /#guide on the home
+// page until the linefile redesign (Jack, 2026-11-10); chapters keep their old ids so /guide/#principles etc. work.
+import Base from '../../layouts/Base.astro';
+import FileRail from '../../components/FileRail.astro';
+import FileBar from '../../components/FileBar.astro';
+import SourceList from '../../components/SourceList.astro';
+import { site, updated, updatedISO, publishedISO } from '../../data/content';
+import { questions, sources } from '../../lib/content';
+import { renderLines } from '../../lib/linefile';
+import { guideFile } from '../../lib/site-files';
+const gf = guideFile();
+const srcs = sources.map(s => ({ label: s.name, url: s.url }));
+const ids = new Map(gf.chapters.map(c => [c.from, c.id]));
+const doc = renderLines(gf.lines, 1, gf.count, { sources: srcs, headingId: (_t, depth, line) => (depth === 2 ? ids.get(line) : undefined) });
+const faq = questions();
+const url = `${site.url}/guide/`;
+const org = { '@id': `${site.publisher.url}#organization` };
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'Article', '@id': `${url}#article`, headline: 'What is GEO? A practical guide to Generative Engine Optimisation', description: 'A beginner’s guide to GEO, AI search, and making useful content easier to find and cite.', mainEntityOfPage: url, isPartOf: { '@id': `${site.url}/#website` }, inLanguage: 'en-GB', datePublished: publishedISO, dateModified: updatedISO, author: org, publisher: org, image: `${site.url}/og.png`, citation: sources.map(s => s.url), wordCount: gf.words },
+  { '@type': 'FAQPage', '@id': `${url}#faq`, mainEntity: faq.map(q => ({ '@type': 'Question', name: q.question, acceptedAnswer: { '@type': 'Answer', text: q.answer.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') } })) },
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'What is GEO', item: `${site.url}/` },
+    { '@type': 'ListItem', position: 2, name: 'The guide', item: url } ] },
+  { '@type': 'Organization', '@id': org['@id'], name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt] }
+] };
+---
+<Base title="The guide: what is GEO? A practical guide to Generative Engine Optimisation" description="The whole guide to Generative Engine Optimisation in one page: what GEO is, how AI answers find sources, the principles, crawler access, a first 30 days and how to measure it. Every source linked." current="guide">
+  <main id="main">
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+    <div class="lf-shell" data-page="guide">
+      <FileRail page="guide" />
+      <div class="lf-pane" data-lf-file={gf.count}>
+        <FileBar name="guide.md" meta={[`${gf.count} lines`, `${gf.words.toLocaleString('en-GB')} words`, `${gf.minutes} min read`, `Reviewed ${updated}`]} href="/guide.md" />
+        <article class="lf-doc" aria-label="guide.md" set:html={doc.html} />
+        <div class="lf-sec lf-in"><SourceList sources={srcs} cited={doc.cited} note={`Reviewed ${updated}. Practical recommendations are distinguished from platform requirements and research findings.`} /></div>
+      </div>
+    </div>
+  </main>
+</Base>
