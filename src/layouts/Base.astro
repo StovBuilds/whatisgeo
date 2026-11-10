@@ -28,7 +28,7 @@ const links = [
 const wordmark = '<b>w</b>hat<b>i</b>s<b>g</b>eo<i>.</i>';
 ---
 <!doctype html>
-<html lang="en-GB" data-theme="whatisgeo" data-mode="light" data-depth="flat" data-selection="tint" data-buttons="pill" data-labels="sentence" data-controls="sentence" data-accent-scope="action" data-hover="tint" data-density="default" data-texture="none" data-ornament="none" data-illustration="none">
+<html lang="en-GB" data-theme="whatisgeo" data-mode="dark" data-depth="flat" data-selection="tint" data-buttons="pill" data-labels="sentence" data-controls="sentence" data-accent-scope="action" data-hover="tint" data-density="default" data-texture="none" data-ornament="none" data-illustration="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,7 +55,7 @@ const wordmark = '<b>w</b>hat<b>i</b>s<b>g</b>eo<i>.</i>';
     <meta name="theme-color" content="#ffffff" />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <script is:inline>
-      try { var t = localStorage.getItem('wig-theme'); document.documentElement.dataset.mode = t === 'dark' || t === 'light' ? t : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { }
+      try { var t = localStorage.getItem('wig-theme'); document.documentElement.dataset.mode = t === 'light' ? 'light' : t === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 'dark'; } catch (e) { }
     </script>
   </head>
   <body>

@@ -7,7 +7,8 @@ const root = document.documentElement;
 // ---------------------------------------------------------------- theme: system / light / dark (footer radiogroup)
 const themeOpts = [...document.querySelectorAll<HTMLButtonElement>('[data-theme-opt]')];
 const dark = matchMedia('(prefers-color-scheme: dark)');
-function stored() { try { return localStorage.getItem('wig-theme') || 'system'; } catch { return 'system'; } }
+// Default is dark (Jack, 10 Nov 2026); "system" is an explicit choice, stored like the others.
+function stored() { try { return localStorage.getItem('wig-theme') || 'dark'; } catch { return 'dark'; } }
 function applyTheme(choice: string) {
   root.dataset.mode = choice === 'dark' || (choice === 'system' && dark.matches) ? 'dark' : 'light';
   for (const b of themeOpts) b.setAttribute('aria-checked', String(b.dataset.themeOpt === choice));
@@ -15,7 +16,7 @@ function applyTheme(choice: string) {
 applyTheme(stored());
 for (const b of themeOpts) b.addEventListener('click', () => {
   const choice = b.dataset.themeOpt!;
-  try { choice === 'system' ? localStorage.removeItem('wig-theme') : localStorage.setItem('wig-theme', choice); } catch { /* private mode */ }
+  try { localStorage.setItem('wig-theme', choice); } catch { /* private mode */ }
   applyTheme(choice);
 });
 dark.addEventListener('change', () => applyTheme(stored()));
