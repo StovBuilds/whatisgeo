@@ -1,0 +1,56 @@
+<script>
+/* Option A · margin — set each margin note level with the sentence that cites it, push notes down when two would
+   collide, and draw the hero's hairline thread from the cited line to its note. Desktop only (>860 px); on phones the
+   notes are already in flow under their paragraph. No motion: the threads are static ink. */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var mq = window.matchMedia('(min-width: 861px)');
+  function layout() {
+    var sheets = document.querySelectorAll('.a-sheet');
+    for (var s = 0; s < sheets.length; s++) {
+      var sheet = sheets[s];
+      var svg = sheet.querySelector(':scope > svg.a-threads');
+      if (!svg) { svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'a-threads'); svg.setAttribute('aria-hidden', 'true'); sheet.insertBefore(svg, sheet.firstChild); }
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      var notes = sheet.querySelectorAll('.a-notes:not([data-flow]) > .a-note');
+      for (var i = 0; i < notes.length; i++) notes[i].style.removeProperty('--a-dy');
+      if (!mq.matches) continue;
+      var sr = sheet.getBoundingClientRect();
+      var floor = -Infinity;
+      for (var j = 0; j < notes.length; j++) {
+        var n = notes[j], cell = n.parentNode.getBoundingClientRect();
+        var cite = n.dataset.for ? document.getElementById(n.dataset.for) : null;
+        var pill = n.querySelector('.a-note__head .ds-citation-sources-cite');
+        var dy = 0;
+        if (cite && pill) {
+          var cr = cite.getBoundingClientRect(), pr = pill.getBoundingClientRect(), nr = n.getBoundingClientRect();
+          dy = (cr.top + cr.height / 2) - (cell.top + (pr.top - nr.top) + pr.height / 2);
+        }
+        var top = cell.top + dy, gap = 20;
+        if (top < floor + gap) { dy += floor + gap - top; }
+        n.style.setProperty('--a-dy', dy + 'px');
+        var after = n.getBoundingClientRect();
+        floor = after.bottom;
+        if (!cite || !pill) continue;
+        var c = cite.getBoundingClientRect(), p = pill.getBoundingClientRect();
+        var col = cite.closest('.a-row').querySelector(':scope > :not(.a-ln):not(.a-notes)').getBoundingClientRect();
+        var x1 = col.right + 10 - sr.left, y1 = c.top + c.height / 2 - sr.top;
+        var x2 = p.left - 8 - sr.left, y2 = p.top + p.height / 2 - sr.top;
+        var mx = (x1 + x2) / 2;
+        var path = document.createElementNS(NS, 'path');
+        path.setAttribute('d', 'M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ' ' + mx + ' ' + y2 + ' ' + x2 + ' ' + y2);
+        svg.appendChild(path);
+        var dot = document.createElementNS(NS, 'circle');
+        dot.setAttribute('cx', x1); dot.setAttribute('cy', y1); dot.setAttribute('r', 2.25);
+        svg.appendChild(dot);
+      }
+    }
+  }
+  var t; function soon() { clearTimeout(t); t = setTimeout(layout, 60); }
+  layout();
+  window.addEventListener('load', layout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+  window.addEventListener('resize', soon);
+  if (mq.addEventListener) mq.addEventListener('change', layout);
+})();
+</script>

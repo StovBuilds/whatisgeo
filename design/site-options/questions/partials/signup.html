@@ -1,0 +1,16 @@
+<!-- sign-up: the live form, as one row of the grid (no tinted panel) -->
+<section class="c-sec" id="updates" aria-labelledby="signup-h">
+<div class="c-wrap">
+<div class="c-row" data-kind="signup">
+<div class="c-side"><h2 class="c-h2" id="signup-h">Get the next guide first</h2><p class="c-side__p">New guides and course news, sent when there’s something worth sending.</p></div>
+<form class="c-form" action="/api/subscribe" method="post">
+<div class="c-form__row"><div class="c-field"><label class="ds-label" for="signup-email">Email address</label>
+<div class="ds-text-input" data-variant="jstov"><input class="ds-text-input__control" id="signup-email" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="you@yourbusiness.com"></div></div>
+<button class="ds-button-primary" type="submit"><span class="ds-button-primary__label">Join email updates</span></button></div>
+<label class="ds-checkbox"><input class="ds-checkbox__input" name="consent" type="checkbox" value="yes" required><span class="ds-checkbox__text"><span class="ds-checkbox__label">I’d like email updates about new GEO guides and future courses. I can unsubscribe anytime.</span></span></label>
+<div class="c-hp" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" tabindex="-1" autocomplete="off"></div>
+<p class="c-fine"><a href="/privacy/">Privacy</a> · Email confirmation required.</p>
+</form>
+</div>
+</div>
+</section>

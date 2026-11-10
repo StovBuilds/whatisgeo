@@ -1,0 +1,332 @@
+{
+  "generated": "2026-11-10T17:40:18.229Z",
+  "design_system": "178166f",
+  "widths": [
+    1440,
+    390
+  ],
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "options": [
+    {
+      "name": "margin",
+      "letter": "A",
+      "tagline": "The margin: the guide is read like an annotated text. Every sourced sentence carries the hero's blue footnote, and its source sits level with it in a right-hand margin, joined by the same hairline thread. Chapters are addressed by their guide.md line range.",
+      "theme": "whatisgeo",
+      "screens": [
+        "article",
+        "guide",
+        "home",
+        "mcp"
+      ]
+    },
+    {
+      "name": "linefile",
+      "letter": "B",
+      "tagline": "The file: the site is guide.md. A gutter of real line numbers runs down the guide and every article (the hero's wall, made readable); headings show as their Markdown rows; every page links its own .md, and the MCP page is the same file seen by a machine.",
+      "theme": "whatisgeo",
+      "screens": [
+        "article",
+        "guide",
+        "home",
+        "mcp"
+      ]
+    },
+    {
+      "name": "questions",
+      "letter": "C",
+      "tagline": "The questions: every page is a set of questions and their answers, laid out the way the hero asks one. Question on the left, the answer with its footnotes on the right, row after row; the hero's question chips become how you get around.",
+      "theme": "whatisgeo",
+      "screens": [
+        "article",
+        "guide",
+        "home",
+        "mcp"
+      ]
+    }
+  ],
+  "screens": [
+    "article",
+    "guide",
+    "home",
+    "mcp"
+  ],
+  "cells": [
+    {
+      "option": "linefile",
+      "screen": "article",
+      "html": "dist/linefile-article.html",
+      "theme": "whatisgeo",
+      "components": [
+        "nav-item",
+        "breadcrumb",
+        "sidebar-nav-panel",
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/linefile-article-light-1440.png",
+        "light-390": "shots/linefile-article-light-390.png",
+        "dark-1440": "shots/linefile-article-dark-1440.png",
+        "dark-390": "shots/linefile-article-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "margin",
+      "screen": "article",
+      "html": "dist/margin-article.html",
+      "theme": "whatisgeo",
+      "components": [
+        "breadcrumb",
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/margin-article-light-1440.png",
+        "light-390": "shots/margin-article-light-390.png",
+        "dark-1440": "shots/margin-article-dark-1440.png",
+        "dark-390": "shots/margin-article-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "questions",
+      "screen": "article",
+      "html": "dist/questions-article.html",
+      "theme": "whatisgeo",
+      "components": [
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "suggestion-chips"
+      ],
+      "shots": {
+        "light-1440": "shots/questions-article-light-1440.png",
+        "light-390": "shots/questions-article-light-390.png",
+        "dark-1440": "shots/questions-article-dark-1440.png",
+        "dark-390": "shots/questions-article-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "linefile",
+      "screen": "guide",
+      "html": "dist/linefile-guide.html",
+      "theme": "whatisgeo",
+      "components": [
+        "nav-item",
+        "sidebar-nav-panel",
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/linefile-guide-light-1440.png",
+        "light-390": "shots/linefile-guide-light-390.png",
+        "dark-1440": "shots/linefile-guide-dark-1440.png",
+        "dark-390": "shots/linefile-guide-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "margin",
+      "screen": "guide",
+      "html": "dist/margin-guide.html",
+      "theme": "whatisgeo",
+      "components": [
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/margin-guide-light-1440.png",
+        "light-390": "shots/margin-guide-light-390.png",
+        "dark-1440": "shots/margin-guide-dark-1440.png",
+        "dark-390": "shots/margin-guide-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "questions",
+      "screen": "guide",
+      "html": "dist/questions-guide.html",
+      "theme": "whatisgeo",
+      "components": [
+        "button-secondary",
+        "citation-sources",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "suggestion-chips"
+      ],
+      "shots": {
+        "light-1440": "shots/questions-guide-light-1440.png",
+        "light-390": "shots/questions-guide-light-390.png",
+        "dark-1440": "shots/questions-guide-dark-1440.png",
+        "dark-390": "shots/questions-guide-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "linefile",
+      "screen": "home",
+      "html": "dist/linefile-home.html",
+      "theme": "whatisgeo",
+      "components": [
+        "nav-item",
+        "checkbox",
+        "text-input",
+        "sidebar-nav-panel",
+        "button-primary",
+        "button-secondary",
+        "citation-sources",
+        "footer",
+        "marketing-nav",
+        "segmented-control",
+        "suggestion-chips",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/linefile-home-light-1440.png",
+        "light-390": "shots/linefile-home-light-390.png",
+        "dark-1440": "shots/linefile-home-dark-1440.png",
+        "dark-390": "shots/linefile-home-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "margin",
+      "screen": "home",
+      "html": "dist/margin-home.html",
+      "theme": "whatisgeo",
+      "components": [
+        "checkbox",
+        "text-input",
+        "button-primary",
+        "button-secondary",
+        "citation-sources",
+        "footer",
+        "marketing-nav",
+        "segmented-control",
+        "suggestion-chips",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/margin-home-light-1440.png",
+        "light-390": "shots/margin-home-light-390.png",
+        "dark-1440": "shots/margin-home-dark-1440.png",
+        "dark-390": "shots/margin-home-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "questions",
+      "screen": "home",
+      "html": "dist/questions-home.html",
+      "theme": "whatisgeo",
+      "components": [
+        "checkbox",
+        "text-input",
+        "button-primary",
+        "button-secondary",
+        "citation-sources",
+        "footer",
+        "marketing-nav",
+        "segmented-control",
+        "suggestion-chips",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/questions-home-light-1440.png",
+        "light-390": "shots/questions-home-light-390.png",
+        "dark-1440": "shots/questions-home-dark-1440.png",
+        "dark-390": "shots/questions-home-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "linefile",
+      "screen": "mcp",
+      "html": "dist/linefile-mcp.html",
+      "theme": "whatisgeo",
+      "components": [
+        "nav-item",
+        "sidebar-nav-panel",
+        "button-secondary",
+        "code-snippet",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/linefile-mcp-light-1440.png",
+        "light-390": "shots/linefile-mcp-light-390.png",
+        "dark-1440": "shots/linefile-mcp-dark-1440.png",
+        "dark-390": "shots/linefile-mcp-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "margin",
+      "screen": "mcp",
+      "html": "dist/margin-mcp.html",
+      "theme": "whatisgeo",
+      "components": [
+        "button-secondary",
+        "code-snippet",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "text-link"
+      ],
+      "shots": {
+        "light-1440": "shots/margin-mcp-light-1440.png",
+        "light-390": "shots/margin-mcp-light-390.png",
+        "dark-1440": "shots/margin-mcp-dark-1440.png",
+        "dark-390": "shots/margin-mcp-dark-390.png"
+      },
+      "overflow": []
+    },
+    {
+      "option": "questions",
+      "screen": "mcp",
+      "html": "dist/questions-mcp.html",
+      "theme": "whatisgeo",
+      "components": [
+        "button-secondary",
+        "code-snippet",
+        "data-table",
+        "footer",
+        "marketing-nav",
+        "suggestion-chips"
+      ],
+      "shots": {
+        "light-1440": "shots/questions-mcp-light-1440.png",
+        "light-390": "shots/questions-mcp-light-390.png",
+        "dark-1440": "shots/questions-mcp-dark-1440.png",
+        "dark-390": "shots/questions-mcp-dark-390.png"
+      },
+      "overflow": []
+    }
+  ]
+}
