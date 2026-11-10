@@ -1,0 +1,352 @@
+/* ============================================================================
+   nav-item — the row primitive every sidebar / panel / tree is built from.
+   taxonomy-components.md §A · core · S1 (selected treatment is the variant).
+
+   Root: <a class="ds-nav-item"> or <button class="ds-nav-item">.
+   Parts: __icon · __label · __trailing (holds __count | __chevron | __dot |
+          __value | __add | __lock | __tag | __bookmark) · __skeleton
+   Selected: aria-current="page" | aria-current="true" | aria-selected="true".
+   Height: --ds-size-h (36 default; data-size sm/lg → 32/44); a list gives the
+   40 px house pitch with gap: var(--ds-space-1).
+   Tokens only. Private knobs: --_pad-x, --_gap, --_icon, --_radius, --_level,
+   --_indent, --_bar-w.
+   ========================================================================== */
+
+.ds-nav-item {
+  --_pad-x:  var(--ds-space-2);          /* 8 — navattic / v0 / elevenlabs inset */
+  --_gap:    var(--ds-space-2);          /* icon → label                         */
+  --_icon:   var(--ds-icon-size-row);    /* 20 (homerun tier-1 uses rail size)   */
+  --_radius: var(--ds-radius-sm);        /* 6 — the nav pill                     */
+  --_level:  0;                          /* tree depth; set inline per row       */
+  --_indent: var(--ds-space-4);          /* 16 per level (clickup)               */
+  --_bar-w:  3px;                        /* tint-plus-accent inset bar           */
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--_gap);
+  width: 100%;
+  min-height: var(--ds-size-h);
+  padding-block: 0;
+  padding-inline: calc(var(--_pad-x) + var(--_level) * var(--_indent)) var(--_pad-x);
+  border: 0;
+  border-radius: var(--_radius);
+  background: transparent;
+  color: var(--ds-ink-2);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-size-text);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  text-align: start;
+  text-decoration: none;
+  text-transform: var(--ds-control-case);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-nav-item:hover { text-decoration: none; }
+
+/* ---- parts ------------------------------------------------------------- */
+.ds-nav-item__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--_icon);
+  height: var(--_icon);
+  color: inherit;                        /* the icon ALWAYS inherits the row ink  */
+  font-size: calc(var(--_icon) * .8);    /* emoji / initials inside the slot      */
+  line-height: 1;
+}
+.ds-nav-item__icon > svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+/* entity square: a tinted rounded square holding a glyph / initial (clickup, hsaj) */
+.ds-nav-item__icon[data-kind="square"] { border-radius: var(--ds-radius-xs); background: var(--ds-surface-3); color: var(--ds-ink-2); font-size: var(--ds-text-xs); font-weight: var(--ds-weight-semibold); }
+.ds-nav-item__icon[data-kind="avatar"] { border-radius: var(--ds-radius-pill); background: var(--ds-surface-3); color: var(--ds-ink-2); font-size: var(--ds-text-xs); font-weight: var(--ds-weight-semibold); overflow: hidden; }
+.ds-nav-item__icon[data-kind="avatar"] > img { width: 100%; height: 100%; object-fit: cover; }
+/* reserved slot with nothing in it keeps labels aligned (quicken's disclosure rule) */
+.ds-nav-item__icon:empty { visibility: hidden; }
+
+.ds-nav-item__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ds-nav-item__meta {                     /* optional second line / suffix, muted */
+  color: var(--ds-ink-muted);
+  font-weight: var(--ds-weight-regular);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-nav-item__trailing {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  margin-inline-start: auto;
+  color: var(--ds-ink-muted);
+  font-weight: var(--ds-weight-regular);
+}
+.ds-nav-item__count {                    /* "3", "12" — mono, tabular, muted     */
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-ink-muted);
+}
+.ds-nav-item__value {                    /* "$0.00" — an inline value (contra)   */
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-ink-muted);
+}
+.ds-nav-item__dot {                      /* unread — the one accent a row may carry */
+  width: 8px; height: 8px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-accent);
+}
+.ds-nav-item__dot[data-tone="danger"] { background: var(--ds-danger); }
+.ds-nav-item__tag {                      /* "New" — chip: tint + same-hue ink     */
+  padding-inline: var(--ds-space-2);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface-3);
+  color: var(--ds-ink-2);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: 1.6;
+}
+.ds-nav-item__tag[data-tone="accent"] { background: var(--ds-accent-tint); color: var(--ds-accent-ink); }
+.ds-nav-item__chevron,
+.ds-nav-item__add,
+.ds-nav-item__lock,
+.ds-nav-item__bookmark,
+.ds-nav-item__external {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: var(--ds-icon-size); height: var(--ds-icon-size);
+}
+.ds-nav-item__chevron > svg, .ds-nav-item__add > svg, .ds-nav-item__lock > svg, .ds-nav-item__bookmark > svg, .ds-nav-item__external > svg {
+  width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round;
+}
+.ds-nav-item__chevron { transition: transform var(--ds-dur-fast) var(--ds-ease-standard); }
+.ds-nav-item[aria-expanded="true"] .ds-nav-item__chevron { transform: rotate(90deg); }
+/* a bordered micro "+" button in the trailing slot (elevenlabs Voices, oku Create) */
+.ds-nav-item__add[data-kind="button"] {
+  width: 24px; height: 24px;
+  border-radius: var(--ds-radius-xs);
+  border: var(--ds-border-width) solid var(--ds-border);
+  background: var(--ds-surface);
+  color: var(--ds-ink-2);
+}
+/* row actions that appear on hover / focus (clickup ··· +) */
+.ds-nav-item__actions { display: inline-flex; gap: var(--ds-space-0-5); opacity: 0; transition: opacity var(--ds-dur-fast) var(--ds-ease-standard); }
+.ds-nav-item:hover .ds-nav-item__actions,
+.ds-nav-item:focus-within .ds-nav-item__actions,
+.ds-nav-item[data-state="hover"] .ds-nav-item__actions { opacity: 1; }
+.ds-nav-item__actions > button {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; padding: 0;
+  border: 0; border-radius: var(--ds-radius-xs);
+  background: transparent; color: var(--ds-ink-muted);
+}
+.ds-nav-item__actions > button:hover { background: var(--ds-surface-3); color: var(--ds-ink); }
+.ds-nav-item__actions > button > svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; }
+
+/* ---- states (house: tint pill — reads the derived selection tokens) ---- */
+.ds-nav-item:hover,
+.ds-nav-item[data-state="hover"] {
+  background: var(--ds-hover-bg);
+  box-shadow: var(--ds-hover-shadow);
+  color: var(--ds-ink);
+}
+.ds-nav-item:active { background: var(--ds-surface-pressed, var(--ds-surface-3)); }   /* pressed = --ds-surface-pressed (§13.4) */
+.ds-nav-item[aria-current="page"],
+.ds-nav-item[aria-current="true"],
+.ds-nav-item[aria-selected="true"] {
+  background: var(--ds-selected-bg);
+  color: var(--ds-selected-ink);
+  font-weight: var(--ds-selected-weight);
+  box-shadow: none;                      /* R4: selected ≠ elevated              */
+}
+/* geometry-changing selection axes (bar / underline) — a bar on the leading edge */
+[data-selection="bar"] .ds-nav-item[aria-current="page"]::before,
+[data-selection="bar"] .ds-nav-item[aria-current="true"]::before,
+[data-selection="bar"] .ds-nav-item[aria-selected="true"]::before {
+  content: ""; position: absolute; inset-block: var(--ds-space-2); inset-inline-start: 0;
+  width: var(--_bar-w); border-radius: var(--ds-radius-pill);
+  background: var(--ds-selected-line);
+}
+[data-selection="underline"] .ds-nav-item[aria-current="page"]::after,
+[data-selection="underline"] .ds-nav-item[aria-current="true"]::after,
+[data-selection="underline"] .ds-nav-item[aria-selected="true"]::after {
+  content: ""; position: absolute; inset-inline: var(--_pad-x); inset-block-end: 0;
+  height: 2px; background: var(--ds-selected-line);
+}
+/* focus ring: _base.css draws it; pill radius kept */
+.ds-nav-item:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: calc(-1 * var(--ds-ring-width)); border-radius: var(--_radius); }
+
+/* disabled: faint ink, no fill (a filled row would read as selected), still listed */
+.ds-nav-item:disabled,
+.ds-nav-item[aria-disabled="true"] {
+  color: var(--ds-ink-faint);
+  background: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+/* locked / gated (navattic-174): readable muted ink + lock glyph; clickable (opens upsell) */
+.ds-nav-item[data-state="locked"] { color: var(--ds-ink-muted); }
+.ds-nav-item[data-state="locked"] .ds-nav-item__lock { color: var(--ds-ink-muted); }
+
+/* add-row: "+ Add X" styled as a peer row (hsaj, clickup) */
+.ds-nav-item[data-kind="add"] { color: var(--ds-ink-muted); font-weight: var(--ds-weight-regular); }
+.ds-nav-item[data-kind="add"]:hover { color: var(--ds-ink); }
+
+/* loading: skeleton bars in the TRUE frame — no layout jump */
+.ds-nav-item[aria-busy="true"] { pointer-events: none; }
+.ds-nav-item__skeleton {
+  display: block; flex: 1 1 auto;
+  height: calc(var(--ds-size-text) * .9);
+  max-width: 60%;
+  border-radius: var(--ds-radius-xs);
+  background: var(--ds-rule-strong);   /* skeleton fill: surface-3 is invisible on the ground plane; no --ds-skeleton token */
+  animation: ds-nav-item-pulse var(--ds-dur-slow) var(--ds-ease-standard) infinite alternate;
+}
+.ds-nav-item[aria-busy="true"] .ds-nav-item__icon { border-radius: var(--ds-radius-xs); background: var(--ds-rule-strong); color: transparent; visibility: visible; }
+@keyframes ds-nav-item-pulse { from { opacity: 1; } to { opacity: .55; } }
+
+/* ============================================================================
+   VARIANTS — each reference designer's selected treatment, kept by name.
+   The unmarked root (or data-variant="jstov") is the house tint pill above.
+   ========================================================================== */
+
+/* tint-pill — fill one step darker + darker ink, NO weight change
+   [navattic-web-153] [v0-web-8] [elevenlabs-web-49] [manychat-web-184] [hsvu79cweaarswf] */
+.ds-nav-item[data-variant="tint-pill"] { font-weight: var(--ds-weight-regular); }
+.ds-nav-item[data-variant="tint-pill"][aria-current="page"],
+.ds-nav-item[data-variant="tint-pill"][aria-current="true"],
+.ds-nav-item[data-variant="tint-pill"][aria-selected="true"] {
+  background: var(--ds-surface-selected);
+  color: var(--ds-ink);
+  font-weight: var(--ds-weight-regular);
+}
+/* elevenlabs keeps the icon grey in the active row — the documented anti-pattern;
+   opt in with data-icon="static" to reproduce it faithfully */
+.ds-nav-item[data-variant="tint-pill"][data-icon="static"] .ds-nav-item__icon { color: var(--ds-ink-muted); }
+
+/* tint-pill-plus-weight — tint + 500/600 + icon to ink
+   [origin-connecting-an-account-05-06] [homerun-web-21] [hsajlzkwuaagtdc] [braintrust-web-13] [descript-editing-profile-00-03] */
+.ds-nav-item[data-variant="tint-pill-plus-weight"] { font-weight: var(--ds-weight-regular); color: var(--ds-ink-2); }
+.ds-nav-item[data-variant="tint-pill-plus-weight"] .ds-nav-item__icon { color: var(--ds-ink-faint); }  /* origin: inactive icons dim, labels stay ink */
+.ds-nav-item[data-variant="tint-pill-plus-weight"]:hover .ds-nav-item__icon { color: inherit; }
+.ds-nav-item[data-variant="tint-pill-plus-weight"][aria-current="page"],
+.ds-nav-item[data-variant="tint-pill-plus-weight"][aria-current="true"],
+.ds-nav-item[data-variant="tint-pill-plus-weight"][aria-selected="true"] {
+  background: var(--ds-surface-selected);
+  color: var(--ds-ink);
+  font-weight: var(--ds-weight-semibold);
+}
+.ds-nav-item[data-variant="tint-pill-plus-weight"][aria-current] .ds-nav-item__icon,
+.ds-nav-item[data-variant="tint-pill-plus-weight"][aria-selected="true"] .ds-nav-item__icon { color: inherit; }
+
+/* tint-plus-accent — accent tint + accent ink + inset accent bar on the leading edge
+   [grammarly-web-158-acordian] [confluence-web-23] */
+.ds-nav-item[data-variant="tint-plus-accent"] { font-weight: var(--ds-weight-regular); }
+.ds-nav-item[data-variant="tint-plus-accent"][aria-current="page"],
+.ds-nav-item[data-variant="tint-plus-accent"][aria-current="true"],
+.ds-nav-item[data-variant="tint-plus-accent"][aria-selected="true"] {
+  background: var(--ds-accent-tint);
+  color: var(--ds-accent-ink);
+  font-weight: var(--ds-weight-semibold);
+}
+.ds-nav-item[data-variant="tint-plus-accent"][aria-current="page"]::before,
+.ds-nav-item[data-variant="tint-plus-accent"][aria-current="true"]::before,
+.ds-nav-item[data-variant="tint-plus-accent"][aria-selected="true"]::before {
+  content: ""; position: absolute; inset-block: 0; inset-inline-start: 0;
+  width: var(--_bar-w); border-radius: var(--_radius) 0 0 var(--_radius);
+  background: var(--ds-accent-line);
+}
+/* confluence has no bar: data-bar="none" */
+.ds-nav-item[data-variant="tint-plus-accent"][data-bar="none"]::before { display: none; }
+.ds-nav-item[data-variant="tint-plus-accent"][aria-current] .ds-nav-item__bookmark { color: var(--ds-accent-ink); }
+
+/* full-width-band — edge-to-edge accent-tint band across the rail (reads as a tab)
+   [quicken-web-234-accordoin]  · the list sets --_bleed to its own inset */
+.ds-nav-item[data-variant="full-width-band"] {
+  --_radius: 0;
+  font-weight: var(--ds-weight-regular);
+  margin-inline: calc(-1 * var(--_bleed, 0px));
+  width: calc(100% + 2 * var(--_bleed, 0px));
+  padding-inline: calc(var(--_bleed, 0px) + var(--_pad-x));
+}
+.ds-nav-item[data-variant="full-width-band"][aria-current="page"],
+.ds-nav-item[data-variant="full-width-band"][aria-current="true"],
+.ds-nav-item[data-variant="full-width-band"][aria-selected="true"] {
+  background: var(--ds-accent-tint);
+  color: var(--ds-accent-ink);
+  font-weight: var(--ds-weight-regular);
+}
+
+/* edge-bar — bold label + filled icon + 5×40 bar flush on the CONTENT-facing edge
+   [givingli-web-15] — no fill */
+.ds-nav-item[data-variant="edge-bar"] { --_radius: 0; font-weight: var(--ds-weight-regular); color: var(--ds-ink-2); }
+.ds-nav-item[data-variant="edge-bar"]:hover { background: transparent; color: var(--ds-ink); }
+.ds-nav-item[data-variant="edge-bar"][aria-current="page"],
+.ds-nav-item[data-variant="edge-bar"][aria-current="true"],
+.ds-nav-item[data-variant="edge-bar"][aria-selected="true"] {
+  background: transparent;
+  color: var(--ds-ink);
+  font-weight: var(--ds-weight-bold);
+}
+.ds-nav-item[data-variant="edge-bar"][aria-current] .ds-nav-item__icon > svg,
+.ds-nav-item[data-variant="edge-bar"][aria-selected="true"] .ds-nav-item__icon > svg { fill: currentColor; }
+.ds-nav-item[data-variant="edge-bar"][aria-current="page"]::after,
+.ds-nav-item[data-variant="edge-bar"][aria-current="true"]::after,
+.ds-nav-item[data-variant="edge-bar"][aria-selected="true"]::after {
+  content: ""; position: absolute; inset-inline-end: calc(-1 * var(--_bleed, 0px)); top: 50%;
+  width: 5px; height: 40px; transform: translateY(-50%);
+  border-radius: var(--ds-radius-xs) 0 0 var(--ds-radius-xs);
+  background: var(--ds-ink);
+}
+
+/* gradient-text-bracket — accent→accent-2 gradient label between two gradient hairlines, no fill
+   [contra-web-39] — the "featured" row */
+.ds-nav-item[data-variant="gradient-text-bracket"] {
+  --_radius: 0;
+  font-weight: var(--ds-weight-bold);
+  margin-inline: calc(-1 * var(--_bleed, 0px));
+  width: calc(100% + 2 * var(--_bleed, 0px));
+  padding-inline: calc(var(--_bleed, 0px) + var(--_pad-x));
+}
+.ds-nav-item[data-variant="gradient-text-bracket"]:hover { background: transparent; }
+.ds-nav-item[data-variant="gradient-text-bracket"]::before,
+.ds-nav-item[data-variant="gradient-text-bracket"]::after {
+  content: ""; position: absolute; inset-inline: 0; height: var(--ds-border-width);
+  background: linear-gradient(90deg, var(--ds-accent), var(--ds-accent-2));
+}
+.ds-nav-item[data-variant="gradient-text-bracket"]::before { inset-block-start: 0; }
+.ds-nav-item[data-variant="gradient-text-bracket"]::after  { inset-block-end: 0; }
+.ds-nav-item[data-variant="gradient-text-bracket"] .ds-nav-item__label {
+  background: linear-gradient(90deg, var(--ds-accent), var(--ds-accent-2));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.ds-nav-item[data-variant="gradient-text-bracket"] .ds-nav-item__trailing { color: var(--ds-accent-2); }
+.ds-nav-item[data-variant="gradient-text-bracket"][aria-current="page"],
+.ds-nav-item[data-variant="gradient-text-bracket"][aria-current="true"] { background: transparent; }
+
+/* weight-only — no fill anywhere; active = weight change
+   [braintrust-web-13] (weight is the carrier) [luma-creating-an-event-00-03] (nav has no selected state) */
+.ds-nav-item[data-variant="weight-only"] { font-weight: var(--ds-weight-regular); color: var(--ds-ink-2); }
+.ds-nav-item[data-variant="weight-only"]:hover { background: transparent; color: var(--ds-ink); }
+.ds-nav-item[data-variant="weight-only"][aria-current="page"],
+.ds-nav-item[data-variant="weight-only"][aria-current="true"],
+.ds-nav-item[data-variant="weight-only"][aria-selected="true"] {
+  background: transparent;
+  color: var(--ds-ink);
+  font-weight: var(--ds-weight-bold);
+}
+
+/* ---- list helper: the pitch lives on the list, not the row ---------------- */
+.ds-nav-item-list { display: flex; flex-direction: column; gap: var(--_row-gap, var(--ds-space-1)); list-style: none; margin: 0; padding: 0; min-width: 0; }
+.ds-nav-item-list > li { min-width: 0; display: flex; }

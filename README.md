@@ -27,7 +27,11 @@ profile lives at [i.hilyt.it/whatisgeo](https://i.hilyt.it/whatisgeo).
 
 ## Guides
 
-Beyond the home guide, each shorter guide answers one question at `/<slug>/`, from one file in
+The long guide lives at `/guide/` (its text is `/guide.md`; it was on the home page until the 2026-11-10
+redesign, and `/#guide` and the old `/#<chapter>` links hop there). Every page reads as the Markdown file it is served
+as, with real line numbers: see `design/site/DESIGN.md` and `src/lib/linefile.ts`.
+
+Beyond the long guide, each shorter guide answers one question at `/<slug>/`, from one file in
 `src/content/guides/<slug>.md`. The frontmatter contract is in `src/lib/guide-schema.ts`
 (checked by the build and by `tests/guides.test.ts`): `title`, `seoTitle?`, `summary` (the direct
 answer, ≤220 chars), `category`, `ours?` (≤2 of our own products, from `src/data/products.ts`
@@ -35,7 +39,9 @@ only, always labelled as ours), `related?`, `sources` (≥1), `faq` (3-6), `publ
 `status` (only `published` ships; a published file that fails validation fails the build).
 The page, its `/<slug>.md` mirror, `/guides/`, the home page list, `sitemap.xml`, `llms.txt` and
 `llms-full.txt` are all generated from the same file. Copy is drafted with ScriptGrain, then
-edited and fact-checked; every claim needs a source the editor actually read.
+edited and fact-checked; every claim needs a source the editor actually read. Inline footnotes appear only
+where a guide links one of its sources, or where `src/data/footnotes.ts` places one on a sentence that names its
+source document (checked at build time).
 
 ## Run it locally
 

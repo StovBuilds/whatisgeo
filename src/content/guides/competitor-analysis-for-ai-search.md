@@ -135,6 +135,6 @@ Sort the sheet into three lists:
 2. Questions where you are named but described wrongly.
 3. Questions where nobody is named well. These are your openings.
 
-Fix access problems first. Then build or improve the pages that should answer the missing questions, and correct inaccurate descriptions wherever they come from. Afterwards, rerun the same questions under the same conditions so the comparison is fair. The [measurement section of the main guide](/#measurement) explains how to read changes over time.
+Fix access problems first. Then build or improve the pages that should answer the missing questions, and correct inaccurate descriptions wherever they come from. Afterwards, rerun the same questions under the same conditions so the comparison is fair. The [measurement section of the main guide](/guide/#measurement) explains how to read changes over time.
 
 Keep expectations modest. The GEO paper (Aggarwal et al., KDD 2024) tested content changes on its own benchmark of queries and sources and reported visibility gains under those test conditions. It also found that how well each change worked varied across domains. Treat it as a source of ideas to test on your own pages. It does not predict what will happen on your site, and nobody can guarantee that an assistant will name you.

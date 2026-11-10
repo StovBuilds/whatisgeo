@@ -1,0 +1,195 @@
+/* ============================================================================
+   components/checkbox/checkbox.css
+   Value-collecting boolean (submitted later; a switch commits now). The
+   <input type="checkbox"> IS the box (appearance:none); ::before draws the
+   tick (a rotated L), ::after the indeterminate bar. Root <label> holds text.
+
+   Private knobs:
+     --_size            box edge (16 / 18 / 20 / 22 in the corpus)
+     --_radius          box radius (xs = 4×scale default; sm for manychat)
+     --_border-w        1px hairline or 2px (origin, manychat)
+     --_border / --_fill / --_on-fill / --_on-ink / --_mixed-ink
+   ========================================================================== */
+
+.ds-checkbox {
+  --_size: 18px;
+  --_radius: var(--ds-radius-xs);
+  --_border-w: var(--ds-border-width);
+  --_border:   var(--ds-border);
+  --_fill:     var(--ds-surface);
+  --_on-fill:  var(--ds-accent);           /* boolean-on = the accent's job [manychat-web-126] */
+  --_on-ink:   var(--ds-ink-on-accent);    /* the pair for an accent fill                      */
+  --_mixed-ink: var(--ds-ink);             /* indeterminate = ink bar on the rest fill         */
+  --_stroke: 2px;
+
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--ds-space-2);
+  font-size: var(--ds-size-text);
+  line-height: var(--ds-lh-list);
+  color: var(--ds-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  max-width: 100%;
+  min-width: 0;
+}
+/* label first, box flush right (row-of-settings grammar) */
+.ds-checkbox[data-label="start"] { flex-direction: row-reverse; justify-content: space-between; width: 100%; }
+
+/* sizes — default (unmarked) follows data-size and density; fidelity variants pin --_size */
+.ds-checkbox[data-size="sm"] { --_size: 16px; --_stroke: 1.5px; }
+.ds-checkbox[data-size="lg"] { --_size: 20px; }
+[data-density="compact"]     .ds-checkbox:not([data-size]):not([data-variant]) { --_size: 16px; --_stroke: 1.5px; }
+[data-density="comfortable"] .ds-checkbox:not([data-size]):not([data-variant]) { --_size: 20px; }
+
+/* ---- the box (the input itself) ------------------------------------------ */
+.ds-checkbox__input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  margin: 0;
+  /* centre the box on the first text line */
+  margin-block-start: calc((var(--ds-size-text) * var(--ds-lh-list) - var(--_size)) / 2);
+  inline-size: var(--_size);
+  block-size: var(--_size);
+  border-radius: var(--_radius);
+  border: var(--_border-w) solid var(--_border);
+  background: var(--_fill);
+  color: var(--_on-ink);
+  cursor: inherit;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              border-color     var(--ds-dur-fast) var(--ds-ease-standard);
+}
+/* tick — an L rotated 45°, drawn with the current colour */
+.ds-checkbox__input::before {
+  content: "";
+  grid-area: 1 / 1;
+  inline-size: calc(var(--_size) * .28);
+  block-size:  calc(var(--_size) * .52);
+  border-inline-end: var(--_stroke) solid currentColor;
+  border-block-end:  var(--_stroke) solid currentColor;
+  rotate: 45deg;
+  translate: 0 -12%;
+  opacity: 0;
+  transition: opacity var(--ds-dur-fast) var(--ds-ease-standard);
+}
+/* indeterminate bar */
+.ds-checkbox__input::after {
+  content: "";
+  grid-area: 1 / 1;
+  inline-size: calc(var(--_size) * .5);
+  block-size: var(--_stroke);
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--ds-dur-fast) var(--ds-ease-standard);
+}
+
+/* ---- states -------------------------------------------------------------- */
+.ds-checkbox__input:checked {
+  background: var(--_on-fill);
+  border-color: var(--_on-fill);
+  color: var(--_on-ink);
+}
+.ds-checkbox__input:checked::before { opacity: 1; }
+/* indeterminate: rest fill, ink bar [manychat-web-126, navattic-web-153] */
+.ds-checkbox__input:indeterminate,
+.ds-checkbox__input[aria-checked="mixed"] {
+  background: var(--_fill);
+  border-color: var(--_border);
+  color: var(--_mixed-ink);
+}
+.ds-checkbox__input:indeterminate::before, .ds-checkbox__input[aria-checked="mixed"]::before { opacity: 0; }
+.ds-checkbox__input:indeterminate::after,  .ds-checkbox__input[aria-checked="mixed"]::after  { opacity: 1; }
+/* hover — one grade: border → border-strong; checked fill → accent-hover */
+.ds-checkbox:hover .ds-checkbox__input:not(:disabled):not(:checked),
+.ds-checkbox[data-state="hover"] .ds-checkbox__input:not(:disabled):not(:checked) { border-color: var(--ds-border-strong); }
+.ds-checkbox:hover .ds-checkbox__input:not(:disabled):checked:not(:indeterminate),
+.ds-checkbox[data-state="hover"] .ds-checkbox__input:not(:disabled):checked:not(:indeterminate) { background: var(--ds-accent-hover); border-color: var(--ds-accent-hover); }
+/* focus-visible — ring OUTSIDE the box (the _base input rule pulls it inside) */
+.ds-checkbox__input:focus-visible {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+}
+/* pressed */
+.ds-checkbox__input:not(:disabled):not(:checked):active { background: var(--ds-surface-pressed, var(--ds-surface-3)); }   /* pressed = --ds-surface-pressed (§13.4) */
+/* disabled — surface-3 box, rule edge, faint mark + faint text, still visible */
+.ds-checkbox__input:disabled {
+  cursor: not-allowed;
+  background: var(--ds-surface-3);
+  border-color: var(--ds-rule);
+  color: var(--ds-ink-faint);
+}
+.ds-checkbox:has(.ds-checkbox__input:disabled) { cursor: not-allowed; }
+.ds-checkbox:has(.ds-checkbox__input:disabled) .ds-checkbox__label,
+.ds-checkbox:has(.ds-checkbox__input:disabled) .ds-checkbox__hint { color: var(--ds-ink-faint); }
+/* loading — the mark becomes a spinner in the same 18px frame */
+.ds-checkbox__input[aria-busy="true"] { cursor: progress; }
+.ds-checkbox__input[aria-busy="true"]::before {
+  opacity: 1;
+  inline-size: calc(var(--_size) * .6);
+  block-size:  calc(var(--_size) * .6);
+  border: var(--_stroke) solid var(--ds-border-strong);
+  border-block-start-color: var(--ds-ink);
+  border-radius: var(--ds-radius-pill);
+  rotate: 0deg;
+  translate: 0 0;
+  animation: ds-checkbox-spin calc(var(--ds-dur-slow) * 3) linear infinite;
+}
+/* busy boxes drop to the rest fill so the spinner reads the same whatever the prior value */
+.ds-checkbox__input[aria-busy="true"]:checked { background: var(--_fill); border-color: var(--_border); }
+.ds-checkbox__input[aria-busy="true"]::after { opacity: 0; }
+@keyframes ds-checkbox-spin { to { rotate: 1turn; } }
+/* error — danger edge on the box; message in the hint */
+.ds-checkbox__input[aria-invalid="true"]:not(:checked) { border-color: var(--ds-danger); }
+.ds-checkbox__hint[data-tone="error"] { color: var(--ds-danger-ink); }
+
+/* ---- text ---------------------------------------------------------------- */
+.ds-checkbox__text { display: flex; flex-direction: column; gap: var(--ds-space-0-5); min-width: 0; }
+.ds-checkbox__label { color: var(--ds-ink); }
+.ds-checkbox__hint  { font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); }
+
+/* ============================================================================
+   VARIANTS
+   ========================================================================== */
+
+/* origin — 22px, 2px ink-2 border, r4; only unchecked captured [origin-connecting-an-account-00-04] */
+.ds-checkbox[data-variant="origin-2px-border-22"] {
+  --_size: 22px;
+  --_border-w: 2px;
+  --_border: var(--ds-ink-2);
+  font-size: var(--ds-text-lg);
+  gap: var(--ds-space-3);
+}
+.ds-checkbox[data-variant="origin-2px-border-22"]:hover .ds-checkbox__input:not(:disabled):not(:checked) { border-color: var(--ds-ink); }
+
+/* manychat bulk — 20px, 2px rule-grade border, r6, unlabelled in a filter bar
+   (weakness: no visible label → aria-label required) [manychat-web-184] */
+.ds-checkbox[data-variant="manychat-bulk-20"] {
+  --_size: 20px;
+  --_border-w: 2px;
+  --_border: var(--ds-rule-strong);
+  --_radius: var(--ds-radius-sm);
+}
+
+/* navattic — 20px hairline, r4–5, inside a popover row [navattic-web-88] */
+.ds-checkbox[data-variant="navattic-hairline-20"] {
+  --_size: 20px;
+  --_border: var(--ds-border);
+}
+
+/* navattic / manychat select-all — 18px hairline header checkbox whose
+   indeterminate state is an ink minus on the rest fill [navattic-web-153, manychat-web-126] */
+.ds-checkbox[data-variant="navattic-indeterminate-select-all"] {
+  --_size: 18px;
+  --_border: var(--ds-border);
+  color: var(--ds-ink-muted);
+  font-size: var(--ds-text-sm);
+}
+
+/* plane — 18px r4 hairline inside a work-item card [screenshot-2026-09-17-125644] */
+.ds-checkbox[data-variant="plane-card-select"] {
+  --_size: 18px;
+  --_border: var(--ds-rule-strong);
+}

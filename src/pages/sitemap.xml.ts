@@ -5,6 +5,7 @@ import { guides, lastUpdated } from '../lib/guides';
 const latest = [updatedISO, lastUpdated()].sort().pop()!;
 const urls: [string, string][] = [
   [`${site.url}/`, updatedISO],
+  [`${site.url}/guide/`, updatedISO],
   [`${site.url}/guides/`, latest],
   ...guides.map(g => [`${site.url}${g.url}`, g.fm.updated] as [string, string]),
   [`${site.url}/privacy/`, updatedISO],

@@ -1,0 +1,388 @@
+/* ============================================================================
+   data-table — Data table
+   taxonomy-components.md §D · core · S1 (core anatomy S0; which variant is aesthetic)
+   Anatomy: [outer border] · header row (tinted or plain) · body rows · [column rules] ·
+   [selection column] · [group headers] · [ghost add row] · footer (count, tools, pagination).
+   Root .ds-data-table is a <div> wrapping __scroll (overflow-x: auto) > <table class="__table">
+   and an optional __footer — a <table> cannot scroll itself.
+   Variants: jstov (default) · navattic-bordered-grid · retool-list-first-hairline ·
+             manychat-bordered-card-table · manychat-card-row-table · clickup-grouped-list ·
+             origin-transaction-list · (quicken-fill-nested-tree → tree-table)
+   Knobs: --_row-h --_head-h --_pad-x --_radius --_head-bg --_rule-row --_rule-col --_cols (card-row grid) --_cover (overflow cover fill)
+   Axes: data-figures="mono" (numbers + __id in the mono lane) · data-frame="none" (no outer rule/radius/fill — flush in a card body)
+   Three rule grades (navattic): outer edge --ds-rule · rows --ds-rule-soft · columns --_rule-col
+   (transparent unless data-columns="ruled"; the contract has no 4th grade fainter than
+   rule-soft — reported as tokens_missing).
+   Composes: .ds-checkbox (selection column), .ds-entity-cell (entity rows) — by root class only.
+   ========================================================================== */
+
+.ds-data-table {
+  --_row-h: var(--ds-control-h);              /* 32 / 36 / 44 with density — list-first rows = control height */
+  --_head-h: var(--ds-control-h-sm);          /* 28 / 32 / 40 */
+  --_pad-x: var(--ds-control-pad-x);          /* 12 */
+  --_radius: var(--ds-radius-md);
+  --_head-bg: transparent;
+  --_rule-row: var(--ds-rule-soft);
+  --_rule-col: transparent;
+  --_cover: var(--ds-surface);                /* overflow cover fill; declared here so no ancestor's knob leaks in */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--ds-surface);              /* data surfaces are always surface + rule; data-depth does not drive tables */
+  border: var(--ds-border-width) solid var(--ds-rule);
+  border-radius: var(--_radius);
+  color: var(--ds-ink);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-lh-list);
+}
+.ds-data-table svg { fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.ds-data-table[data-rows="entity"]      { --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-5)); }   /* 64: a two-line entity cell */
+.ds-data-table[data-rows="comfortable"] { --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-8)); }   /* 76 ≈ manychat 75 */
+.ds-data-table[data-columns="ruled"]    { --_rule-col: var(--ds-rule-soft); }
+.ds-data-table[data-header="tint"]      { --_head-bg: var(--ds-surface-2); }
+
+/* scroll wrapper: the overflow cue is a fixed edge shadow hidden by a cover that scrolls with the content */
+.ds-data-table__scroll {
+  position: relative;                        /* absolutely-positioned descendants (sr-only labels) stay inside the scroll clip */
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: calc(var(--_radius) - var(--ds-border-width)) calc(var(--_radius) - var(--ds-border-width)) 0 0;
+  background:
+    linear-gradient(to left, var(--_cover, var(--ds-surface)) 40%, transparent) 100% 0 / var(--ds-space-8) 100% no-repeat local,
+    linear-gradient(to left, var(--ds-rule), transparent) 100% 0 / var(--ds-space-4) 100% no-repeat scroll;
+}
+.ds-data-table__scroll:last-child { border-radius: calc(var(--_radius) - var(--ds-border-width)); }
+.ds-data-table__table { width: 100%; min-width: var(--_min-w, 0); border-collapse: collapse; }
+.ds-data-table__table caption { text-align: start; padding: var(--ds-space-3) var(--_pad-x); font-weight: var(--ds-weight-semibold); }
+
+/* header row: label lane, sentence case by default (data-labels="upper" uppercases it) */
+.ds-data-table__th {
+  height: var(--_head-h);
+  padding: 0 var(--_pad-x);
+  vertical-align: middle;
+  text-align: start;
+  background: var(--_head-bg);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  letter-spacing: var(--ds-label-tracking);
+  text-transform: var(--ds-label-case);
+  color: var(--ds-ink-muted);
+  white-space: nowrap;
+}
+.ds-data-table__th + .ds-data-table__th, .ds-data-table__td + .ds-data-table__td { border-inline-start: var(--ds-border-width) solid var(--_rule-col); }
+/* sort control lives inside the th so the ring has a box; caret shows direction (manychat's stacked ▲▼ is the weakness) */
+.ds-data-table__sort {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  min-height: var(--ds-control-h-sm);
+  margin-inline: calc(-1 * var(--ds-space-1));
+  padding: 0 var(--ds-space-1);
+  border: 0;
+  border-radius: var(--ds-radius-xs);
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.ds-data-table__sort:hover { color: var(--ds-ink); }
+.ds-data-table__sort svg { width: 12px; height: 12px; opacity: 0; transition: opacity var(--ds-dur-fast) var(--ds-ease-standard), transform var(--ds-dur-fast) var(--ds-ease-standard); }
+.ds-data-table__sort:hover svg { opacity: 1; color: var(--ds-ink-faint); }
+.ds-data-table__th[aria-sort="ascending"] .ds-data-table__sort svg, .ds-data-table__th[aria-sort="descending"] .ds-data-table__sort svg { opacity: 1; color: var(--ds-ink); }
+.ds-data-table__th[aria-sort="descending"] .ds-data-table__sort svg { transform: rotate(180deg); }
+.ds-data-table__th[aria-sort="ascending"], .ds-data-table__th[aria-sort="descending"] { color: var(--ds-ink); }
+
+/* body cells */
+.ds-data-table__td {
+  height: var(--_row-h);
+  padding: var(--ds-space-1) var(--_pad-x);
+  vertical-align: middle;
+  border-block-end: var(--ds-border-width) solid var(--_rule-row);
+  color: var(--ds-ink-2);
+}
+.ds-data-table__table tbody tr:last-child > .ds-data-table__td { border-block-end-color: transparent; }
+.ds-data-table__primary { color: var(--ds-ink); font-weight: var(--ds-weight-medium); }
+.ds-data-table__num { text-align: end; font-variant-numeric: tabular-nums; }
+.ds-data-table__null { font-style: italic; color: var(--ds-ink-muted); }           /* null = italic word (navattic, house) */
+.ds-data-table__null[data-null="dash"] { font-style: normal; }                    /* quicken's – ; manychat's n/a */
+.ds-data-table__secondary { display: block; font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.ds-data-table__truncate { display: block; max-width: var(--_max, 240px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-data-table__nowrap { white-space: nowrap; }
+/* selection column: composes .ds-checkbox by root; the cell is the checkbox's tap target */
+.ds-data-table__select { width: calc(var(--ds-control-h-sm) + var(--_pad-x)); padding-inline-end: 0; }
+/* metric glyph before a count (navattic's bar-chart) */
+.ds-data-table__glyph { display: inline-block; width: var(--ds-icon-size); height: var(--ds-icon-size); vertical-align: -3px; margin-inline-end: var(--ds-space-1); color: var(--ds-ink-muted); }
+/* enum chip — local fallback (enum-chip does not exist yet): tint + same-hue ink, never white-on-colour */
+.ds-data-table__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  min-height: calc(var(--ds-space-5) + 2px);
+  padding-inline: var(--ds-space-2);
+  border-radius: var(--ds-radius-xs);
+  background: var(--_chip-tint, var(--ds-surface-2));
+  color: var(--_chip-ink, var(--ds-ink-2));
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  white-space: nowrap;
+}
+.ds-data-table__chip[data-shape="pill"] { border-radius: var(--ds-radius-pill); }
+.ds-data-table__chip[data-hue="1"] { --_chip-tint: var(--ds-data-1-tint); --_chip-ink: var(--ds-data-1-ink); }
+.ds-data-table__chip[data-hue="2"] { --_chip-tint: var(--ds-data-2-tint); --_chip-ink: var(--ds-data-2-ink); }
+.ds-data-table__chip[data-hue="3"] { --_chip-tint: var(--ds-data-3-tint); --_chip-ink: var(--ds-data-3-ink); }
+.ds-data-table__chip[data-hue="4"] { --_chip-tint: var(--ds-data-4-tint); --_chip-ink: var(--ds-data-4-ink); }
+.ds-data-table__chip[data-hue="6"] { --_chip-tint: var(--ds-data-6-tint); --_chip-ink: var(--ds-data-6-ink); }
+.ds-data-table__chip[data-tone="live"] { --_chip-tint: var(--ds-live); --_chip-ink: var(--ds-ink-on-semantic); text-transform: uppercase; letter-spacing: .04em; }  /* the ONE semantic fill: live */
+.ds-data-table__chip[data-tone="off"] { --_chip-tint: var(--ds-surface-2); --_chip-ink: var(--ds-ink-muted); text-transform: uppercase; letter-spacing: .04em; }
+/* status glyph (clickup's dashed-circle "to do") */
+.ds-data-table__status { display: inline-grid; place-items: center; width: var(--ds-icon-size); height: var(--ds-icon-size); vertical-align: -3px; margin-inline-end: var(--ds-space-2); color: var(--ds-ink-muted); }
+/* hover-revealed row actions: fixed-width column so nothing reflows */
+.ds-data-table__actions-cell { width: calc(var(--ds-control-h-sm) + var(--_pad-x)); padding-inline-start: 0; text-align: end; }
+.ds-data-table__actions { display: inline-flex; gap: var(--ds-space-1); opacity: 0; transition: opacity var(--ds-dur-fast) var(--ds-ease-standard); }
+.ds-data-table__row:hover .ds-data-table__actions, .ds-data-table__row:focus-within .ds-data-table__actions, .ds-data-table__row[data-state="hover"] .ds-data-table__actions { opacity: 1; }
+@media (hover: none) { .ds-data-table__actions { opacity: 1; } }
+.ds-data-table__icon-button {
+  appearance: none;
+  display: inline-grid;
+  place-items: center;
+  width: var(--ds-control-h-sm);
+  height: var(--ds-control-h-sm);
+  padding: 0;
+  border: 0;
+  border-radius: var(--ds-radius-sm);
+  background: none;
+  color: var(--ds-ink-muted);
+  cursor: pointer;
+}
+.ds-data-table__icon-button:hover { background: var(--ds-surface-hover); color: var(--ds-ink); }
+.ds-data-table__icon-button svg { width: var(--ds-icon-size); height: var(--ds-icon-size); }
+
+/* ---- row states ----------------------------------------------------------------- */
+.ds-data-table__row { transition: background-color var(--ds-dur-fast) var(--ds-ease-standard); }
+tbody .ds-data-table__row:hover > .ds-data-table__td, .ds-data-table__row[data-state="hover"] > .ds-data-table__td { background: var(--ds-hover-bg); }
+.ds-data-table__row[aria-selected="true"] > .ds-data-table__td { background: var(--ds-selected-bg); color: var(--ds-selected-ink); }
+.ds-data-table__row[aria-selected="true"] .ds-data-table__primary { color: inherit; font-weight: var(--ds-selected-weight); }
+.ds-data-table__row[data-state="inactive"] > .ds-data-table__td, .ds-data-table__row[data-state="inactive"] .ds-data-table__primary { color: var(--ds-ink-muted); }   /* whole-row muting [manychat-web-42] */
+.ds-data-table__row[aria-disabled="true"] > .ds-data-table__td, .ds-data-table__row[aria-disabled="true"] .ds-data-table__primary { color: var(--ds-ink-faint); }
+.ds-data-table__row[aria-disabled="true"] { cursor: not-allowed; }
+.ds-data-table__row:focus-visible { outline-offset: calc(-1 * var(--ds-ring-width)); }
+/* group header row (clickup): caret · status chip · count; rows below indent nothing */
+.ds-data-table__group > .ds-data-table__th { height: var(--ds-control-h); font-family: var(--ds-font-sans); font-size: var(--ds-text-sm); text-transform: none; letter-spacing: 0; color: var(--ds-ink); background: transparent; border-block-end: var(--ds-border-width) solid var(--_rule-row); }
+.ds-data-table__group-cell { display: flex; align-items: center; gap: var(--ds-space-2); }
+.ds-data-table__group-cell .ds-data-table__icon-button { width: var(--ds-space-6); height: var(--ds-space-6); }
+.ds-data-table__group[aria-expanded="false"] .ds-data-table__icon-button svg { transform: rotate(-90deg); }
+.ds-data-table__count { color: var(--ds-ink-muted); font-weight: var(--ds-weight-regular); font-variant-numeric: tabular-nums; }
+/* ghost add row */
+.ds-data-table__add > .ds-data-table__td { padding-block: 0; }
+.ds-data-table__add-button { appearance: none; display: inline-flex; align-items: center; gap: var(--ds-space-1-5); min-height: var(--_row-h); padding: 0; border: 0; background: none; font: inherit; color: var(--ds-ink-muted); cursor: pointer; border-radius: var(--ds-radius-xs); }
+.ds-data-table__add-button:hover { color: var(--ds-ink); }
+.ds-data-table__add-button svg { width: 14px; height: 14px; }
+/* loading: skeleton bars in the true frame */
+.ds-data-table[aria-busy="true"] .ds-data-table__table { pointer-events: none; }
+.ds-data-table__num > .ds-data-table__skeleton { margin-inline-start: auto; }
+.ds-data-table__skeleton { display: block; height: var(--ds-space-3); width: var(--_w, 70%); max-width: 100%; border-radius: var(--ds-radius-xs); background: var(--ds-skeleton); }
+/* empty: keep the header (the columns are the promise), dashed footprint below it */
+.ds-data-table[data-state="empty"] { border-style: dashed; border-color: var(--ds-rule-strong); }
+.ds-data-table__empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ds-space-2); min-height: calc(var(--ds-control-h-lg) * 2); padding: var(--ds-space-6) var(--_pad-x); text-align: center; color: var(--ds-ink-muted); }
+.ds-data-table__empty > span { max-width: var(--ds-measure); }
+.ds-data-table__empty a { color: var(--ds-ink-link); }
+.ds-data-table__empty-row > .ds-data-table__td { border-block-end: 0; }
+/* error: danger edge + message in the footer slot */
+.ds-data-table[aria-invalid="true"] { border-color: var(--ds-danger); }
+.ds-data-table__error { display: flex; align-items: center; gap: var(--ds-space-1-5); color: var(--ds-danger-ink); font-size: var(--ds-text-sm); }
+.ds-data-table__error svg { width: var(--ds-icon-size); height: var(--ds-icon-size); flex: none; }
+
+/* ---- footer: count · page-size · tools · pagination ------------------------------- */
+.ds-data-table__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  min-height: var(--_head-h);
+  padding: var(--ds-space-1) var(--_pad-x);
+  border-block-start: var(--ds-border-width) solid var(--ds-rule);
+  font-size: var(--ds-text-sm);
+  color: var(--ds-ink-muted);
+}
+.ds-data-table__footer-count { color: var(--ds-ink); font-weight: var(--ds-weight-medium); font-variant-numeric: tabular-nums; }
+.ds-data-table__footer-count[data-align="center"] { margin-inline: auto; }
+.ds-data-table__tools { display: inline-flex; align-items: center; gap: var(--ds-space-1); }
+/* pager: two outline buttons one rung down (control-h-sm) [navattic-web-153] */
+.ds-data-table__pager { display: inline-flex; align-items: center; gap: var(--ds-space-2); }
+.ds-data-table__page-button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ds-control-h-sm);
+  padding-inline: var(--ds-space-3);
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--ds-radius-button);
+  background: var(--ds-surface);
+  color: var(--ds-ink-2);
+  font: inherit;
+  font-size: var(--ds-text-sm);
+  text-transform: var(--ds-control-case);
+  cursor: pointer;
+  box-shadow: var(--ds-shadow-lip);
+}
+.ds-data-table__page-button:hover { border-color: var(--ds-border-strong); background: var(--ds-hover-bg); }
+.ds-data-table__page-button:disabled { color: var(--ds-ink-faint); border-color: var(--ds-rule); background: var(--ds-surface); box-shadow: none; }
+
+/* ---- axes: figures lane + frame ----------------------------------------------------------- */
+/* data-figures="mono": body numbers and IDs move to the mono lane (tabular, one size down, zero tracking) so a column
+   of amounts / references reads as a ledger; numbers stay end-aligned, IDs stay start-aligned (a reference is a
+   label, not a quantity). Header cells keep the label lane. Ink stays the cell's own (--ds-ink-2), never ink-code. */
+.ds-data-table[data-figures="mono"] :is(.ds-data-table__td.ds-data-table__num, .ds-data-table__id, .ds-data-table__footer-count) {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.ds-data-table[data-figures="mono"] .ds-data-table__td.ds-data-table__num { text-align: end; }
+.ds-data-table[data-figures="mono"] .ds-data-table__td.ds-data-table__num .ds-data-table__secondary { font-family: var(--ds-font-sans); }
+.ds-data-table__id { font-variant-numeric: tabular-nums; white-space: nowrap; }     /* a reference cell (INV-0271); mono under data-figures="mono" */
+/* data-frame="none": no outer rule, radius or fill — for a table flush inside a card body (the card is the frame;
+   a bordered table in a bordered card is the retool-25 nested-border weakness). The first and last columns lose their
+   outer inset so the text lines up with the card header; the overflow cover takes the card fill. */
+.ds-data-table[data-frame="none"] { --_radius: 0px; --_cover: var(--ds-card-bg); background: transparent; border: 0; }
+.ds-data-table[data-frame="none"] :is(.ds-data-table__th, .ds-data-table__td):first-child { padding-inline-start: 0; }
+.ds-data-table[data-frame="none"] :is(.ds-data-table__th, .ds-data-table__td):last-child { padding-inline-end: 0; }
+.ds-data-table[data-frame="none"] .ds-data-table__footer { padding-inline: 0; }
+.ds-data-table[data-frame="none"][data-state="empty"] .ds-data-table__empty { border: var(--ds-border-width) dashed var(--ds-rule-strong); border-radius: var(--ds-radius-sm); }   /* the dashed footprint moves inside */
+.ds-data-table[data-frame="none"][aria-invalid="true"] .ds-data-table__footer { border-block-start-color: var(--ds-danger); }
+
+/* ============================================================================ variants */
+/* navattic-bordered-grid — r8 card whose OUTER border is the row grade; 32 tinted header (ground), 64 entity rows,
+   row rules + column rules (a true grid); 14/500 ink-2 sentence-case headers; everything left-aligned incl. numbers (fidelity — a weakness) */
+.ds-data-table[data-variant="navattic-bordered-grid"] { --_head-bg: var(--ds-ground); --_rule-col: var(--ds-rule-soft); --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-5)); border-color: var(--ds-rule-soft); }
+.ds-data-table[data-variant="navattic-bordered-grid"] .ds-data-table__th { font-family: var(--ds-font-sans); font-size: var(--ds-text-md); text-transform: none; letter-spacing: 0; color: var(--ds-ink-2); border-block-end-color: var(--ds-rule-soft); }
+.ds-data-table[data-variant="navattic-bordered-grid"] .ds-data-table__num { text-align: start; font-variant-numeric: normal; }
+.ds-data-table[data-variant="navattic-bordered-grid"] .ds-data-table__td { padding-inline: var(--ds-space-4); }
+.ds-data-table[data-variant="navattic-bordered-grid"] .ds-data-table__td:first-child { padding-inline-start: var(--ds-space-3); }
+/* retool-list-first-hairline — outer 1 px r4, 32 header (optional tint band via data-header), 32 rows + rule-grade hairlines,
+   text left / numbers right, enum pills, 32 footer with CENTRED count and tool icons right; 12 px text */
+.ds-data-table[data-variant="retool-list-first-hairline"] { --_radius: var(--ds-radius-xs); --_row-h: var(--ds-control-h-sm); --_rule-row: var(--ds-rule); font-size: var(--ds-text-sm); }
+.ds-data-table[data-variant="retool-list-first-hairline"] .ds-data-table__th { font-family: var(--ds-font-sans); font-size: var(--ds-text-sm); font-weight: var(--ds-weight-semibold); text-transform: none; letter-spacing: 0; color: var(--ds-ink); }
+.ds-data-table[data-variant="retool-list-first-hairline"] .ds-data-table__td { color: var(--ds-ink); }
+.ds-data-table[data-variant="retool-list-first-hairline"] .ds-data-table__chip { border-radius: var(--ds-radius-pill); }
+.ds-data-table[data-variant="retool-list-first-hairline"] .ds-data-table__footer { min-height: var(--ds-control-h-sm); }
+/* manychat-bordered-card-table — white r8 + card shadow, 44 header 14/600 ink, 75 rows, rule-grade row rules, 24 px cell padding,
+   whole-row muting for inactive records */
+.ds-data-table[data-variant="manychat-bordered-card-table"] { --_head-h: var(--ds-control-h-lg); --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-8)); --_rule-row: var(--ds-rule); --_pad-x: var(--ds-space-6); box-shadow: var(--ds-shadow-card); }
+.ds-data-table[data-variant="manychat-bordered-card-table"] .ds-data-table__th { font-family: var(--ds-font-sans); font-size: var(--ds-text-md); font-weight: var(--ds-weight-semibold); text-transform: none; letter-spacing: 0; color: var(--ds-ink); border-block-end-color: var(--ds-rule); }
+/* manychat-card-row-table — UNBOXED header row + floating card rows that reuse the header's column x-positions; 16 px gaps;
+   two-line rows (primary + secondary under each KPI). Grid layout, so the markup restates table roles. */
+.ds-data-table[data-variant="manychat-card-row-table"] { --_cols: auto minmax(0, 1fr) 72px 72px 148px 40px; --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-6) + var(--ds-space-1)); background: transparent; border: 0; border-radius: 0; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__scroll { background: none; }
+.ds-data-table[data-variant="manychat-card-row-table"] :is(.ds-data-table__table, thead, tbody) { display: block; min-width: 0; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__row { display: grid; grid-template-columns: var(--_cols); align-items: center; column-gap: var(--ds-space-3); min-width: 0; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__th { height: auto; padding: 0 var(--_pad-x) var(--ds-space-3); border: 0; background: transparent; font-family: var(--ds-font-sans); font-size: var(--ds-text-xs); text-transform: none; letter-spacing: 0; color: var(--ds-ink-muted); }
+.ds-data-table[data-variant="manychat-card-row-table"] tbody .ds-data-table__row { min-height: calc(var(--ds-control-h-lg) + var(--ds-space-6) + var(--ds-space-1)); background: var(--ds-surface); border-radius: var(--ds-radius-md); box-shadow: var(--ds-shadow-card); padding-block: var(--ds-space-3); }
+.ds-data-table[data-variant="manychat-card-row-table"] tbody .ds-data-table__row + .ds-data-table__row { margin-block-start: var(--ds-space-4); }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__td { height: auto; min-width: 0; padding: 0 var(--_pad-x); border: 0; }
+.ds-data-table[data-variant="manychat-card-row-table"] tbody .ds-data-table__row:hover > .ds-data-table__td, .ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__row[data-state="hover"] > .ds-data-table__td { background: transparent; }   /* no fill on hover in the reference; the kebab appears */
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__row[aria-selected="true"] > .ds-data-table__td { background: transparent; color: inherit; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__primary { font-size: var(--ds-text-lg); font-weight: var(--ds-weight-semibold); display: flex; align-items: center; gap: var(--ds-space-2); min-width: 0; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__primary .ds-data-table__truncate { flex: 0 1 auto; min-width: 0; max-width: 100%; }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__summary { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-1-5); margin-block-start: var(--ds-space-2); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__summary svg { width: var(--ds-icon-size); height: var(--ds-icon-size); color: var(--ds-danger); }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__num .ds-data-table__secondary { margin-block-start: var(--ds-space-2); }
+.ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__select, .ds-data-table[data-variant="manychat-card-row-table"] .ds-data-table__actions-cell { width: auto; }
+@media (max-width: 600px) {
+  .ds-data-table[data-variant="manychat-card-row-table"] { --_cols: auto minmax(0, 1fr) 40px; }
+  .ds-data-table[data-variant="manychat-card-row-table"] :is(.ds-data-table__th, .ds-data-table__td)[data-collapse] { display: none; }
+}
+/* clickup-grouped-list — unboxed; caret · status pill · count group headers, 36 rows with rule-grade hairlines, ghost add row, 13/500 names */
+.ds-data-table[data-variant="clickup-grouped-list"] { --_row-h: var(--ds-control-h); --_rule-row: var(--ds-rule); --_pad-x: var(--ds-space-2); background: transparent; border: 0; border-radius: 0; }
+.ds-data-table[data-variant="clickup-grouped-list"] .ds-data-table__scroll { background: none; }
+.ds-data-table[data-variant="clickup-grouped-list"] .ds-data-table__th { font-family: var(--ds-font-sans); font-size: var(--ds-text-xs); text-transform: none; letter-spacing: 0; border-block-end-color: var(--ds-rule); }
+.ds-data-table[data-variant="clickup-grouped-list"] .ds-data-table__primary { font-size: var(--ds-text-sm); }
+.ds-data-table[data-variant="clickup-grouped-list"] .ds-data-table__chip { text-transform: uppercase; letter-spacing: .02em; font-weight: var(--ds-weight-bold); --_chip-tint: var(--ds-surface-3); --_chip-ink: var(--ds-ink); }
+/* origin-transaction-list — no outer border, no dividers, 66–71 px pitch; rows are list-rows in table clothing (name + meta cell, right amount) */
+.ds-data-table[data-variant="origin-transaction-list"] { --_row-h: calc(var(--ds-control-h-lg) + var(--ds-space-6)); --_rule-row: transparent; --_pad-x: 0px; background: transparent; border: 0; border-radius: 0; }
+.ds-data-table[data-variant="origin-transaction-list"] .ds-data-table__scroll { background: none; }
+.ds-data-table[data-variant="origin-transaction-list"] .ds-data-table__th { height: auto; padding-block-end: var(--ds-space-3); border-block-end: 0; font-family: var(--ds-font-label); font-size: var(--ds-text-xs); letter-spacing: .06em; text-transform: uppercase; }
+.ds-data-table[data-variant="origin-transaction-list"] .ds-data-table__td { color: var(--ds-ink); }
+.ds-data-table[data-variant="origin-transaction-list"] .ds-data-table__num { font-weight: var(--ds-weight-medium); font-size: var(--ds-text-lg); }
+
+/* ============================================================================ DESK-446 — empty / loading / share axes
+   Three orthogonal axes set on the root; each value is named for the reference it models (they combine with any table
+   variant above): data-empty="gusto-colspan-action | plain-footprint | rox-ghosted-overlay" ·
+   data-loading="neon-skeleton-rows | databricks-skeleton-grid | clickup-blurred-overlay" (aria-busy goes on the <table>) ·
+   data-share="ynab-underline | deel-cell-fill | reddit-bar-pct" (a __share cell carries --_share: 42%).
+   New parts: __empty-icon · __empty-title · __empty-text · __empty-action · __ghost · __overlay · __overlay-card · __status-line
+              __share · __share-num · __share-bar · __share-pct.   New knobs: --_share --_bar --_bar-tint --_bar-h --_share-w */
+
+/* ---- empty row: one colspan row, parts shared by the three treatments ---------------------------------------------- */
+.ds-data-table__empty-icon { display: grid; place-items: center; inline-size: var(--ds-control-h-lg); block-size: var(--ds-control-h-lg); border-radius: var(--ds-radius-md); background: var(--ds-surface-2); color: var(--ds-ink-muted); }
+.ds-data-table__empty-icon svg { inline-size: var(--ds-icon-size-row, var(--ds-icon-size)); block-size: var(--ds-icon-size-row, var(--ds-icon-size)); }
+.ds-data-table__empty-title { color: var(--ds-ink); font-size: var(--ds-text-md); font-weight: var(--ds-weight-semibold); }
+.ds-data-table__empty-text { max-inline-size: var(--ds-measure); font-size: var(--ds-text-sm); color: var(--ds-ink-muted); }
+.ds-data-table__empty-action {
+  appearance: none; display: inline-flex; align-items: center; min-height: var(--ds-control-h-sm); margin-block-start: var(--ds-space-1);
+  padding-inline: var(--ds-space-3); border: var(--ds-border-width) solid var(--ds-border); border-radius: var(--ds-radius-button);
+  background: var(--ds-surface); color: var(--ds-ink); font: inherit; font-size: var(--ds-text-sm); font-weight: var(--ds-weight-medium);
+  text-transform: var(--ds-control-case); text-decoration: none; cursor: pointer; box-shadow: var(--ds-shadow-lip);
+}
+.ds-data-table__empty-action:hover { border-color: var(--ds-border-strong); background: var(--ds-hover-bg); }
+.ds-data-table__empty-action:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); }
+/* gusto: header kept, the body is ONE row — icon, title, sentence, action — no footprint, no rule under it */
+.ds-data-table[data-empty="gusto-colspan-action"] .ds-data-table__empty { min-height: calc(var(--ds-control-h-lg) * 4); gap: var(--ds-space-2); }
+.ds-data-table[data-empty="gusto-colspan-action"] .ds-data-table__empty-icon { background: transparent; color: var(--ds-danger-ink); }
+/* plain: the colspan cell holds a quiet footprint box (rule-soft edge, sm radius) inset from the table edge; no action */
+.ds-data-table[data-empty="plain-footprint"] .ds-data-table__empty-row > .ds-data-table__td { padding: var(--ds-space-4) var(--_pad-x); }
+.ds-data-table[data-empty="plain-footprint"] .ds-data-table__empty { border: var(--ds-border-width) solid var(--ds-rule); border-radius: var(--ds-radius-sm); min-height: calc(var(--ds-control-h-lg) * 3); }
+.ds-data-table[data-empty="plain-footprint"] .ds-data-table__empty-icon { inline-size: var(--ds-control-h); block-size: var(--ds-control-h); border-radius: var(--ds-radius-sm); }
+/* rox: the columns stay promised as GHOST rows (aria-hidden, fading out) with a centred status overlay on top */
+.ds-data-table__scroll:has(> .ds-data-table__overlay) { position: relative; }
+.ds-data-table__ghost > .ds-data-table__row > .ds-data-table__td { border-block-end-color: var(--_rule-row); }
+.ds-data-table__ghost { -webkit-mask-image: linear-gradient(to bottom, currentColor, transparent); mask-image: linear-gradient(to bottom, currentColor, transparent); pointer-events: none; user-select: none; }
+.ds-data-table__ghost .ds-data-table__skeleton { background: var(--ds-surface-3); }
+.ds-data-table__overlay { position: absolute; inset: var(--_head-h) 0 0 0; display: grid; place-items: center; padding: var(--_pad-x); text-align: center; }
+.ds-data-table__overlay > .ds-data-table__empty { min-height: 0; padding: 0; }
+
+/* ---- loading: skeleton in the true frame; aria-busy lives on the <table> ----------------------------------------- */
+@keyframes ds-dt-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.ds-data-table[data-loading] .ds-data-table__skeleton { animation: ds-dt-pulse calc(var(--ds-dur-slow) * 5) var(--ds-ease-standard) infinite; }
+.ds-data-table__table[aria-busy="true"] { pointer-events: none; }
+.ds-data-table__table[aria-busy="true"] .ds-data-table__td { color: transparent; }
+/* neon: header stays real, each body cell is one bar sized to its column (--_w), hairlines kept so the rows read as rows */
+.ds-data-table[data-loading="neon-skeleton-rows"] .ds-data-table__skeleton { block-size: var(--ds-space-2-5, var(--ds-space-3)); }
+/* databricks: the header is skeleton too (the columns are not known yet), column rules on, a status line says what is loading */
+.ds-data-table[data-loading="databricks-skeleton-grid"] { --_rule-col: var(--ds-rule-soft); }
+.ds-data-table[data-loading="databricks-skeleton-grid"] .ds-data-table__th .ds-data-table__skeleton { background: var(--ds-surface-3); }
+.ds-data-table__status-line { display: flex; align-items: center; gap: var(--ds-space-2); padding: var(--ds-space-2) var(--_pad-x); border-block-end: var(--ds-border-width) solid var(--ds-rule-soft); font-size: var(--ds-text-sm); color: var(--ds-ink-muted); }
+/* clickup: the rows are blurred ghosts, a floating card says what is happening */
+.ds-data-table[data-loading="clickup-blurred-overlay"] .ds-data-table__table { filter: blur(var(--ds-space-0-5)); }
+.ds-data-table[data-loading="clickup-blurred-overlay"] .ds-data-table__overlay { z-index: 1; inset: 0; }
+.ds-data-table__overlay-card { display: grid; justify-items: center; gap: var(--ds-space-1); max-inline-size: 280px; padding: var(--ds-space-5) var(--ds-space-6); border: var(--ds-border-width) solid var(--ds-border); border-radius: var(--ds-radius-md); background: var(--ds-surface); box-shadow: var(--ds-shadow-lip), var(--ds-shadow-float); text-align: center; }
+.ds-data-table__overlay-card svg { inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size); color: var(--ds-ink-muted); }
+
+/* ---- share: an in-cell proportion for spend share — the number stays end-aligned and tabular ---------------------- */
+.ds-data-table__share { --_bar: var(--ds-data-1); --_bar-tint: var(--ds-data-1-tint); --_bar-h: var(--ds-space-1); position: relative; text-align: end; font-variant-numeric: tabular-nums; }
+.ds-data-table__share[data-hue="2"] { --_bar: var(--ds-data-2); --_bar-tint: var(--ds-data-2-tint); }
+.ds-data-table__share[data-hue="3"] { --_bar: var(--ds-data-3); --_bar-tint: var(--ds-data-3-tint); }
+.ds-data-table__share[data-hue="4"] { --_bar: var(--ds-data-4); --_bar-tint: var(--ds-data-4-tint); }
+.ds-data-table__share-num { position: relative; z-index: 1; display: block; }
+.ds-data-table__share-pct { display: block; min-inline-size: 4ch; text-align: end; color: var(--ds-ink-muted); font-size: var(--ds-text-sm); }
+.ds-data-table__share-bar { display: block; inline-size: 100%; block-size: var(--_bar-h); border-radius: var(--ds-radius-pill); background: var(--ds-rule-soft); overflow: hidden; }
+.ds-data-table__share-bar::before { content: ""; display: block; inline-size: var(--_share, 0%); block-size: 100%; border-radius: inherit; background: var(--_bar); }
+/* ynab: thin track UNDER the figure, end-aligned number above it; zero keeps the empty track */
+.ds-data-table[data-share="ynab-underline"] .ds-data-table__share { min-inline-size: calc(var(--ds-control-h-lg) * 3); }
+.ds-data-table[data-share="ynab-underline"] .ds-data-table__share-bar { margin-block-start: var(--ds-space-1); }
+/* deel: the bar IS the cell — a tint fill to --_share behind the figure, no track (row height held) */
+.ds-data-table[data-share="deel-cell-fill"] .ds-data-table__share { min-inline-size: calc(var(--ds-control-h-lg) * 3); }
+.ds-data-table[data-share="deel-cell-fill"] .ds-data-table__share-bar { position: absolute; inset: 0; block-size: auto; border-radius: 0; background: transparent; }
+.ds-data-table[data-share="deel-cell-fill"] .ds-data-table__share-bar::before { background: var(--_bar-tint); }
+/* reddit: bar + percentage side by side in their OWN column; the amount keeps its own numeric column */
+.ds-data-table[data-share="reddit-bar-pct"] .ds-data-table__share { display: flex; align-items: center; gap: var(--ds-space-2); min-inline-size: calc(var(--ds-control-h-lg) * 3); }
+.ds-data-table[data-share="reddit-bar-pct"] .ds-data-table__share-bar { flex: 1 1 auto; min-inline-size: var(--ds-space-10, 40px); block-size: var(--ds-space-2); }
+.ds-data-table[data-share="reddit-bar-pct"] .ds-data-table__share-pct { flex: none; }
+.ds-data-table:not([data-share="deel-cell-fill"]) .ds-data-table__row[aria-selected="true"] .ds-data-table__share-bar { background: var(--ds-surface); }

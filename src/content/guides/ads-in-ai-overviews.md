@@ -86,7 +86,7 @@ Google's Search Central documentation sets out what a page needs to appear as a 
 
 The Ads Help page describes the relationship in one direction only. Ads are matched to the query and to the AI Overview's content, so the answer shapes which ads appear. Google does not say ads shape the answer. A sponsored ad and a cited source are two separate things that can sit in the same box.
 
-For the organic side, [how to rank in Google AI Overviews](/how-to-rank-in-google-ai-overviews/) goes into what Google does document, and the [how AI answers happen](/#how-it-works) section of our main guide covers how answers get built.
+For the organic side, [how to rank in Google AI Overviews](/how-to-rank-in-google-ai-overviews/) goes into what Google does document, and the [how AI answers happen](/guide/#how-it-works) section of our main guide covers how answers get built.
 
 ## Ads in AI Mode
 

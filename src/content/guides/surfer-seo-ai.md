@@ -160,4 +160,4 @@ The tracker suits teams who want a regular view of brand mentions in AI answers 
 
 You can probably skip it if you publish rarely, if your content lacks something people actually want, or if you expect the tool to supply expertise. A score cannot fix those. If you only need tracking, the standalone plan or a different tracker may fit better. Our overview of [AI SEO tools](/ai-seo-tools/) sets out the options without ranking them.
 
-Whatever you choose, the method is the same. Decide what you are trying to change, test on a real page, and judge by what you measured. Our home guide covers [how to measure progress](/#measurement).
+Whatever you choose, the method is the same. Decide what you are trying to change, test on a real page, and judge by what you measured. Our home guide covers [how to measure progress](/guide/#measurement).

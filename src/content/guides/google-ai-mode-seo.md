@@ -63,7 +63,7 @@ Google says both AI Overviews and AI Mode "may use a 'query fan-out' technique",
 
 Google also says AI Mode and AI Overviews "may use different models and techniques", so the responses and links they show will vary. The guidance for site owners is the same for both, but you should expect different outputs.
 
-What this means for your content is our interpretation, because Google publishes no recipe. If one question turns into several searches, a page that covers the question properly, plus the subtopics and follow-ups a reader would naturally have, has more chances to match one of them. Padding is a different matter. Thin sections written to touch more phrases help nobody, and the GEO research below found keyword stuffing did little. For the bigger picture of how AI answers are put together, see [how AI answers happen](/#how-it-works). For where this overlaps with ordinary search work, see [GEO and SEO](/#geo-vs-seo).
+What this means for your content is our interpretation, because Google publishes no recipe. If one question turns into several searches, a page that covers the question properly, plus the subtopics and follow-ups a reader would naturally have, has more chances to match one of them. Padding is a different matter. Thin sections written to touch more phrases help nobody, and the GEO research below found keyword stuffing did little. For the bigger picture of how AI answers are put together, see [how AI answers happen](/guide/#how-it-works). For where this overlaps with ordinary search work, see [GEO and SEO](/guide/#geo-vs-seo).
 
 ## Eligibility and controls: indexing, snippets, nosnippet and robots
 
@@ -80,7 +80,7 @@ This part is documented and mechanical, so it is worth getting exactly right.
 | `max-snippet:[number]` | Caps snippet length and limits how much of the content may be used as a direct input for AI Overviews and AI Mode. `max-snippet:0` is the same as `nosnippet`. |
 | `data-nosnippet` | An HTML attribute for `span`, `div` or `section` elements. It keeps those parts of the page out of snippets. |
 
-Watch for two traps. First, Google can only read these rules on pages it is allowed to crawl. If robots.txt blocks a page, Google never sees its `noindex`. Second, Google-Extended. Google's crawler documentation says this token controls whether your content may be used to train future Gemini models and for grounding in Gemini Apps and Vertex AI. It also says Google-Extended "does not impact a site's inclusion in Google Search". Blocking it will not keep you out of AI Mode. The home guide's section on [crawler access](/#crawler-access) covers crawlers more widely.
+Watch for two traps. First, Google can only read these rules on pages it is allowed to crawl. If robots.txt blocks a page, Google never sees its `noindex`. Second, Google-Extended. Google's crawler documentation says this token controls whether your content may be used to train future Gemini models and for grounding in Gemini Apps and Vertex AI. It also says Google-Extended "does not impact a site's inclusion in Google Search". Blocking it will not keep you out of AI Mode. The home guide's section on [crawler access](/guide/#crawler-access) covers crawlers more widely.
 
 Restricting snippets is a trade-off, because it limits what AI Mode can use and show. Choose it deliberately.
 
@@ -97,7 +97,7 @@ This checklist is our recommendation, built on Google's list above. None of it i
 5. **Answer the next questions.** For each important page, list what a reader would ask next, and answer it on that page or a linked one.
 6. **Keep titles and structured data accurate.** A title should describe the page honestly, and structured data should match what is visible.
 
-Nothing exotic, which matches Google's guidance. The home guide's [principles](/#principles) explain the thinking behind most of it.
+Nothing exotic, which matches Google's guidance. The home guide's [principles](/guide/#principles) explain the thinking behind most of it.
 
 ## What the research says, and its limits
 
@@ -127,7 +127,7 @@ So there is no report where you can read off "AI Mode clicks". Our recommendatio
 2. Keep a dated log of every change you make to those pages.
 3. Compare later periods with that baseline, reading any changes against your log and against wider shifts in your traffic.
 
-This is a blunt method, but it is honest about what the data can show. The [measurement section](/#measurement) of the home guide covers setting up a repeatable baseline, including checks on AI assistants outside Google.
+This is a blunt method, but it is honest about what the data can show. The [measurement section](/guide/#measurement) of the home guide covers setting up a repeatable baseline, including checks on AI assistants outside Google.
 
 ## What you cannot control
 

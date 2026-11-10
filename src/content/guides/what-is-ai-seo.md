@@ -61,7 +61,7 @@ Several labels are in circulation. Publishers use them in overlapping and someti
 
 Two examples show how much the definitions vary. Search Engine Land's guide "What is AI SEO?" treats AI SEO as the broader discipline, with GEO, AEO and LLMO as parts of it. A separate Search Engine Land research piece, "SEO, GEO, or ASO?", surveyed marketers on which terms they recognise and use, and found no settled answer. Those are one publication's framings, not industry rules.
 
-Our reading is that no standards body defines any of these terms. The platforms we checked do not use any of them in their own documentation either: Google's guidance for its AI features simply talks about SEO. The same advice gets filed under every label. For the longer explanation of the term this site uses, see [what GEO is](/#what-is-geo), and for how it compares with the classic discipline, [GEO vs SEO](/#geo-vs-seo).
+Our reading is that no standards body defines any of these terms. The platforms we checked do not use any of them in their own documentation either: Google's guidance for its AI features simply talks about SEO. The same advice gets filed under every label. For the longer explanation of the term this site uses, see [what GEO is](/guide/#what-is-geo), and for how it compares with the classic discipline, [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## What platforms actually document
 
@@ -86,7 +86,7 @@ Each company documents separate user agents for different jobs:
 | Anthropic | Claude-SearchBot | ClaudeBot | Claude-User: blocking it may reduce visibility for user-directed search |
 | Perplexity | PerplexityBot: not used for training foundation models | None documented | Perplexity-User: generally ignores robots.txt |
 
-OpenAI says its settings are independent, so you can allow search while blocking training. Anthropic says its bots honour robots.txt. The practical point is that crawler access is a documented lever you can check and set. Much of what gets sold as AI SEO has no documentation behind it. More in [crawler access](/#crawler-access).
+OpenAI says its settings are independent, so you can allow search while blocking training. Anthropic says its bots honour robots.txt. The practical point is that crawler access is a documented lever you can check and set. Much of what gets sold as AI SEO has no documentation behind it. More in [crawler access](/guide/#crawler-access).
 
 None of these pages promises that following them gets you into an answer. They describe eligibility and controls, not outcomes.
 
@@ -110,7 +110,7 @@ These are sensible practices, labelled as such. No platform requires them.
 - **Write answer-first.** State the answer near the top of the page, then support it. Readers find it clearer, and a self-contained answer is easier for any system to quote accurately.
 - **Think in full questions.** Plan pages around the sentences a buyer would actually type or say to an assistant, as well as short keywords.
 
-The home guide's [principles](/#principles) cover these in more depth.
+The home guide's [principles](/guide/#principles) cover these in more depth.
 
 ## Using AI tools to do SEO work
 
@@ -118,4 +118,4 @@ This is the second meaning. AI tools can help draft, restructure, summarise and 
 
 ## How to tell whether it is working
 
-For Google, Search Console counts traffic from AI features within the Web search type, without a separate breakdown. For other assistants, the most direct check is sensible practice rather than a documented method. Put the real questions your buyers ask to the assistants they use, and note whether you are mentioned, whether you are cited and whether the description is accurate. Repeat this over time, because answers vary from one run to the next. Keep a dated log rather than a single screenshot. See [measurement](/#measurement) for the wider picture.
+For Google, Search Console counts traffic from AI features within the Web search type, without a separate breakdown. For other assistants, the most direct check is sensible practice rather than a documented method. Put the real questions your buyers ask to the assistants they use, and note whether you are mentioned, whether you are cited and whether the description is accurate. Repeat this over time, because answers vary from one run to the next. Keep a dated log rather than a single screenshot. See [measurement](/guide/#measurement) for the wider picture.

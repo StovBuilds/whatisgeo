@@ -63,7 +63,7 @@ Across all three, the web content Google describes comes from its Search index. 
 
 ## What you control: crawling, indexing and Google-Extended
 
-You control two separate settings, and they are easy to mix up. Our home guide's section on [crawler access](/#crawler-access) explains the general idea.
+You control two separate settings, and they are easy to mix up. Our home guide's section on [crawler access](/guide/#crawler-access) explains the general idea.
 
 **Googlebot controls Search, including its AI features (documented).** Google says AI is "integral to how Search functions", so robots.txt rules for Googlebot are how you control crawling for Search. To limit what Search shows from a page, it points to `nosnippet`, `data-nosnippet`, `max-snippet` and `noindex`. Because snippet eligibility is a stated condition, a page with `nosnippet` or `noindex` cannot be a supporting link in AI Overviews or AI Mode.
 

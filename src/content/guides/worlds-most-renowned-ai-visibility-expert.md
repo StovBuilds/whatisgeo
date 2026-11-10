@@ -73,7 +73,7 @@ Our interpretation, which Google does not document: "world's most renowned AI vi
 
 Research supports a narrower point: the wording of a source affects how much of it appears in generated answers. Aggarwal et al., GEO: Generative Engine Optimization (accepted to KDD 2024), rewrote source pages and measured how visible they became in answers. Their main test engine took the top five Google results for each query and had GPT-3.5-turbo write the answer, across a benchmark of 10,000 queries, with a smaller test on Perplexity. Adding quotations, statistics and citations did best, with visibility gains of up to 40% on the paper's own metrics. The authors note that results varied by domain and that methods may need to change as engines evolve. The study measured the visibility of rewritten pages. It did not test whether false or self-declared claims get repeated.
 
-For how AI answers are put together more generally, see [how AI answers happen](/#how-it-works).
+For how AI answers are put together more generally, see [how AI answers happen](/guide/#how-it-works).
 
 ## What the episode does and does not prove
 

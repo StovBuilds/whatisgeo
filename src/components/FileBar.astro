@@ -1,0 +1,12 @@
+---
+// The file bar over a reading pane: the file's name, its real counts, and the raw file.
+interface Props { name: string; meta: string[]; href?: string; label?: string; tag?: 'h1' | 'p' }
+const { name, meta, href, label = 'Raw Markdown', tag = 'p' } = Astro.props;
+const Tag = tag;
+const ICON_DOC = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></svg>';
+---
+<div class="lf-file-bar">
+  <Tag class="lf-file-bar__name"><Fragment set:html={ICON_DOC} /><span>{name}</span></Tag>
+  <ul class="lf-file-bar__meta">{meta.map(m => <li>{m}</li>)}</ul>
+  {href && <a class="ds-text-link lf-file-bar__act" href={href}><span class="ds-text-link__label">{label}</span></a>}
+</div>

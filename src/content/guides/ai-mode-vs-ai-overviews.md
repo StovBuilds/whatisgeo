@@ -64,7 +64,7 @@ For each feature in more depth, see [what are Google AI Overviews](/what-are-goo
 
 ## What the two share: query fan-out, links and eligibility
 
-Search Central says both features "may use a 'query fan-out' technique", which means issuing multiple related searches across subtopics and data sources to build a response. AI Mode's Help page describes it in plain terms: it divides your question into subtopics and searches for each one simultaneously. In practice your page could be found for a sub-question the searcher never typed. The [how it works](/#how-it-works) section of our main guide covers this retrieval step in more detail.
+Search Central says both features "may use a 'query fan-out' technique", which means issuing multiple related searches across subtopics and data sources to build a response. AI Mode's Help page describes it in plain terms: it divides your question into subtopics and searches for each one simultaneously. In practice your page could be found for a sub-question the searcher never typed. The [how it works](/guide/#how-it-works) section of our main guide covers this retrieval step in more detail.
 
 Eligibility is the same for both. To be eligible as a supporting link in either feature, Google says a page "must be indexed and eligible to be shown in Google Search with a snippet", and "there are no additional technical requirements." Eligibility is the minimum. It does not mean a page will be shown.
 

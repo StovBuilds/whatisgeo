@@ -1,0 +1,298 @@
+/* ============================================================================
+   linefile — the site as its own Markdown files (design/site/DESIGN.md). Layout glue only, classes .lf-*.
+   Tokens only: no colour, radius or shadow literals. The one type change: --ds-font-mono = IBM Plex Mono (OFL,
+   @fontsource/ibm-plex-mono) for gutters, markers, file meta and code.
+   Blue means one thing, as in the hero: a source. A blue line number = that line cites one; the pill = the footnote.
+   DS GAPs (logged in DESIGN.md §8): nav-item has no wrapping label (.lf-files), data-table has no stacked mode for
+   phones (.lf-table under 600px), sidebar-nav-panel has no reading-position marker (.lf-marker).
+   ========================================================================== */
+html[data-theme="whatisgeo"] { --ds-font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+html { scroll-padding-top: var(--ds-space-6); }
+html:focus-within { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html:focus-within { scroll-behavior: auto; } }
+body { overflow-x: clip; }
+
+:root {
+  --lf-rail: 17.5rem;               /* the file list */
+  --lf-num: 2.75rem;                /* the line-number gutter */
+  --lf-mark: 1.75rem;               /* the Markdown-marker lane */
+  --lf-gap: var(--ds-space-3);
+  --lf-measure: 40rem;              /* ~68 characters of Inter at the body size */
+  --lf-indent: calc(var(--lf-num) + var(--lf-mark) + 2 * var(--lf-gap));
+  --lf-note-w: 13.5rem;             /* the margin note (the thread's far end) */
+  --lf-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+/* ---------------------------------------------------------------- chrome */
+.lf-skip { position: fixed; inset-block-start: var(--ds-space-2); inset-inline-start: var(--ds-space-2); z-index: 100; transform: translateY(-200%); }
+.lf-skip:focus { transform: none; }
+.lf-wm { font-family: var(--ds-font-display); font-weight: 750; letter-spacing: -0.06em; white-space: nowrap; }
+.lf-wm b { font-weight: inherit; }
+.lf-wm b:nth-of-type(1) { color: var(--ds-accent); }
+.lf-wm b:nth-of-type(2) { color: var(--ds-data-3); }
+.lf-wm b:nth-of-type(3) { color: var(--ds-data-2); }
+.lf-wm i { font-style: normal; color: var(--ds-accent); }
+.ds-marketing-nav__wordmark.lf-wm { font-size: var(--ds-text-xl); }
+.ds-footer__wordmark.lf-wm { font-size: var(--ds-text-xl); }
+.ds-footer__theme-opt svg { fill: none; stroke: currentColor; }
+.honeypot { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* the suggestions card sits on the reading column, like everything else below the hero */
+.lf-suggest { inline-size: 100%; max-inline-size: calc(var(--ds-container-max) + 2 * var(--ds-gutter-page)); margin-inline: auto; padding: 0 var(--ds-gutter-page) var(--ds-space-16); }
+.lf-suggest__in { margin-inline-start: calc(var(--lf-rail) + clamp(var(--ds-space-8), 4vw, var(--ds-space-16)) + var(--lf-indent)); max-inline-size: var(--lf-measure); }
+
+/* ---------------------------------------------------------------- shell: file list + one reading pane */
+.lf-shell { display: grid; grid-template-columns: var(--lf-rail) minmax(0, 1fr); gap: clamp(var(--ds-space-8), 4vw, var(--ds-space-16));
+  inline-size: 100%; max-inline-size: calc(var(--ds-container-max) + 2 * var(--ds-gutter-page)); margin-inline: auto;
+  padding: var(--ds-space-10) var(--ds-gutter-page) var(--ds-space-20); }
+.lf-shell[data-page="home"] { padding-block-start: var(--ds-space-16); border-block-start: var(--ds-border-width) solid var(--ds-rule); }
+.lf-pane { position: relative; min-width: 0; }
+
+.lf-rail { position: sticky; inset-block-start: var(--ds-space-6); align-self: start; min-width: 0;
+  max-block-size: calc(100dvh - var(--ds-space-12)); display: flex; flex-direction: column; }
+.lf-rail .ds-sidebar-nav-panel { --_w: 100%; --_pad: 0px; --_bg: transparent; --_rule: transparent; --_group-gap: var(--ds-space-5); block-size: auto; min-block-size: 0; }
+.lf-rail .ds-sidebar-nav-panel__title { font-family: var(--ds-font-mono); font-size: var(--ds-text-sm); font-weight: var(--ds-weight-medium); color: var(--ds-ink-muted); }
+.lf-rail .ds-sidebar-nav-panel__group-label { font-family: var(--ds-font-sans); }
+.lf-rail .ds-nav-item__count { font-family: var(--ds-font-mono); font-variant-numeric: tabular-nums; }
+.lf-rail svg { inline-size: 16px; block-size: 16px; fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linejoin: round; stroke-linecap: round; }
+.lf-rail__body { position: relative; }
+.lf-where { color: var(--ds-accent-ink); }
+
+/* the reading marker: one accent tick that slides to the part of the file you are reading */
+.lf-marker { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: 1; inline-size: 2px; block-size: 1.25rem;
+  border-radius: var(--ds-radius-pill); background: var(--ds-accent); opacity: 0; pointer-events: none;
+  transition: transform 320ms var(--lf-out), opacity 200ms var(--ds-ease-standard); }
+.lf-marker[data-on] { opacity: 1; }
+.lf-rail a[aria-current="location"] .ds-nav-item__label, .lf-rail .lf-file a[aria-current="location"] > span:first-child { color: var(--ds-ink); }
+.lf-rail a[aria-current="location"] .ds-nav-item__count, .lf-rail .lf-file a[aria-current="location"] .lf-file__n { color: var(--ds-accent-ink); }
+
+/* the open folder's files: plain list so long names wrap instead of being cut off (DS GAP nav-item) */
+.lf-files { display: flex; flex-direction: column; gap: 1px; margin: var(--ds-space-1) 0 var(--ds-space-2); padding-inline-start: var(--ds-space-8); }
+.lf-files--sec { margin-block: var(--ds-space-1); padding-inline-start: var(--ds-space-4); border-inline-start: var(--ds-border-width) solid var(--ds-rule); margin-inline-start: var(--ds-space-1); }
+.lf-file a { display: flex; align-items: baseline; justify-content: space-between; gap: var(--ds-space-2); padding: var(--ds-space-1) var(--ds-space-2);
+  border-radius: var(--ds-radius-sm); font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); text-decoration: none; }
+.lf-file a > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.lf-files--sec .lf-file a { font-family: var(--ds-font-sans); }
+.lf-file a:hover { background: var(--ds-hover-bg); color: var(--ds-ink); }
+.lf-file a:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: calc(-1 * var(--ds-ring-width)); }
+.lf-file a[aria-current="page"] { background: var(--ds-selected-bg); color: var(--ds-selected-ink); font-weight: var(--ds-weight-medium); }
+.lf-file__n { flex: none; font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------- the file bar */
+.lf-file-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-space-2) var(--ds-space-5); padding-block-end: var(--ds-space-3);
+  margin-block-end: var(--ds-space-8); border-block-end: var(--ds-border-width) solid var(--ds-rule); font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.lf-file-bar__name { margin: 0; display: inline-flex; align-items: center; gap: var(--ds-space-2); font-size: var(--ds-text-sm); font-weight: var(--ds-weight-medium); color: var(--ds-ink); }
+.lf-file-bar__name svg { inline-size: 16px; block-size: 16px; fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linejoin: round; }
+.lf-file-bar__meta { display: flex; flex-wrap: wrap; gap: 0 var(--ds-space-2); margin: 0; padding: 0; list-style: none; }
+.lf-file-bar__meta li:not(:last-child)::after { content: "·"; margin-inline-start: var(--ds-space-2); }
+.lf-file-bar__act { margin-inline-start: auto; font-family: var(--ds-font-sans); font-size: var(--ds-text-sm); }
+.lf-crumbs { margin-block-end: var(--ds-space-4); }
+
+/* ---------------------------------------------------------------- lines: number | marker | text */
+.lf-doc { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; --ds-ink-link: var(--ds-accent-ink); }
+.lf-l { display: grid; grid-template-columns: var(--lf-num) var(--lf-mark) minmax(0, var(--lf-measure)); column-gap: var(--lf-gap); align-items: baseline;
+  margin: 0; padding: 0; scroll-margin-block-start: var(--ds-space-8); }
+.lf-doc > * + * { margin-block-start: var(--ds-space-4); }
+.lf-list { display: flex; flex-direction: column; gap: var(--ds-space-2); margin: 0; padding: 0; list-style: none; }
+.lf-quote { display: flex; flex-direction: column; gap: var(--ds-space-1); margin: 0; }
+.lf-n, .lf-m { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); line-height: 1; color: var(--ds-ink-muted); font-variant-numeric: tabular-nums; user-select: none; white-space: nowrap; }
+.lf-n { position: relative; text-align: end; transition: color 200ms var(--ds-ease-standard); }
+.lf-t { margin: 0; min-width: 0; overflow-wrap: break-word; font-size: var(--ds-text-md); line-height: var(--ds-lh-prose); color: var(--ds-ink); text-wrap: pretty; }
+.lf-t strong { font-weight: var(--ds-weight-semibold); }
+.lf-t code:not(.ds-code-snippet__code) { font-family: var(--ds-font-mono); font-size: .875em; }
+.lf-ext { margin-inline-start: .15em; display: inline-block; text-decoration: none; }
+.lf-a { overflow-wrap: anywhere; }
+.lf-l .ds-citation-sources-cite { margin-inline: .2em .05em; }
+
+/* a line that cites a source: its number is blue (the hero's meaning). The line you are on: an accent tick. */
+.lf-l[data-cited] > .lf-n { color: var(--ds-accent-ink); }
+.lf-n::after { content: ""; position: absolute; inset-block: -.35em; inset-inline-end: calc(-1 * var(--lf-gap) / 2 - 1px); inline-size: 2px; border-radius: var(--ds-radius-pill);
+  background: var(--ds-accent); transform: scaleY(0); transition: transform 200ms var(--lf-out); }
+.lf-l[data-current] > .lf-n, .lf-l:target > .lf-n { color: var(--ds-accent-ink); }
+.lf-l[data-current] > .lf-n::after, .lf-l:target > .lf-n::after { transform: scaleY(1); }
+.lf-l[data-cited]:hover > .lf-n, .lf-l[data-thread] > .lf-n { color: var(--ds-accent-ink); }
+.lf-l[data-thread] .lf-fn { background: var(--ds-accent-tint); color: var(--ds-accent-ink); }
+
+/* headings: the marker sits in its lane, the heading at a reading size */
+.lf-h1, .lf-h2, .lf-h3, .lf-l[data-kind^="h"] > .lf-t { font-family: var(--ds-font-display); font-weight: var(--ds-heading-weight); letter-spacing: var(--ds-heading-tracking); color: var(--ds-ink); text-wrap: balance; }
+.lf-h1, .lf-l[data-kind="h1"] > .lf-t { font-size: var(--ds-text-2xl); line-height: 1.2; }
+.lf-l[data-kind="h1"] { grid-template-columns: var(--lf-num) var(--lf-mark) minmax(0, calc(var(--lf-measure) + 8rem)); }
+.lf-h2, .lf-l[data-kind="h2"] > .lf-t { margin: 0; font-size: var(--ds-text-xl); line-height: var(--ds-lh-heading); }
+.lf-h3, .lf-l[data-kind="h3"] > .lf-t { margin: 0; font-size: var(--ds-text-lg); line-height: var(--ds-lh-heading); }
+.lf-doc > .lf-l[data-kind="h2"] { margin-block-start: var(--ds-space-12); }
+.lf-doc > .lf-l[data-kind="h3"] { margin-block-start: var(--ds-space-8); }
+.lf-doc > .lf-l[data-kind^="h"] + * { margin-block-start: var(--ds-space-3); }
+.lf-doc > .lf-l[data-kind="meta"] + .lf-l[data-kind="meta"] { margin-block-start: var(--ds-space-1); }
+.lf-doc > .lf-l[data-kind="h1"] + .lf-l[data-kind="meta"] { margin-block-start: var(--ds-space-5); }
+.lf-l[data-kind="meta"] > .lf-t, .lf-l[data-kind="skip"] > .lf-t { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); overflow-wrap: anywhere; }
+.lf-l[data-kind="meta"] .lf-a { color: inherit; }
+.lf-key { color: var(--ds-ink); }
+.lf-l[data-kind="skip"] > .lf-t { padding-block: var(--ds-space-2); border-block: var(--ds-border-width) dashed var(--ds-rule); }
+.lf-l[data-kind="skip"] > .lf-n { white-space: normal; line-height: var(--ds-lh-body); }
+
+/* the short answer (the guide file's `>` line) and other quotes */
+.lf-l[data-kind="lead"] > .lf-t { font-size: var(--ds-text-lg); line-height: var(--ds-lh-body); }
+.lf-label { display: block; margin-block-end: var(--ds-space-1); font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); }
+.lf-doc > .lf-quote:has([data-kind="lead"]) { margin-block: var(--ds-space-6); }
+.lf-l[data-kind="quote"] > .lf-t { padding-inline-start: var(--ds-space-4); border-inline-start: 2px solid var(--ds-rule-strong); color: var(--ds-ink-2); }
+
+/* sources listed inside the file (a guide's "## Sources") */
+.lf-src > .lf-t { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: var(--ds-space-3); scroll-margin-block-start: var(--ds-space-8); }
+.lf-src__k { grid-row: span 2; align-self: start; display: inline-grid; place-items: center; min-inline-size: 1.5em; block-size: 1.5em; margin-block-start: .2em; border-radius: var(--ds-radius-pill);
+  background: var(--ds-surface-3); font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-2); }
+.lf-src__where { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+.lf-src__where a, .lf-sources__where a { color: var(--ds-accent-ink); }
+.lf-src:target .lf-src__k, .lf-src > .lf-t:target .lf-src__k { background: var(--ds-accent-tint); color: var(--ds-accent-ink); }
+
+/* tables: one block that starts on its line */
+.lf-l[data-kind="table"], .lf-l[data-kind="snip"], .lf-l[data-kind="code"] { grid-template-columns: var(--lf-num) var(--lf-mark) minmax(0, calc(var(--lf-measure) + 8rem)); align-items: start; }
+.lf-l[data-kind="table"] > .lf-n, .lf-l[data-kind="table"] > .lf-m { padding-block-start: var(--ds-space-3); }
+.lf-table .ds-data-table__table { font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); }
+.lf-table .ds-data-table__td { padding-block: var(--ds-space-2-5); vertical-align: top; }
+.lf-table th.ds-data-table__td { font-weight: var(--ds-weight-medium); text-align: start; }
+
+/* code: one command or address is a copyable snippet; a block keeps every line's number */
+.lf-l[data-kind="snip"] > .lf-n { padding-block-start: calc((var(--ds-size-h, 2.25rem) - 1em) / 2); }
+.lf-snip { display: grid; max-inline-size: 100%; }
+.lf-code { display: flex; flex-direction: column; }
+.lf-code > .lf-l { margin: 0; }
+.lf-l[data-kind="code"] > .lf-t { padding-inline: var(--ds-space-4); background: var(--ds-surface-2); border-inline: var(--ds-border-width) solid var(--ds-rule);
+  font-family: var(--ds-font-mono); font-size: var(--ds-text-sm); line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
+.lf-l[data-kind="code"] > .lf-t code { font: inherit; }
+.lf-l[data-kind="code"][data-pos="first"] > .lf-t { padding-block-start: var(--ds-space-3); border-block-start: var(--ds-border-width) solid var(--ds-rule); border-start-start-radius: var(--ds-radius-sm); border-start-end-radius: var(--ds-radius-sm); }
+.lf-l[data-kind="code"][data-pos="last"] > .lf-t { padding-block-end: var(--ds-space-3); border-block-end: var(--ds-border-width) solid var(--ds-rule); border-end-start-radius: var(--ds-radius-sm); border-end-end-radius: var(--ds-radius-sm); }
+.lf-l[data-kind="code"][data-pos="first"] > .lf-n { padding-block-start: var(--ds-space-3); }
+.lf-l[data-kind="code"] > .lf-n { line-height: 1.75; font-size: var(--ds-text-xs); }
+
+/* ---------------------------------------------------------------- moment 1: the thread and its margin note */
+.lf-thread { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; overflow: visible; pointer-events: none; z-index: 1; }
+.lf-thread path { fill: none; stroke: var(--ds-accent); stroke-width: 1; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .9; }
+.lf-thread[data-on] path { stroke-dashoffset: 0; transition: stroke-dashoffset 460ms var(--lf-out); }
+.lf-margin { position: absolute; inset-block-start: 0; inset-inline-start: calc(var(--lf-indent) + var(--lf-measure) + var(--ds-space-10)); inline-size: var(--lf-note-w);
+  display: none; flex-direction: column; gap: var(--ds-space-3); padding-inline-start: var(--ds-space-3); border-inline-start: var(--ds-border-width) solid var(--ds-accent);
+  opacity: 0; pointer-events: none; z-index: 1; }
+.lf-margin[data-on] { opacity: 1; transition: opacity 240ms var(--ds-ease-standard) 180ms; }
+.lf-margin__src { display: flex; flex-direction: column; gap: var(--ds-space-0-5); margin: 0; }
+.lf-margin__k { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-accent-ink); line-height: var(--ds-lh-body); }
+.lf-margin__t { font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); color: var(--ds-ink); }
+.lf-margin__w { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); line-height: var(--ds-lh-body); }
+@media (min-width: 1200px) { .lf-margin { display: flex; } }
+@media (prefers-reduced-motion: reduce) {
+  .lf-thread[data-on] path, .lf-margin[data-on], .lf-marker, .lf-n, .lf-n::after { transition: none; }
+}
+
+/* ---------------------------------------------------------------- site chrome inside the pane (unnumbered, on the text column) */
+.lf-in { padding-inline-start: var(--lf-indent); max-inline-size: calc(var(--lf-indent) + var(--lf-measure)); }
+.lf-in-pane { max-inline-size: calc(var(--lf-indent) + var(--lf-measure)); padding-inline-start: var(--lf-indent); }
+.lf-intro { display: flex; flex-direction: column; gap: var(--ds-space-3); margin-block-end: var(--ds-space-8); }
+.lf-intro--page { margin-block-end: var(--ds-space-10); }
+.lf-p { margin: 0; font-size: var(--ds-text-md); line-height: var(--ds-lh-prose); color: var(--ds-ink-muted); text-wrap: pretty; }
+.lf-note { margin: var(--ds-space-4) 0 0; font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); }
+.lf-disclaimer { margin-block-start: var(--ds-space-10); padding-block-start: var(--ds-space-4); border-block-start: var(--ds-border-width) solid var(--ds-rule); }
+.lf-more { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--ds-space-2) var(--ds-space-4); margin: var(--ds-space-8) 0 0; }
+.lf-more__alt { font-size: var(--ds-text-sm); color: var(--ds-ink-muted); }
+.lf-sec { margin-block-start: var(--ds-space-20); }
+.lf-sec--first { margin-block-start: 0; }
+.lf-sec::before { content: ""; display: block; block-size: var(--ds-border-width); background: var(--ds-rule); margin-block-end: var(--ds-space-10); margin-inline-start: var(--lf-indent); }
+.lf-sec--first::before { display: none; }
+.lf-sec.lf-in::before, .lf-in > .lf-sec::before { margin-inline-start: 0; }
+
+/* contents as line ranges */
+.lf-toc__a { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 var(--ds-space-4); padding-block-end: var(--ds-space-3);
+  border-block-end: var(--ds-border-width) solid var(--ds-rule); text-decoration: none; }
+.lf-doc.lf-toc > * + * { margin-block-start: var(--ds-space-3); }
+.lf-toc__t { font-weight: var(--ds-weight-medium); }
+.lf-toc__r { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); white-space: nowrap; }
+.lf-toc__a:hover .lf-toc__t { color: var(--ds-accent-ink); }
+.lf-toc__a:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); border-radius: var(--ds-radius-xs); }
+.lf-l[data-kind="toc"]:hover > .lf-n { color: var(--ds-ink); }
+
+/* guides as a file list */
+.lf-cat { margin-block-start: var(--ds-space-10); scroll-margin-block-start: var(--ds-space-6); }
+.lf-sec.lf-cat { margin-block-start: var(--ds-space-16); }
+.lf-cat__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--ds-space-1) var(--ds-space-4); }
+.lf-cat__n { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); white-space: nowrap; }
+.lf-cat__all { font-size: var(--ds-text-sm); }
+.lf-cat__blurb { margin: var(--ds-space-1) 0 var(--ds-space-3); font-size: var(--ds-text-sm); color: var(--ds-ink-muted); line-height: var(--ds-lh-body); }
+.lf-rows { margin: 0; padding: 0; list-style: none; border-block-start: var(--ds-border-width) solid var(--ds-rule); }
+.lf-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: var(--ds-space-1) var(--ds-space-6); padding-block: var(--ds-space-3); border-block-end: var(--ds-border-width) solid var(--ds-rule); }
+.lf-row__t { color: var(--ds-ink); text-decoration: none; line-height: var(--ds-lh-body); text-wrap: pretty; }
+.lf-row__t:hover { color: var(--ds-accent-ink); text-decoration: underline; text-underline-offset: .2em; }
+.lf-row__t:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: var(--ds-ring-offset); border-radius: var(--ds-radius-xs); }
+.lf-row__m { font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.lf-row[data-kind="next"] { grid-template-columns: minmax(0, 1fr); padding-block: var(--ds-space-4); }
+.lf-row[data-kind="next"] .lf-row__t { font-weight: var(--ds-weight-medium); }
+.lf-row[data-kind="next"] .lf-row__m { white-space: normal; overflow-wrap: anywhere; }
+.lf-row__s { margin: 0; font-size: var(--ds-text-sm); line-height: var(--ds-lh-body); color: var(--ds-ink-muted); }
+
+/* sources after a file (guide.md): the reference list, plus where each one is cited */
+.lf-sources { gap: var(--ds-space-3); }
+.lf-sources__where { margin: var(--ds-space-1) 0 0; font-family: var(--ds-font-mono); font-size: var(--ds-text-xs); color: var(--ds-ink-muted); }
+
+/* sign-up: one quiet block on the text column */
+.lf-signup { display: flex; flex-direction: column; gap: var(--ds-space-3); }
+.lf-form { display: flex; flex-direction: column; gap: var(--ds-space-4); margin-block-start: var(--ds-space-3); }
+.lf-form__row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--ds-space-3); }
+.lf-field { flex: 1 1 16rem; display: flex; flex-direction: column; gap: var(--ds-space-1-5); min-width: 0; }
+.lf-field .ds-text-input { --_w: 100%; }
+.lf-label { font-size: var(--ds-text-sm); font-weight: var(--ds-weight-medium); color: var(--ds-ink); }
+.lf-status:empty { display: none; }
+.lf-status { font-size: var(--ds-text-sm); color: var(--ds-ink); }
+.lf-status[data-state="error"] { color: var(--ds-danger-ink); }
+
+/* plain prose pages (privacy, confirm) */
+.lf-prose { display: flex; flex-direction: column; gap: var(--ds-space-4); max-inline-size: var(--lf-measure); line-height: var(--ds-lh-prose); }
+.lf-prose + .lf-prose { margin-block-start: var(--ds-space-10); }
+.lf-prose h2 { font-family: var(--ds-font-display); font-size: var(--ds-text-xl); font-weight: var(--ds-heading-weight); line-height: var(--ds-lh-heading); }
+.lf-prose a { color: var(--ds-accent-ink); overflow-wrap: anywhere; }
+
+/* ---------------------------------------------------------------- narrow desktops: no margin column */
+@media (max-width: 1100px) { :root { --lf-rail: 15rem; } }
+
+/* ---------------------------------------------------------------- phones: the rail becomes a "Files" row at the top */
+@media (max-width: 767px) {
+  :root { --lf-num: 2.25rem; --lf-mark: 0px; --lf-gap: var(--ds-space-2-5); }
+  .lf-shell { grid-template-columns: minmax(0, 1fr); gap: var(--ds-space-6); padding-block: var(--ds-space-6) var(--ds-space-16); }
+  .lf-shell[data-page="home"] { padding-block-start: var(--ds-space-10); }
+  .lf-rail { position: static; max-block-size: none; }
+  .lf-marker { display: none; }
+  .lf-l, .lf-l[data-kind="table"], .lf-l[data-kind="snip"], .lf-l[data-kind="code"] { column-gap: 0; grid-template-columns: var(--lf-num) 0 minmax(0, 1fr); }
+  .lf-l > .lf-n { padding-inline-end: var(--lf-gap); }
+  .lf-m { visibility: hidden; }
+  .lf-in, .lf-in-pane { padding-inline-start: var(--lf-num); }
+  .lf-in-pane { padding-inline-start: 0; }
+  .lf-sec::before { margin-inline-start: var(--lf-num); }
+  .lf-sec.lf-in::before { margin-inline-start: 0; }
+  .lf-row { grid-template-columns: minmax(0, 1fr); }
+  .lf-row__m { white-space: normal; overflow-wrap: anywhere; }
+  .lf-file-bar__act { margin-inline-start: 0; }
+  .lf-l[data-kind="code"] > .lf-t { font-size: var(--ds-text-xs); }
+  .lf-sec { margin-block-start: var(--ds-space-16); }
+  .lf-suggest__in { margin-inline-start: 0; }
+  .lf-toc__r { white-space: normal; }
+}
+
+/* tables at phone width: each row becomes a labelled block (DS GAP data-table: no stacked mode), so a 3-column
+   comparison reads at 390 px without scrolling sideways */
+@media (max-width: 600px) {
+  .lf-table { --_row-h: auto; }
+  .lf-table .ds-data-table__scroll { overflow: visible; }
+  .lf-table .ds-data-table__table, .lf-table tbody, .lf-table tr, .lf-table th, .lf-table td { display: block; inline-size: 100%; min-inline-size: 0; }
+  .lf-table .ds-data-table__table { min-inline-size: 0 !important; table-layout: auto; }
+  .lf-table thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  .lf-table tbody tr { padding-block: var(--ds-space-3); border-block-end: var(--ds-border-width) solid var(--ds-rule); }
+  .lf-table tbody tr:last-child { border-block-end: 0; }
+  .lf-table th.ds-data-table__td { padding: 0 var(--ds-space-3) var(--ds-space-1); border: 0; font-weight: var(--ds-weight-semibold); }
+  .lf-table td.ds-data-table__td { display: grid; grid-template-columns: minmax(5.5rem, 38%) minmax(0, 1fr); gap: var(--ds-space-3); padding: var(--ds-space-1) var(--ds-space-3); border: 0; }
+  .lf-table td.ds-data-table__td::before { content: attr(data-label); color: var(--ds-ink-muted); font-size: var(--ds-text-xs); font-family: var(--ds-font-mono); line-height: var(--ds-lh-body); }
+  .lf-table td.ds-data-table__td[data-label=""]::before { content: none; }
+  .lf-table td.ds-data-table__td[data-label=""] { grid-template-columns: minmax(0, 1fr); }
+}
+.lf-rail .ds-sidebar-nav-panel__list > li.lf-sub { display: block; }
+.lf-rail .ds-sidebar-nav-panel__list .ds-nav-item, .lf-rail .ds-sidebar-nav-panel__tree .ds-nav-item { flex: 1 1 auto; min-width: 0; }
+.lf-suggest .ds-suggest { margin-inline: 0; }
+.lf-files--mcp { margin-inline-start: var(--ds-space-5); }
+/* sources after guide.md: the "cited on line" note sits under its card, and titles are never cut off (DS GAP
+   citation-sources: __name always clamps to 2 lines; a reference list needs the whole title) */
+.lf-sources .ds-citation-sources__card { flex-direction: column; }
+.lf-sources .ds-citation-sources__name { -webkit-line-clamp: unset; line-clamp: none; display: block; overflow: visible; }

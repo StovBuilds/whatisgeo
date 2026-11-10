@@ -17,6 +17,9 @@ test('the What is GEO answer cites the definition, the SEO line and the warning 
   const what = resolveAnswers(lines).find(a => a.key === 'what')!;
   for (const [, n] of what.parts) assert.ok(n > 0);
   assert.match(lines[what.parts[0][1] - 1], /^Generative Engine Optimisation \(GEO\) is the practice/);
+  // The guide moved to /guide/ (linefile redesign, 2026-11-10): only the Canonical line's text changed, no line moved.
+  assert.deepEqual(what.parts.map(([, n]) => n), [10, 18, 12]);
+  assert.equal(lines[2], 'Canonical: https://whatisgeo.app/guide/');
 });
 
 test('only the deliberate gap has no source, and it is labelled as a gap', () => {

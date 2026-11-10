@@ -131,4 +131,4 @@ On 31 October 2026 Jasper's pricing page listed two plans. **Pro** costs $69 per
 5. **Decide how you will measure SEO results.** Search Console reports Google traffic, including AI Overviews and AI Mode.
 6. **Treat Reddit threads and agency reviews as anecdote.** One person's ranking jump or detector result is not evidence about yours.
 
-The thinking behind how we judge tools like this is set out in [our principles](/#principles).
+The thinking behind how we judge tools like this is set out in [our principles](/guide/#principles).

@@ -1,0 +1,39 @@
+/* ============================================================================
+   patterns/sections/l-foot-01-sitemap-footer.css
+   L-FOOT-01 · Sitemap grid footer · core
+   Root <div class="ds-sec-l-foot-01-sitemap-footer" data-variant="jstov | sequence-conversion-card |
+        klarna-wordmark-monument | rox-engineering-grid | vercel-sitemap-badges | heron-table-footer |
+        intercom-mono-labelled | attio-mega | fibery-proof-rail">
+   CHROME — the one landing region with NO --ds-section-gap: a footer sits flush against whatever closed the page
+   (the CTA band, the last chapter's seam) and the page ends on its legal row / terminator / rails. Everything
+   visible is components/footer composed by ROOT class (.ds-footer[data-variant][data-headings][data-legal]);
+   the composed <footer> carries the contentinfo landmark, its own container (--_max), gutters and ground, so
+   this root has no padding, no container and no gap — it is the page-rhythm wrapper (l-nav-01's approach).
+   What the wrapper adds:
+     __signoff — the optional L-FOOT-03 slot (signoff_html) between the link grid and the legal band (house);
+                 the composed .ds-wordmark-signoff inside it is full-bleed by design, so the slot only sets rhythm.
+     data-labels / data-density on the root — the heron block sets data-labels="upper" (its cell labels are
+                 the label lane), the intercom block data-density="compact" (its 27 px pitch); page attributes win.
+   Rhythm knob: --_gap-start (default 0). A page whose last content section carries no bottom gap of its own may set
+     --_gap-start: var(--ds-section-gap) inline on the root; the house footer's own top padding (space-16) is the
+     usual separation.
+   Tokens only. Private knobs: --_gap-start --_signoff-gap
+   ========================================================================== */
+
+.ds-sec-l-foot-01-sitemap-footer {
+  --_gap-start: 0px;                                                /* chrome: no section gap (the footer's own padding is the pitch) */
+  --_signoff-gap: var(--ds-space-10);                               /* grid → sign-off slot → rule (klarna 104 ≈ space-24 on 8 px; house one gap) */
+  position: relative;
+  padding: 0;
+  padding-block-start: var(--_gap-start);
+  min-width: 0;
+  color: var(--ds-ink);
+}
+.ds-sec-l-foot-01-sitemap-footer > .ds-footer { width: 100%; }        /* placement of the composed root only */
+
+/* the L-FOOT-03 slot: a composed .ds-wordmark-signoff (or a brand SVG) between the grid and the legal band */
+.ds-sec-l-foot-01-sitemap-footer__signoff {
+  margin-block-start: var(--_signoff-gap);
+  min-width: 0;
+}
+.ds-sec-l-foot-01-sitemap-footer__signoff > * { max-width: 100%; }

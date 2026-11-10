@@ -45,7 +45,7 @@ In practice, LLM SEO means two jobs: letting AI search tools reach and understan
 
 LLM SEO is the practice of making it more likely that AI tools find your pages, use them as sources and describe your business correctly. It is an extension of ordinary SEO, with no hidden layer of the web behind it.
 
-You will see it under several labels: LLM optimisation, SEO for LLMs, answer engine optimisation (AEO) and generative engine optimisation (GEO). They all describe the same work. The fuller definition is in [what GEO is](/#what-is-geo), and how it relates to traditional search is covered in [GEO vs SEO](/#geo-vs-seo).
+You will see it under several labels: LLM optimisation, SEO for LLMs, answer engine optimisation (AEO) and generative engine optimisation (GEO). They all describe the same work. The fuller definition is in [what GEO is](/guide/#what-is-geo), and how it relates to traditional search is covered in [GEO vs SEO](/guide/#geo-vs-seo).
 
 Most "LLM SEO" guides hand you a list of tactics and treat them all as equally proven. This page sorts them into three kinds of claim instead:
 
@@ -77,7 +77,7 @@ The platforms have published more about this than many guides admit. Everything 
 
 **Google-Extended.** This is a robots.txt token that controls whether Google uses your content to train Gemini models and to ground Gemini answers. Google says it does not affect inclusion in Google Search and is not a ranking signal, so blocking it will not remove you from Search.
 
-**robots.txt itself.** RFC 9309, the standard for robots.txt, says its rules are not a form of access authorisation. Crawlers are asked to honour them, and as the OpenAI and Perplexity notes above show, fetchers acting for a user may not. For setting these rules in practice, see [crawler access](/#crawler-access).
+**robots.txt itself.** RFC 9309, the standard for robots.txt, says its rules are not a form of access authorisation. Crawlers are asked to honour them, and as the OpenAI and Perplexity notes above show, fetchers acting for a user may not. For setting these rules in practice, see [crawler access](/guide/#crawler-access).
 
 **llms.txt.** This is a proposal published at llmstxt.org: a Markdown file, usually at your site root, that gives AI agents a short summary and links to your key pages. The proposal itself does not say any major AI platform reads these files, and none of the platform documents above mention it.
 
@@ -116,7 +116,7 @@ Everything in this section is a recommendation. Where a platform or the research
 5. **Describe yourself consistently.** Use the same name, the same description of what you do and the same key facts on your site and your profiles. When those differ, an AI tool has conflicting material to work from.
 6. **Keep pages specific.** Generic copy gives a system nothing distinctive to quote.
 
-Most of this overlaps with good SEO, and that is intended. The wider approach is in the [principles](/#principles) section, and if you are starting from scratch, the [30-day plan](/#getting-started) puts these steps in order.
+Most of this overlaps with good SEO, and that is intended. The wider approach is in the [principles](/guide/#principles) section, and if you are starting from scratch, the [30-day plan](/guide/#getting-started) puts these steps in order.
 
 ## What not to bother with, and claims to distrust
 
@@ -134,4 +134,4 @@ Most of this overlaps with good SEO, and that is intended. The wider approach is
 
 Measure what you can and be honest about the rest. Check that your pages are indexed. Look in your server logs for the documented crawlers by name. Ask AI tools the questions your customers ask, and note whether you are cited and whether you are described correctly.
 
-AI answers vary from one run to the next, so a single check proves little. Repeat the same set of questions over time and look for patterns across many questions rather than any single result. The method is set out under [measuring progress](/#measurement).
+AI answers vary from one run to the next, so a single check proves little. Repeat the same set of questions over time and look for patterns across many questions rather than any single result. The method is set out under [measuring progress](/guide/#measurement).

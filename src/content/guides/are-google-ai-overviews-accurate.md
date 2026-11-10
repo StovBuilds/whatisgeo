@@ -83,7 +83,7 @@ Some headlines turn the 9 percent miss rate into millions of wrong answers per h
 
 Google's explanation, quoted above, names three causes: misreading the query, misreading the nuance of a web page, and "data voids" where little good information exists. Its rock-eating example was a data void, filled by satire that a real company had republished on its own website.
 
-Beyond that, what follows is our general explanation rather than a documented finding. An overview is generated text that summarises retrieved pages. When sources disagree, a summary can blend them or pick one without saying so. When a sentence loses its caveats, its meaning can shift. And an answer can be right and still cite pages that do not quite say it, which is the gap Oumi was measuring. For how retrieval and generation fit together, see [how AI answers happen](/#how-it-works).
+Beyond that, what follows is our general explanation rather than a documented finding. An overview is generated text that summarises retrieved pages. When sources disagree, a summary can blend them or pick one without saying so. When a sentence loses its caveats, its meaning can shift. And an answer can be right and still cite pages that do not quite say it, which is the gap Oumi was measuring. For how retrieval and generation fit together, see [how AI answers happen](/guide/#how-it-works).
 
 ## How to check an AI Overview before you rely on it
 
@@ -117,6 +117,6 @@ Then work through these steps. The first two come from Google's Search Central g
 2. **Make important facts available as text on your own pages**, which is also on Google's list. State prices, locations, services and opening hours plainly, in one place, and keep them current.
 3. **Fix contradictions elsewhere.** If an old directory listing, press release or review site carries the wrong detail, correct it at the source where you can.
 4. **Report the overview** using the steps above, and link to the page with the correct information.
-5. **Check again over time.** An [AI visibility audit](/ai-visibility-audit/) sets out how to record what AI tools say about you, and [how to track AI Overviews](/how-to-track-ai-overviews/) covers monitoring the overviews themselves. For measuring progress in general, see [measuring progress](/#measurement).
+5. **Check again over time.** An [AI visibility audit](/ai-visibility-audit/) sets out how to record what AI tools say about you, and [how to track AI Overviews](/how-to-track-ai-overviews/) covers monitoring the overviews themselves. For measuring progress in general, see [measuring progress](/guide/#measurement).
 
 If your concern is being cited at all, see [how to rank in Google AI Overviews](/how-to-rank-in-google-ai-overviews/).

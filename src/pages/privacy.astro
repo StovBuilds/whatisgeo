@@ -1,19 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import FileRail from '../components/FileRail.astro';
 import { supportSections } from '../data/content';
 import { render } from '../lib/content';
 const content = supportSections.find(s=>s.title==='Privacy')!.markdown;
 ---
-<Base title="Privacy | What is GEO" description="How What is GEO handles newsletter subscriptions, your email address, and website preferences."><main class="utility-page" id="main"><p class="eyebrow">What is GEO</p><h1>Privacy, plainly.</h1><div class="prose" set:html={render(content)} /><div class="prose" id="analytics-switch"><h2>Analytics in this browser</h2><p id="analytics-state">Analytics is on in this browser.</p><p><button type="button" class="pill" id="analytics-toggle" data-analytics-optout aria-pressed="false">Turn off analytics for this browser</button></p></div><a class="pill" href="/">Back to the guide ↗</a></main>
+<Base title="Privacy | What is GEO" description="How What is GEO handles newsletter subscriptions, your email address, and website preferences.">
+  <main id="main">
+    <div class="lf-shell" data-page="privacy">
+      <FileRail page="other" />
+      <div class="lf-pane lf-in-pane">
+        <header class="lf-intro lf-intro--page"><h1 class="lf-h1">Privacy, plainly</h1></header>
+        <div class="lf-prose" set:html={render(content)} />
+        <div class="lf-prose" id="analytics-switch"><h2>Analytics in this browser</h2><p id="analytics-state">Analytics is on in this browser.</p><p><button type="button" class="ds-button-secondary" data-variant="jstov" id="analytics-toggle" data-analytics-optout aria-pressed="false"><span class="ds-button-secondary__label">Turn off analytics for this browser</span></button></p></div>
+      </div>
+    </div>
+  </main>
   <script>
     const key = 'analytics_opt_out';
     const button = document.getElementById('analytics-toggle');
+    const label = button?.querySelector('span');
     const state = document.getElementById('analytics-state');
     const nav = navigator as Navigator & { globalPrivacyControl?: boolean };
     function render() {
       let off = false; try { off = localStorage.getItem(key) === '1'; } catch {}
       const signal = nav.globalPrivacyControl || navigator.doNotTrack === '1';
-      if (button) { button.textContent = off ? 'Turn analytics back on for this browser' : 'Turn off analytics for this browser'; button.setAttribute('aria-pressed', String(off)); }
+      if (button && label) { label.textContent = off ? 'Turn analytics back on for this browser' : 'Turn off analytics for this browser'; button.setAttribute('aria-pressed', String(off)); }
       if (state) state.textContent = signal ? 'Your browser is sending a do-not-track / privacy-control signal, so nothing is recorded regardless.' : off ? 'Analytics is off in this browser.' : 'Analytics is on in this browser.';
     }
     button?.addEventListener('click', () => { try { localStorage.getItem(key) === '1' ? localStorage.removeItem(key) : localStorage.setItem(key, '1'); } catch {} render(); });

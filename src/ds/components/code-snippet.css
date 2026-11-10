@@ -1,0 +1,424 @@
+/* ============================================================================
+   components/code-snippet/code-snippet.css — Code snippet / command bar   taxonomy-components.md §G · common · S1
+   Root `.ds-code-snippet` is ONE line of code or a shell command in a box: an optional
+   mono eyebrow, a prompt glyph, the command (user-selectable, truncating), an optional
+   language tag and a composed copy control. It is the canonical form of cta-block's
+   command bar (__command / __select / __cmd / __copy / __copy-done are superseded) and
+   the line form used inside terminal-view. Not a code BLOCK (multi-line source), not an
+   input. `.ds-code-snippet-group` stacks lines in one box (install steps).
+   Composes (root class only): icon-button (data-variant="ghost-glyph", the copy glyph),
+     button-secondary (data-variant="ghost-text", the house "Copy" text button),
+     button-primary (data-variant="filled-ink", the cloudflare hero bar's paper Copy).
+     The composed control sits on the snippet's OWN plane (inverse in a light page), so the
+     snippet recolours its rest/hover through :where() — the composed states, ring, spinner
+     and geometry are untouched. The hero bar's filled-ink Copy is left alone.
+   Parts: __label · __select (+ __select-glyph) · __prompt · __code · __lang · __copy
+          (+ __copy-idle · __copy-done) · __status (sr-only live region)
+   Tones: unmarked = the plane the variant chooses (house: surface-2 well); data-tone="inverse"
+          forces --ds-surface-inverse + --ds-ink-inverse in ANY mode; data-tone="surface"
+          forces the light well. Tone rules are written LAST so they beat a variant.
+   Overflow: data-overflow="ellipsis" (default) | fade | wrap | scroll.
+   Sizes: data-size="sm|md|lg" (32/36/44 on the ladder; 52 at comfortable density — the
+          cloudflare hero bar).
+   States: rest · hover (copy) · focus-visible (copy, composed ring) · data-state="copied" on
+          the ROOT (2 s, JS contract in the README) · aria-disabled · aria-busy (skeleton).
+   Variants (data-variant): jstov (unmarked root) · cloudflare-hero-command-bar ·
+          cloudflare-card-code-box · vercel-command-bar · synara-terminal-line
+   Tokens only (tools/lint-tokens.mjs). Private knobs: --_fill --_ink --_muted --_prompt
+          --_border --_radius --_h --_text --_pad-x --_pad-end --_cs-gap (not --_gap: the composed
+          buttons declare their own --_gap, which would shadow it on the copy element) --_fade --_success
+          --_url --_divider.
+   ========================================================================== */
+
+.ds-code-snippet {
+  --_fill:    var(--ds-surface-2);                    /* house: a mono well on the page      */
+  --_ink:     var(--ds-ink);
+  --_muted:   var(--ds-ink-muted);                    /* label, lang, the copy glyph at rest */
+  --_prompt:  var(--ds-ink-muted);                    /* house rations accent to state       */
+  --_border:  var(--ds-rule);
+  --_radius:  var(--ds-radius-sm);                    /* 6 · 9 at scale 1.5 (≈ ref 10)       */
+  --_h:       var(--ds-size-h);                       /* 36 · 32 sm · 44 lg · ×density        */
+  --_text:    var(--ds-text-sm);                      /* the mono lane: 12 @14 · 13 @15       */
+  --_pad-x:   var(--ds-size-pad-x);
+  --_pad-end: var(--ds-space-1-5);                    /* the copy control sits 6 px in        */
+  --_cs-gap:     var(--ds-space-2-5);
+  --_fade:    var(--ds-space-8);                      /* data-overflow="fade" run-out         */
+  --_success: var(--ds-success-ink);                  /* the copied colour on this plane      */
+  --_url:     var(--_ink);                            /* house: a URL is ink, not accent      */
+  --_divider: var(--ds-rule);                         /* between lines in a group             */
+  position: relative;                                 /* the sr-only status lives inside      */
+  display: grid;                                      /* NOT a wrapping flex row: wrapping happens on max-content sizes,
+                                                         so the copy control would drop a line before the command shrank */
+  grid-template-columns: [select] auto [prompt] auto [code] minmax(0, 1fr) [lang] auto [copy] auto;
+  grid-auto-rows: auto;
+  align-items: center;
+  align-content: center;                              /* one row or two (label) sit centred in the min-height */
+  column-gap: 0;                                      /* gaps are per-part margins — an absent part leaves no phantom track gap */
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--_h);
+  padding-block: var(--ds-space-1);
+  padding-inline: var(--_pad-x) var(--_pad-end);
+  font-family: var(--ds-font-mono);
+  font-size: var(--_text);
+  line-height: var(--ds-lh-list);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-align: start;
+  color: var(--_ink);
+  background: var(--_fill);
+  border: var(--ds-border-width) solid var(--_border);
+  border-radius: var(--_radius);
+  box-sizing: border-box;
+}
+.ds-code-snippet > * { min-width: 0; }
+/* the gap between parts, as a margin on every part that follows another part (the label is its own row) */
+.ds-code-snippet > :not(.ds-code-snippet__label) + :not(.ds-code-snippet__status) { margin-inline-start: var(--_cs-gap); }
+
+/* ---- parts ---------------------------------------------------------------------- */
+/* mono eyebrow above the line ("TERMINAL", "macOS"): the label lane, so case follows data-labels */
+.ds-code-snippet__label {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  margin: 0;
+  padding-block: var(--ds-space-1-5) var(--ds-space-0-5);
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: var(--ds-label-tracking);
+  text-transform: var(--ds-label-case);
+  color: var(--_muted);
+  user-select: none;
+}
+/* vercel: a leading selector cell ([npm ▾] | $ …) with a hairline after it */
+.ds-code-snippet__select {
+  grid-column: select;
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  gap: var(--ds-space-1-5);
+  margin-inline-start: calc(-1 * var(--_pad-x));
+  margin-block: calc(-1 * var(--ds-space-1));
+  padding-inline: var(--ds-space-4) var(--ds-space-3);
+  border: 0;
+  border-inline-end: var(--ds-border-width) solid var(--_border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--_ink);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-sm);
+  font-weight: var(--ds-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+  flex: none;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+.ds-code-snippet__select:hover, .ds-code-snippet__select[data-state="hover"] { background: color-mix(in srgb, var(--_ink) 8%, transparent); }
+.ds-code-snippet__select:focus-visible { outline: var(--ds-ring-width) solid var(--ds-ring); outline-offset: calc(-1 * var(--ds-ring-width)); }
+.ds-code-snippet__select-glyph, .ds-code-snippet__select > svg {
+  inline-size: var(--ds-icon-size); block-size: var(--ds-icon-size);
+  display: inline-block; flex: none;
+  fill: none; stroke: currentColor; stroke-width: var(--ds-icon-stroke); stroke-linecap: round; stroke-linejoin: round;
+  color: var(--_muted);
+}
+/* the prompt glyph: decorative, never selected with the command */
+.ds-code-snippet__prompt {
+  grid-column: prompt;
+  color: var(--_prompt);
+  font-weight: var(--ds-weight-medium);
+  user-select: none;
+}
+/* the command: selectable, ellipsis by default */
+.ds-code-snippet__code {
+  grid-column: code;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: all;                                   /* one click selects the whole command */
+}
+.ds-code-snippet__code[data-kind="url"] { color: var(--_url); }
+/* optional language tag at the end of the line */
+.ds-code-snippet__lang {
+  grid-column: lang;
+  font-size: var(--ds-text-xs);
+  color: var(--_muted);
+  user-select: none;
+}
+/* the copy control: a composed icon-button / button-secondary / button-primary — placement only … */
+.ds-code-snippet__copy { grid-column: copy; justify-self: end; }
+/* … and a TEXT copy control leaves the mono lane: the snippet's root sets --ds-font-mono for the code, and a composed
+   button-primary / button-secondary sets no family of its own, so its label inherited mono (the Cloudflare bar's
+   "Copy" read as code). The control is a control: sans, at the size the composed button sets. 2026-09-20 */
+.ds-code-snippet__copy:where(.ds-button-primary, .ds-button-secondary) { font-family: var(--ds-font-sans); }
+/* … plus its rest/hover colours on THIS plane (a ghost in a light page's dark box would
+   otherwise take the page's muted ink). :where() keeps the composed control's own state
+   rules — ring, pressed, disabled, spinner — at their specificity. The hero bar's filled
+   primary is excluded: it paints its own plane. */
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary) {   /* (0,3,0): beats a composed variant's (0,2,0) rest rule */
+  color: var(--_muted);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary):hover,
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary)[data-state="hover"] {   /* (0,4,0): beats a composed variant's :hover (0,3,0) whatever the load order */
+  color: var(--_ink);
+  background: color-mix(in srgb, var(--_ink) 12%, transparent);
+  border-color: transparent;
+  box-shadow: none;
+}
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary):active {
+  background: color-mix(in srgb, var(--_ink) 18%, transparent);
+}
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy:disabled,
+.ds-code-snippet .ds-code-snippet__copy.ds-code-snippet__copy[aria-disabled="true"] {   /* (0,4,0) beats icon-button's re-asserted (0,3,0) disabled rule */
+  color: color-mix(in srgb, var(--_ink) 38%, transparent);
+  background: transparent;
+  border-color: transparent;
+}
+/* the two faces of the copy control: idle (glyph / "Copy") and done (check / "Copied ✓") */
+.ds-code-snippet__copy-done { display: none; }
+.ds-code-snippet[data-state="copied"] .ds-code-snippet__copy-idle { display: none; }
+.ds-code-snippet[data-state="copied"] .ds-code-snippet__copy-done { display: inline-flex; }
+.ds-code-snippet[data-state="copied"] .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary),
+.ds-code-snippet[data-state="copied"] .ds-code-snippet__copy.ds-code-snippet__copy:where(.ds-icon-button, .ds-button-secondary):hover {
+  color: var(--_success);
+}
+/* the live region that announces "Copied" (JS fills it) */
+.ds-code-snippet__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- overflow modes ------------------------------------------------------------- */
+/* fade: the tail runs out under a mask instead of an ellipsis — for URLs, where "…" reads as
+   part of the address. overflow:hidden clips at the padding edge, so the padding-end zone IS
+   the fade zone: a short command never reaches it, a long one fades through it. */
+.ds-code-snippet[data-overflow="fade"] .ds-code-snippet__code {
+  text-overflow: clip;
+  padding-inline-end: var(--_fade);
+  -webkit-mask-image: linear-gradient(to right, currentColor calc(100% - var(--_fade)), transparent);
+  mask-image: linear-gradient(to right, currentColor calc(100% - var(--_fade)), transparent);
+}
+.ds-code-snippet[data-overflow="wrap"] { align-items: start; }
+.ds-code-snippet[data-overflow="wrap"] .ds-code-snippet__code { white-space: pre-wrap; overflow-wrap: anywhere; text-overflow: clip; padding-block: calc((var(--_h) - 2 * var(--ds-space-1) - 1lh) / 2); }
+.ds-code-snippet[data-overflow="wrap"] .ds-code-snippet__prompt { padding-block: calc((var(--_h) - 2 * var(--ds-space-1) - 1lh) / 2); }
+.ds-code-snippet[data-overflow="wrap"] .ds-code-snippet__copy { align-self: start; }
+.ds-code-snippet[data-overflow="scroll"] .ds-code-snippet__code { overflow-x: auto; white-space: pre; text-overflow: clip; scrollbar-width: thin; padding-block-end: var(--ds-space-0-5); }
+
+/* ---- states on the root ----------------------------------------------------------- */
+/* disabled: ink drops to faint on the deeper well, the copy control is disabled by the page */
+.ds-code-snippet[aria-disabled="true"] {
+  --_ink: var(--ds-ink-faint);
+  --_prompt: var(--ds-ink-faint);
+  --_muted: var(--ds-ink-faint);
+  --_url: var(--ds-ink-faint);
+  cursor: not-allowed;
+}
+.ds-code-snippet[aria-disabled="true"] .ds-code-snippet__code { user-select: none; }
+/* loading: the command's footprint is a skeleton bar on this plane; the copy waits */
+.ds-code-snippet[aria-busy="true"] .ds-code-snippet__code {
+  color: transparent;
+  min-width: 14ch;
+  max-width: 36ch;
+  height: .9em;
+  border-radius: var(--ds-radius-xs);
+  background: color-mix(in srgb, var(--_ink) 14%, transparent);
+  user-select: none;
+}
+.ds-code-snippet[aria-busy="true"] .ds-code-snippet__prompt { color: color-mix(in srgb, var(--_prompt) 50%, transparent); }
+.ds-code-snippet[aria-busy="true"] .ds-code-snippet__copy { pointer-events: none; opacity: .5; }
+
+/* ============================================================================
+   VARIANTS. Unmarked root = jstov (house): a hairline --ds-surface-2 well (inverse only
+   when the page puts it in a dark island — the mode remap does that), the prompt in
+   --ds-ink-muted (accent is rationed to state), a URL in ink, the copy control a
+   ghost TEXT button "Copy" → "Copied ✓" in --ds-success-ink.
+   ========================================================================== */
+
+/* cloudflare-hero-command-bar — the 52-px bar on the dark hero: paper at 6 % + a 14 % edge with a
+   blur (= the glass tokens), radius 14 (--ds-radius-md at scale 1.5), 18/8 padding, "$" in the
+   brand orange, 14-px mono, a PAPER-filled 36-px "Copy" inside the bar (button-primary
+   filled-ink — the reference's second filled control, kept as its designer choice; see README)
+   [try-cloudflare-1440-t00] [try-cloudflare.html .cmd-bar] */
+.ds-code-snippet[data-variant="cloudflare-hero-command-bar"] {
+  --_fill:   var(--ds-glass-fill);
+  --_border: var(--ds-glass-border);
+  --_prompt: var(--ds-accent);
+  --_radius: var(--ds-radius-md);
+  --_pad-x:  var(--ds-space-4);
+  --_pad-end: var(--ds-space-2);
+  --_cs-gap:    var(--ds-space-3);
+  --_url:    var(--ds-accent);
+  --_h:      var(--ds-control-h-lg);                  /* 44 · 52 at comfortable density (the reference) */
+  --_text:   var(--ds-text-md);
+  display: inline-grid;
+  width: auto;                                        /* hugs the command; max-width 100% keeps phones safe */
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur));
+  backdrop-filter: blur(var(--ds-glass-blur));
+}
+
+/* cloudflare-card-code-box — the dark box at the foot of a white step card: --ds-surface-inverse,
+   radius 10 (--ds-radius-sm at 1.5), 10 / 14 / 8 padding, 13-px mono, no prompt, a URL in the
+   brand orange, a 28-px ghost copy glyph that goes success-green when copied; ellipsis
+   [try-cloudflare-1440-t02] [try-cloudflare.html .code-chip] */
+.ds-code-snippet[data-variant="cloudflare-card-code-box"] {
+  --_fill:    var(--ds-surface-inverse);
+  --_ink:     var(--ds-ink-inverse);
+  --_muted:   color-mix(in srgb, var(--ds-ink-inverse) 66%, transparent);
+  --_prompt:  var(--ds-accent);
+  --_border:  transparent;
+  --_radius:  var(--ds-radius-sm);
+  --_pad-x:   var(--ds-space-3);
+  --_pad-end: var(--ds-space-2);
+  --_success: var(--ds-success);
+  --_url:     var(--ds-accent);
+  --_divider: color-mix(in srgb, var(--ds-ink-inverse) 12%, transparent);
+  padding-block: var(--ds-space-2);
+}
+.ds-code-snippet[data-variant="cloudflare-card-code-box"] .ds-code-snippet__copy { --_size: var(--ds-control-h-sm); --_radius: var(--ds-radius-xs); }   /* icon-button's documented knobs: 32 / 40 (ref 28), radius 7 */
+
+/* vercel-command-bar — [selector ▾] | $ command | copy, on --ds-surface with --ds-border at the
+   button radius and the lg control height; the copy is a square ghost glyph with an inset ring;
+   pairs with a filled pill in cta-block [vercel-page] — the canonical form of cta-block__command */
+.ds-code-snippet[data-variant="vercel-command-bar"] {
+  --_fill:   var(--ds-surface);
+  --_border: var(--ds-border);
+  --_radius: var(--ds-radius-button);
+  --_h:      var(--ds-control-h-lg);
+  --_text:   var(--ds-text-md);
+  --_pad-x:  var(--ds-space-4);
+  --_pad-end: 0px;
+  --_cs-gap: var(--ds-space-2);
+  width: auto;
+  display: inline-grid;
+  align-content: stretch;                             /* the single row fills the bar so the select + copy cells stretch edge to edge */
+  padding-block: 0;
+  overflow: hidden;                                   /* the square copy cell + select are clipped to the radius; their rings are inset */
+}
+.ds-code-snippet[data-variant="vercel-command-bar"] .ds-code-snippet__select { margin-block: 0; }
+.ds-code-snippet[data-variant="vercel-command-bar"] .ds-code-snippet__copy { --_size: var(--ds-control-h-lg); --_radius: 0px; align-self: stretch; height: auto; }
+.ds-code-snippet[data-variant="vercel-command-bar"] .ds-code-snippet__copy:focus-visible { outline-offset: calc(-1 * var(--ds-ring-width)); }
+
+/* synara-terminal-line — one line INSIDE a terminal pane: no box, no radius, the pane's own ink,
+   a muted "$", the copy glyph appears on hover / focus-within [hsvu79cweaarswf] */
+.ds-code-snippet[data-variant="synara-terminal-line"] {
+  --_fill:   transparent;
+  --_border: transparent;
+  --_ink:    currentColor;
+  --_muted:  color-mix(in srgb, currentColor 62%, transparent);
+  --_prompt: color-mix(in srgb, currentColor 62%, transparent);
+  --_radius: 0px;
+  --_h:      auto;
+  --_pad-x:  0px;
+  --_pad-end: 0px;
+  --_cs-gap:    var(--ds-space-2);
+  --_text:   1em;                                     /* the pane's own size */
+  --_success: var(--ds-success);
+  padding-block: 0;
+  line-height: inherit;
+}
+.ds-code-snippet[data-variant="synara-terminal-line"] .ds-code-snippet__code { user-select: text; }
+.ds-code-snippet[data-variant="synara-terminal-line"] .ds-code-snippet__copy { --_size: var(--ds-control-h-sm); opacity: 0; transition: opacity var(--ds-dur-fast) var(--ds-ease-standard); }
+.ds-code-snippet[data-variant="synara-terminal-line"]:hover .ds-code-snippet__copy,
+.ds-code-snippet[data-variant="synara-terminal-line"]:focus-within .ds-code-snippet__copy,
+.ds-code-snippet[data-variant="synara-terminal-line"][data-state="copied"] .ds-code-snippet__copy,
+.ds-code-snippet[data-variant="synara-terminal-line"][data-state="hover"] .ds-code-snippet__copy { opacity: 1; }
+
+/* ---- tones — written last so an explicit data-tone beats any variant's plane -------- */
+.ds-code-snippet[data-tone="inverse"] {
+  --_fill:    var(--ds-surface-inverse);
+  --_ink:     var(--ds-ink-inverse);
+  --_muted:   color-mix(in srgb, var(--ds-ink-inverse) 66%, transparent);
+  --_border:  transparent;
+  --_success: var(--ds-success);
+  --_divider: color-mix(in srgb, var(--ds-ink-inverse) 12%, transparent);
+}
+.ds-code-snippet[data-tone="surface"] {
+  --_fill:    var(--ds-surface-2);
+  --_ink:     var(--ds-ink);
+  --_muted:   var(--ds-ink-muted);
+  --_border:  var(--ds-rule);
+  --_success: var(--ds-success-ink);
+  --_divider: var(--ds-rule);
+}
+.ds-code-snippet[data-tone="surface"][aria-disabled="true"] { --_fill: var(--ds-surface-3); --_ink: var(--ds-ink-faint); --_muted: var(--ds-ink-faint); }
+
+/* ---- sizes — AFTER the variants and tones, so an explicit data-size beats a variant's default ---- */
+.ds-code-snippet[data-size] { --_h: var(--ds-size-h); --_pad-x: var(--ds-size-pad-x); }
+.ds-code-snippet[data-size="sm"] { --_text: var(--ds-text-xs); --_cs-gap: var(--ds-space-2); --_pad-end: var(--ds-space-1); --_radius: var(--ds-radius-xs); }
+.ds-code-snippet[data-size="md"] { --_text: var(--ds-text-sm); }
+.ds-code-snippet[data-size="lg"] { --_text: var(--ds-text-md); --_cs-gap: var(--ds-space-3); --_pad-end: var(--ds-space-2); --_radius: var(--ds-radius-md); }
+
+/* ============================================================================
+   GROUP — `.ds-code-snippet-group`: stacked lines in ONE box (install steps). The group
+   paints the box; each line drops its own edge and radius and gains a divider. The group's
+   data-tone / data-variant plane flows to the lines through the knobs below.
+   ========================================================================== */
+.ds-code-snippet-group {
+  --_fill:    var(--ds-surface-2);
+  --_ink:     var(--ds-ink);
+  --_muted:   var(--ds-ink-muted);
+  --_border:  var(--ds-rule);
+  --_radius:  var(--ds-radius-sm);
+  --_divider: var(--ds-rule);
+  --_success: var(--ds-success-ink);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  background: var(--_fill);
+  border: var(--ds-border-width) solid var(--_border);
+  border-radius: var(--_radius);
+  overflow: hidden;
+  color: var(--_ink);
+}
+.ds-code-snippet-group > .ds-code-snippet {
+  --_fill: transparent;
+  --_border: transparent;
+  --_radius: 0px;
+  border-inline: 0;
+  border-block-start: 0;
+  border-radius: 0;
+}
+.ds-code-snippet-group > .ds-code-snippet + .ds-code-snippet { border-block-start: var(--ds-border-width) solid var(--_divider); }
+.ds-code-snippet-group > .ds-code-snippet__label {
+  margin: 0;
+  padding: var(--ds-space-2) var(--ds-size-pad-x) 0;
+  font-family: var(--ds-font-label);
+  font-size: var(--ds-text-xs);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: var(--ds-label-tracking);
+  text-transform: var(--ds-label-case);
+  color: var(--_muted);
+}
+.ds-code-snippet-group[data-tone="inverse"],
+.ds-code-snippet-group[data-variant="cloudflare-card-code-box"] {
+  --_fill:    var(--ds-surface-inverse);
+  --_ink:     var(--ds-ink-inverse);
+  --_muted:   color-mix(in srgb, var(--ds-ink-inverse) 66%, transparent);
+  --_border:  transparent;
+  --_divider: color-mix(in srgb, var(--ds-ink-inverse) 12%, transparent);
+  --_success: var(--ds-success);
+}
+.ds-code-snippet-group[data-tone="inverse"] > .ds-code-snippet,
+.ds-code-snippet-group[data-variant="cloudflare-card-code-box"] > .ds-code-snippet {
+  --_ink:     var(--ds-ink-inverse);
+  --_muted:   color-mix(in srgb, var(--ds-ink-inverse) 66%, transparent);
+  --_prompt:  var(--ds-accent);
+  --_success: var(--ds-success);
+  --_url:     var(--ds-accent);
+}
+.ds-code-snippet-group[data-variant="cloudflare-card-code-box"] > .ds-code-snippet .ds-code-snippet__copy { --_size: var(--ds-control-h-sm); --_radius: var(--ds-radius-xs); }
+
+/* ---- phones: the hero bar goes full width and the paper button keeps its label ------ */
+@media (max-width: 480px) {
+  .ds-code-snippet[data-variant="vercel-command-bar"] { display: grid; width: 100%; }
+  .ds-code-snippet[data-variant="vercel-command-bar"] .ds-code-snippet__select { padding-inline: var(--ds-space-3); }
+}

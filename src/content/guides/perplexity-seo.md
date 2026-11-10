@@ -46,7 +46,7 @@ Many of the top results for this search are agency pages and listicles. They pre
 
 Perplexity's help centre describes three steps: it interprets the question, searches the web, and then compiles the most relevant information into an answer. It says every answer includes numbered citations that link to the original sources, so readers can check the information. Follow-up questions keep the context of the conversation.
 
-The public documentation stops there. Neither the help centre nor the crawler page says how Perplexity chooses which sources to cite, or in what order. You can make a page eligible to be found and read, but you cannot decide whether it gets cited. For how AI answers are put together more generally, see [how AI answers happen](/#how-it-works).
+The public documentation stops there. Neither the help centre nor the crawler page says how Perplexity chooses which sources to cite, or in what order. You can make a page eligible to be found and read, but you cannot decide whether it gets cited. For how AI answers are put together more generally, see [how AI answers happen](/guide/#how-it-works).
 
 ## What Perplexity documents about its crawlers
 
@@ -93,7 +93,7 @@ The example only shows how the groups interact. Whether to allow the bot is your
 3. **Do not rely on robots.txt for Perplexity-User.** Perplexity says this agent generally ignores robots.txt, so restricting it takes firewall or server rules.
 4. **Watch your server logs** for both user agents after any change.
 
-Our [AI crawler access guide](/#crawler-access) covers the other platforms' bots.
+Our [AI crawler access guide](/guide/#crawler-access) covers the other platforms' bots.
 
 ## What research says about getting cited
 
@@ -122,7 +122,7 @@ Perplexity documents none of the following, and none of it comes with a promise.
 5. **Keep facts current and consistent.** Out-of-date prices, opening hours or product details give any summary something wrong to repeat.
 6. **Earn credible mentions elsewhere.** Perplexity searches the wider web, so what reputable sites say about you can end up in an answer. This is a reasonable bet, but Perplexity does not name it as a factor.
 
-The reasoning behind these points is in our [GEO principles](/#principles).
+The reasoning behind these points is in our [GEO principles](/guide/#principles).
 
 ## How to check whether Perplexity cites you
 
@@ -131,7 +131,7 @@ The reasoning behind these points is in our [GEO principles](/#principles).
 3. **Repeat with the same list later.** Treat each answer as one data point. A pattern across many questions tells you more.
 4. **Check your server logs** for PerplexityBot and Perplexity-User. A visit does not mean a citation. If PerplexityBot never visits, check robots.txt and your firewall first.
 
-To make this a regular routine, see [measuring progress](/#measurement).
+To make this a regular routine, see [measuring progress](/guide/#measurement).
 
 ## Using Perplexity as a tool for SEO work
 

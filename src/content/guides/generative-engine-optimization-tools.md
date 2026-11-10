@@ -52,7 +52,7 @@ Most "best GEO tools" pages are written by vendors. They put their own product f
 
 A tracker sends questions (prompts) to AI engines and records the answers. An audit tool looks at your site from the outside: robots.txt rules, whether pages can be reached and how the content is structured. A content assistant suggests edits. All three can be useful, but they only observe and advise. None of them controls what an engine writes.
 
-Google's documentation is plain about its own AI features. To be eligible as a supporting link in AI Overviews or AI Mode, "a page must be indexed and eligible to be shown in Google Search with a snippet", and "there are no additional technical requirements". It adds that "specific optimization isn't required" and that the usual SEO basics still apply. Be wary of any tool that promises guaranteed inclusion in AI answers, because Google documents no special lever for it. For how this fits with ordinary search work, see [GEO vs SEO](/#geo-vs-seo).
+Google's documentation is plain about its own AI features. To be eligible as a supporting link in AI Overviews or AI Mode, "a page must be indexed and eligible to be shown in Google Search with a snippet", and "there are no additional technical requirements". It adds that "specific optimization isn't required" and that the usual SEO basics still apply. Be wary of any tool that promises guaranteed inclusion in AI answers, because Google documents no special lever for it. For how this fits with ordinary search work, see [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## The four kinds of tool
 
@@ -82,7 +82,7 @@ An audit checks whether AI crawlers can reach you at all. A useful one compares 
 
 That last point is a handy test of an audit tool. If it tells you to allow Google-Extended so you can appear in AI Overviews, it has misread Google's documentation. Operators change these lists, so check each operator's page rather than relying on any copy, including this one.
 
-The robots.txt standard, RFC 9309, describes rules that crawlers "are requested to honor" and states that "these rules are not a form of access authorization." robots.txt asks crawlers to stay out; it doesn't lock anything. The practical steps are in [crawler access](/#crawler-access).
+The robots.txt standard, RFC 9309, describes rules that crawlers "are requested to honor" and states that "these rules are not a form of access authorization." robots.txt asks crawlers to stay out; it doesn't lock anything. The practical steps are in [crawler access](/guide/#crawler-access).
 
 ### Content and optimisation assistants
 
@@ -134,7 +134,7 @@ This is the order we suggest. It costs nothing but time.
 5. **Check indexing** with Search Console's URL Inspection tool, because Google's requirement is that a page is indexed and eligible for a snippet.
 6. **Read the first-party reports** in Search Console and Bing Webmaster Tools.
 
-After a few rounds you will usually know whether your problem is measurement, access or content. That tells you which kind of tool, if any, is worth paying for. For the wider first month, see [getting started](/#getting-started). For how to read your log over time, see [measuring progress](/#measurement).
+After a few rounds you will usually know whether your problem is measurement, access or content. That tells you which kind of tool, if any, is worth paying for. For the wider first month, see [getting started](/guide/#getting-started). For how to read your log over time, see [measuring progress](/guide/#measurement).
 
 ## Which setup fits which kind of business
 
@@ -145,7 +145,7 @@ These are our recommendations:
 - **An agency with several clients:** put export, a fixed prompt set per client and open methods ahead of extra features.
 - **A publisher or content-heavy site:** start with the audit and content jobs, because access and structure come before anything else.
 
-Whichever setup you choose, the habits in [our principles](/#principles) still apply.
+Whichever setup you choose, the habits in [our principles](/guide/#principles) still apply.
 
 ## How we handle this page
 

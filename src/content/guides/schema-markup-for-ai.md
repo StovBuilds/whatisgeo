@@ -50,7 +50,7 @@ Schema markup labels the facts on a page so software can read them without guess
 
 Schema can describe your business, your products and your articles in a fixed vocabulary that search engines understand. Google says it uses that markup to understand pages. That is a real benefit, and it costs little to get right.
 
-No platform we cite here says that schema decides which sources an AI answer uses. Google's documentation for AI Overviews and AI Mode lists no markup requirement at all. So treat schema as a way to make your facts easy to read. It does not replace being a page worth citing. If you want the bigger picture of how AI answers choose sources first, start with [how AI answers happen](/#how-it-works).
+No platform we cite here says that schema decides which sources an AI answer uses. Google's documentation for AI Overviews and AI Mode lists no markup requirement at all. So treat schema as a way to make your facts easy to read. It does not replace being a page worth citing. If you want the bigger picture of how AI answers choose sources first, start with [how AI answers happen](/guide/#how-it-works).
 
 ## What the platforms document
 
@@ -132,7 +132,7 @@ Then check it with two free tools:
 - **Google's Rich Results Test** (search.google.com/test/rich-results) shows whether Google can read the markup and whether the page qualifies for any rich result.
 - **The Schema Markup Validator** (validator.schema.org), run by Schema.org, checks the markup against the vocabulary, whether or not Google uses that type.
 
-Where you put the markup also matters. Google says it can read JSON-LD that is injected into the page by JavaScript. Other crawlers may not handle it the same way, and we have not seen documentation from every AI company on this point. As a precaution, we put the markup in the HTML the server sends, so it does not depend on scripts running. This is our own practice, not a documented requirement. Whether a crawler can reach the page at all is a separate question, covered in [crawler access](/#crawler-access).
+Where you put the markup also matters. Google says it can read JSON-LD that is injected into the page by JavaScript. Other crawlers may not handle it the same way, and we have not seen documentation from every AI company on this point. As a precaution, we put the markup in the HTML the server sends, so it does not depend on scripts running. This is our own practice, not a documented requirement. Whether a crawler can reach the page at all is a separate question, covered in [crawler access](/guide/#crawler-access).
 
 ## Keep the markup honest: match the visible page
 
@@ -148,6 +148,6 @@ Markup that contradicts the page gives a machine two versions of the facts and n
 
 ## Where schema fits in the wider GEO picture
 
-Schema labels facts you already publish. It cannot make a thin page useful or make an unknown business well known. The work that usually matters more is clear, specific content, pages that crawlers can reach, and a way to see whether anything changes. Our [principles](/#principles) cover the content side. [Measuring progress](/#measurement) covers how to check results without assuming them. If you want to know how often AI tools mention you at all, start with [what AI visibility means](/what-is-ai-visibility/).
+Schema labels facts you already publish. It cannot make a thin page useful or make an unknown business well known. The work that usually matters more is clear, specific content, pages that crawlers can reach, and a way to see whether anything changes. Our [principles](/guide/#principles) cover the content side. [Measuring progress](/guide/#measurement) covers how to check results without assuming them. If you want to know how often AI tools mention you at all, start with [what AI visibility means](/what-is-ai-visibility/).
 
 Treat schema as housekeeping. It is worth doing and cheap to do well, but it will not stand in for having something worth citing.

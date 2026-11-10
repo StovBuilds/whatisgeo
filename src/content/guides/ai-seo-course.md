@@ -128,4 +128,4 @@ Apply what you learned to one site soon, while it is fresh.
 
 Set a baseline first: record how your pages currently appear for the questions you care about, so you have something to compare against later. Then make one change at a time where you can. If you change six things at once, you will not know which one mattered.
 
-Go back to the primary sources every so often. Platform guidance is updated, and a course recorded last year will not know what has changed since. When you need to reset your footing, the [principles section of our main guide](/#principles) sets out the approach this site recommends.
+Go back to the primary sources every so often. Platform guidance is updated, and a course recorded last year will not know what has changed since. When you need to reset your footing, the [principles section of our main guide](/guide/#principles) sets out the approach this site recommends.

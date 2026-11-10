@@ -116,7 +116,7 @@ The middle column changes only the method. The real difference is in the last co
 
 Pages that can be crawled and indexed. Content that is accurate and answers the question properly. Internal links a crawler can follow. Important content available as text, and structured data that matches what is visible on the page. Google lists each of these as still worthwhile for its AI features (documented).
 
-If you have been doing traditional SEO well, that work carries straight over. If you have not, adding AI on top will not make up for it. The home guide's [GEO vs SEO section](/#geo-vs-seo) covers where they overlap in more depth.
+If you have been doing traditional SEO well, that work carries straight over. If you have not, adding AI on top will not make up for it. The home guide's [GEO vs SEO section](/guide/#geo-vs-seo) covers where they overlap in more depth.
 
 ## What is documented, what is research, and what is practice
 

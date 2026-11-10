@@ -49,7 +49,7 @@ SEO, AEO and GEO each describe a slightly different corner of that job. They are
 
 **GEO** (generative engine optimisation) points at AI-written answers, where a model composes a response and may cite or mention sources as it goes. It is the only one of the three with a named research paper behind it: Aggarwal et al., "GEO: Generative Engine Optimization", accepted to KDD 2024. More on what that paper does and does not show below.
 
-We found that the top-ranking pages for these terms use AEO and GEO inconsistently. That is our own observation, and we know of no official definition for either. Some treat AEO as a subset of GEO, some treat them as the same thing, and some tie them to different surfaces. For the longer treatment of the GEO side, see [what GEO is](/#what-is-geo) and [GEO vs SEO](/#geo-vs-seo).
+We found that the top-ranking pages for these terms use AEO and GEO inconsistently. That is our own observation, and we know of no official definition for either. Some treat AEO as a subset of GEO, some treat them as the same thing, and some tie them to different surfaces. For the longer treatment of the GEO side, see [what GEO is](/guide/#what-is-geo) and [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## SEO vs AEO vs GEO at a glance
 
@@ -88,7 +88,7 @@ Mixing these three kinds of claim is how a lot of confident nonsense gets publis
 
 **OpenAI.** OpenAI documents separate user agents. OAI-SearchBot is for surfacing sites in ChatGPT's search features, and sites that block it will not be shown in ChatGPT search answers (though they can still appear as navigational links). GPTBot crawls content that may be used to train its foundation models. ChatGPT-User visits pages for certain user actions, and OpenAI notes that robots.txt rules may not apply to it because a user starts those visits. You can allow one and block another.
 
-**robots.txt itself.** RFC 9309 defines the rules crawlers are "requested to honor" and states plainly that they "are not a form of access authorization". It is a request that well-behaved crawlers follow. It does not lock anything. For the practical setup, see [crawler access](/#crawler-access). Other AI companies publish their own crawler names, so check each operator's documentation before writing rules for it.
+**robots.txt itself.** RFC 9309 defines the rules crawlers are "requested to honor" and states plainly that they "are not a form of access authorization". It is a request that well-behaved crawlers follow. It does not lock anything. For the practical setup, see [crawler access](/guide/#crawler-access). Other AI companies publish their own crawler names, so check each operator's documentation before writing rules for it.
 
 ### What research shows
 
@@ -96,7 +96,7 @@ The Aggarwal et al. paper set out GEO as a research problem. The authors built G
 
 ### What is just practice
 
-The following is our recommendation. No platform documents it as a requirement: keep technical SEO healthy, put a clear direct answer near the top of each important page, keep facts accurate and sourced, decide deliberately which crawlers you allow, and describe your business the same way everywhere it appears. It is cheap, sensible, and comes with no guarantee. Our [principles](/#principles) and [how AI answers happen](/#how-it-works) go into more depth.
+The following is our recommendation. No platform documents it as a requirement: keep technical SEO healthy, put a clear direct answer near the top of each important page, keep facts accurate and sourced, decide deliberately which crawlers you allow, and describe your business the same way everywhere it appears. It is cheap, sensible, and comes with no guarantee. Our [principles](/guide/#principles) and [how AI answers happen](/guide/#how-it-works) go into more depth.
 
 ## Do you need all three? A sensible order of work
 
@@ -114,7 +114,7 @@ None of these steps needs its own budget line per acronym. They are one body of 
 
 Start with what is well established. Google says visits from AI Overviews and AI Mode are counted in Search Console's Performance report, within the "Web" search type, alongside the rest of your search traffic. Indexing, impressions and clicks there tell you whether the foundation holds.
 
-Answer boxes and AI citations are rougher to measure. Pick a fixed set of questions your customers actually ask, check how you appear for them on a regular schedule, and record what you see, including how you are described. Treat each check as a sample, because answers vary from one run to the next. Our notes on [measuring progress](/#measurement) cover this in more detail.
+Answer boxes and AI citations are rougher to measure. Pick a fixed set of questions your customers actually ask, check how you appear for them on a regular schedule, and record what you see, including how you are described. Treat each check as a sample, because answers vary from one run to the next. Our notes on [measuring progress](/guide/#measurement) cover this in more detail.
 
 Be wary of anyone who promises a result. Nobody can guarantee your site will be cited in an AI answer, and Google's own documentation describes eligibility, not placement.
 

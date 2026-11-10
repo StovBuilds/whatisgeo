@@ -95,7 +95,7 @@ If you are comparing tools more broadly, our overview of [AI SEO tools](/ai-seo-
 
 Rewriting text until a classifier passes it, whether by hand or with a humaniser, improves the score and nothing else. Google's guidance asks for something different: accuracy, originality and value to the reader. A page with those qualities is in good shape whatever a detector says. A page without them gains nothing from a better score. The Liang study also found that simple rewording could push detector results either way, which makes the score a weak guide to quality.
 
-Put the time into the page itself. Answer the question directly, back up claims with sources and add experience a reader could not find elsewhere. [How to write content for AI search](/how-to-write-content-for-ai-search/) covers this in practical detail, and the [principles section of our guide](/#principles) explains the thinking behind it.
+Put the time into the page itself. Answer the question directly, back up claims with sources and add experience a reader could not find elsewhere. [How to write content for AI search](/how-to-write-content-for-ai-search/) covers this in practical detail, and the [principles section of our guide](/guide/#principles) explains the thinking behind it.
 
 ## Detectors and AI visibility
 

@@ -66,7 +66,7 @@ According to the May 2024 post, AI Overviews were tested in Search Labs before l
 
 **Google's documentation.** Search Central says AI Overviews and AI Mode "may use a 'query fan-out' technique", which means "issuing multiple related searches across subtopics and data sources" to build a response. While the response is being generated, Google's models find more supporting pages. Google says this lets it show a "wider and more diverse set of helpful links" than a classic web search.
 
-Google has not published a list of signals that decide which pages get cited in an AI Overview. Anyone who claims to know the formula is guessing. Our [guide to how AI answers happen](/#how-it-works) walks through retrieval and citation across the main assistants.
+Google has not published a list of signals that decide which pages get cited in an AI Overview. Anyone who claims to know the formula is guessing. Our [guide to how AI answers happen](/guide/#how-it-works) walks through retrieval and citation across the main assistants.
 
 ## How AI Overviews differ from AI Mode and featured snippets
 
@@ -88,7 +88,7 @@ Eligibility does not mean inclusion. A page that meets every condition may still
 
 **Research finding.** Aggarwal et al. ("GEO: Generative Engine Optimization", accepted to KDD 2024) tested changes to content, such as adding citations, quotations and statistics, and found that these could make a source more visible in generated answers. Bear in mind the conditions. The tests ran on a generative engine the authors built themselves, which answered from the top five Google results, using a benchmark of 10,000 queries. They repeated the tests on Perplexity.ai. They did not test Google AI Overviews, and they found that results varied by subject area. Treat it as a useful pointer, not a rule for Google.
 
-**Our recommendation.** Make sure your important pages are crawlable, indexed and able to show a snippet. Then put your effort into clear, well-sourced content in plain text. Paid markup or special files will not help, because Google says none is needed. Our [principles](/#principles) explain why, and the [crawler access](/#crawler-access) section covers robots.txt and CDN blocks.
+**Our recommendation.** Make sure your important pages are crawlable, indexed and able to show a snippet. Then put your effort into clear, well-sourced content in plain text. Paid markup or special files will not help, because Google says none is needed. Our [principles](/guide/#principles) explain why, and the [crawler access](/guide/#crawler-access) section covers robots.txt and CDN blocks.
 
 ## Can you turn AI Overviews off or opt out?
 
@@ -113,7 +113,7 @@ If you add a preview control and still see your content in AI features, Google s
 
 **Google's documentation.** Search Central says traffic from AI features is counted in Search Console's Performance report, under the "Web" search type, together with the rest of your search traffic. Google's page does not mention a separate AI Overviews report, so you cannot use these figures to isolate AI Overview clicks. Google also suggests tracking conversions and time on site in tools such as Google Analytics.
 
-**Our recommendation.** Search for the questions your customers actually ask and note whether an AI Overview appears and which pages it links to. Repeat the check over time, and read it alongside your Search Console trend. Our [measurement guide](/#measurement) explains how to do this without reading too much into small samples.
+**Our recommendation.** Search for the questions your customers actually ask and note whether an AI Overview appears and which pages it links to. Repeat the check over time, and read it alongside your Search Console trend. Our [measurement guide](/guide/#measurement) explains how to do this without reading too much into small samples.
 
 ## What to do next
 
@@ -125,4 +125,4 @@ These are our recommendations, based on Google's documentation:
 4. Keep important content in text, and keep structured data consistent with what visitors see.
 5. Use the Performance report as your baseline, and run your own spot checks on the questions that matter to you.
 
-For a fuller plan covering every AI assistant, see our [30-day plan](/#getting-started).
+For a fuller plan covering every AI assistant, see our [30-day plan](/guide/#getting-started).

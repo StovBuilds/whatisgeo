@@ -1,0 +1,23 @@
+---
+// Email sign-up: one quiet block on the reading column. Field names, ids and classes are what src/scripts/site.ts and
+// the /api/subscribe Worker expect.
+import { ui } from '../data/content';
+---
+<section class="lf-sec lf-signup" id="updates" aria-labelledby="signup-title">
+  <h2 class="lf-h2" id="signup-title">{ui.signupTitle}</h2>
+  <p class="lf-p">{ui.signupBody}</p>
+  <form class="signup-form lf-form" action="/api/subscribe" method="post">
+    <div class="lf-form__row">
+      <div class="lf-field">
+        <label class="lf-label" for="signup-email">{ui.emailLabel}</label>
+        <div class="ds-text-input" data-variant="jstov"><input class="ds-text-input__control" id="signup-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder={ui.emailPlaceholder} required /></div>
+      </div>
+      <button class="ds-button-secondary" data-variant="jstov" type="submit"><span class="ds-button-secondary__label">{ui.signupButton}</span></button>
+    </div>
+    <label class="ds-checkbox"><input class="ds-checkbox__input" name="consent" type="checkbox" value="yes" required /><span class="ds-checkbox__text"><span class="ds-checkbox__label">{ui.consent}</span></span></label>
+    <div class="honeypot" aria-hidden="true"><label for="company">Company</label><input id="company" name="company" tabindex="-1" autocomplete="off" /></div>
+    <p class="lf-note"><a class="ds-text-link" href="/privacy/">{ui.privacyLink}</a> · Email confirmation required.</p>
+    <div class="form-message lf-status" role="status" aria-live="polite" tabindex="-1"></div>
+    <noscript><p class="lf-note">Submitting opens the signup response page.</p></noscript>
+  </form>
+</section>

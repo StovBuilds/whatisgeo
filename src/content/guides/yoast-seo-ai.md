@@ -86,7 +86,7 @@ What those tokens control is set by the platforms, not by Yoast:
 
 So the toggle, as Yoast describes it, is about AI training. Yoast's own heading for the feature is "Blocking bots used to train AI systems". Its post and listing do not name OAI-SearchBot, PerplexityBot or ClaudeBot, so do not assume it covers them. Our guide to [AI crawlers and robots.txt](/ai-crawlers-robots-txt/) lists the documented tokens for each platform.
 
-Two more limits. First, robots.txt is a request to crawlers: the standard, RFC 9309, says its rules "are not a form of access authorization." Second, blocking or allowing is your decision, as Yoast's post says under "Think before you do". Our recommendation: decide what you want first, flip the toggle, then open yoursite.com/robots.txt and read exactly which lines were added. The home guide's section on [crawler access](/#crawler-access) covers the trade-offs.
+Two more limits. First, robots.txt is a request to crawlers: the standard, RFC 9309, says its rules "are not a form of access authorization." Second, blocking or allowing is your decision, as Yoast's post says under "Think before you do". Our recommendation: decide what you want first, flip the toggle, then open yoursite.com/robots.txt and read exactly which lines were added. The home guide's section on [crawler access](/guide/#crawler-access) covers the trade-offs.
 
 ## llms.txt and structured data in Yoast: what is documented
 

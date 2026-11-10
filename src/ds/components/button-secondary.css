@@ -1,0 +1,268 @@
+/* ============================================================================
+   components/button-secondary/button-secondary.css — Secondary / tertiary
+   buttons (core · S1). Root `.ds-button-secondary` is the <button> itself; it
+   shares button-primary's geometry (height ladder, 16px padding, radius-button,
+   icon slots) and NEVER paints --ds-primary-fill — hierarchy is by fill only:
+   outline (default) → tint → ghost. `data-tone="danger"` recolours any variant
+   to --ds-danger-ink text (outline shape kept — never a filled red).
+   Tokens only (tools/lint-tokens.mjs). Private knobs: --_h --_pad-x --_radius
+   --_w --_gap --_icon.
+   ========================================================================== */
+
+.ds-button-secondary {
+  --_h:      var(--ds-size-h);
+  --_pad-x:  calc(var(--ds-size-pad-x) + var(--ds-space-1));    /* 16 at md — matches button-primary */
+  --_radius: var(--ds-radius-button);
+  --_w:      auto;
+  --_gap:    var(--ds-space-2);
+  --_icon:   var(--ds-icon-size);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--_gap);
+  width: var(--_w);
+  max-width: 100%;
+  min-width: 0;
+  min-height: var(--_h);
+  padding-inline: var(--_pad-x);
+  padding-block: 0;
+  font-family: inherit;
+  font-size: var(--ds-size-text);
+  font-weight: var(--ds-weight-medium);
+  line-height: var(--ds-lh-list);
+  letter-spacing: 0;
+  text-transform: var(--ds-control-case);
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--ds-ink);
+  background: var(--ds-surface);
+  border: var(--ds-border-width) solid var(--ds-border);
+  border-radius: var(--_radius);
+  box-shadow: var(--ds-shadow-lip);               /* 0 in base; 1px darker bottom edge when the theme sets --ds-control-lip */
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--ds-dur-fast) var(--ds-ease-standard),
+              border-color var(--ds-dur-fast) var(--ds-ease-standard),
+              box-shadow var(--ds-dur-fast) var(--ds-ease-standard),
+              color var(--ds-dur-fast) var(--ds-ease-standard);
+}
+
+/* ---- parts ---------------------------------------------------------------- */
+.ds-button-secondary__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ds-button-secondary__icon {
+  flex: none;
+  display: inline-flex;
+  width: var(--_icon);
+  height: var(--_icon);
+}
+.ds-button-secondary__icon svg {
+  width: 100%; height: 100%;
+  fill: none; stroke: currentColor;
+  stroke-width: var(--ds-icon-stroke);
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.ds-button-secondary__icon[data-slot="trailing"] { margin-inline-end: calc(-1 * var(--ds-space-0-5)); }
+.ds-button-secondary__icon[data-slot="leading"]  { margin-inline-start: calc(-1 * var(--ds-space-0-5)); }
+/* a live dot inside the icon slot ("Record"): semantic colour, 8px */
+.ds-button-secondary__dot {
+  flex: none;
+  width: var(--ds-space-2);
+  height: var(--ds-space-2);
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-live);
+}
+
+/* ---- states (outline default) ---------------------------------------------- */
+.ds-button-secondary:hover,
+.ds-button-secondary[data-state="hover"] {
+  border-color: var(--ds-border-strong);
+  background: var(--ds-hover-bg);                /* surface-hover under tint, surface under lift */
+}
+/* data-hover="lift": the row lifts instead of tinting. Selected on the attribute because
+   --ds-hover-shadow is `none` under tint and `none` cannot sit inside a shadow list. */
+[data-hover="lift"] .ds-button-secondary:hover,
+[data-hover="lift"] .ds-button-secondary[data-state="hover"] { box-shadow: var(--ds-shadow-lip), var(--ds-shadow-lift); }
+.ds-button-secondary:active,
+.ds-button-secondary[data-state="pressed"] {
+  background: var(--ds-surface-pressed, var(--ds-surface-3));   /* pressed = --ds-surface-pressed (§13.4); was surface-2, lighter than hover on base */
+  border-color: var(--ds-border-strong);
+  box-shadow: var(--ds-shadow-lip);
+}
+.ds-button-secondary:focus-visible,
+.ds-button-secondary[data-state="focus"] {
+  outline: var(--ds-ring-width) solid var(--ds-ring);
+  outline-offset: var(--ds-ring-offset);
+}
+/* pressed-toggle (aria-pressed): neutral selected tint, never the accent (rule 3) */
+.ds-button-secondary[aria-pressed="true"],
+.ds-button-secondary[aria-expanded="true"] {
+  background: var(--ds-selected-bg);
+  color: var(--ds-selected-ink);
+  border-color: var(--ds-border-strong);
+}
+/* disabled: fill / border / text all step lighter [manychat-web-42] */
+.ds-button-secondary:disabled,
+.ds-button-secondary[aria-disabled="true"] {
+  color: var(--ds-ink-faint);
+  background: var(--ds-surface-3);
+  border-color: var(--ds-rule);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+/* loading: footprint kept, content hidden, spinner in currentColor */
+.ds-button-secondary[aria-busy="true"] { pointer-events: none; }
+.ds-button-secondary[aria-busy="true"] > * { visibility: hidden; }
+.ds-button-secondary[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--_icon);
+  height: var(--_icon);
+  border: 2px solid transparent;
+  border-block-start-color: currentColor;
+  border-inline-end-color: currentColor;
+  border-radius: var(--ds-radius-pill);
+  animation: ds-button-secondary-spin calc(var(--ds-dur-slow) * 3) linear infinite;
+}
+@keyframes ds-button-secondary-spin { to { transform: rotate(360deg); } }
+
+/* ---- danger tone: same shape, --ds-danger-ink text; hover = danger tint ------ */
+.ds-button-secondary[data-tone="danger"],
+.ds-button-secondary[data-variant="danger-text"] { color: var(--ds-danger-ink); }
+.ds-button-secondary[data-tone="danger"]:hover,
+.ds-button-secondary[data-variant="danger-text"]:hover,
+.ds-button-secondary[data-tone="danger"][data-state="hover"],
+.ds-button-secondary[data-variant="danger-text"][data-state="hover"] {
+  background: var(--ds-danger-tint);
+  border-color: var(--ds-danger);
+  color: var(--ds-danger-ink);
+}
+.ds-button-secondary[data-tone="danger"]:focus-visible,
+.ds-button-secondary[data-variant="danger-text"]:focus-visible { outline-color: var(--ds-danger); }
+
+/* ---- sizes ------------------------------------------------------------------- */
+.ds-button-secondary[data-size] { --_h: var(--ds-size-h); --_pad-x: calc(var(--ds-size-pad-x) + var(--ds-space-1)); }
+.ds-button-secondary[data-size="lg"] { --_icon: var(--ds-icon-size-row); }
+
+/* ============================================================================
+   VARIANTS. Unmarked root = jstov (house): outlined-white — --ds-surface fill,
+   1px --ds-border (the contract's control border; the taxonomy's "rule-strong"
+   is the same grade in ledger), 36 tall, radius-button, the control lip when the
+   theme has one. tint-fill for in-card quiet actions; danger = tone.
+   ========================================================================== */
+
+/* outlined-white — 1px rule, white fill [descript-editing-profile-00-03] [jasper-web-19]
+   [manychat-web-42] [retool-web-25] [clickup-web-147] [contra-web-39]: identical to the
+   unmarked root (the house default); the attribute exists so the reference name selects it. */
+
+/* outlined-lip — border + the 1px lift shadow shared with inputs so a toolbar row aligns
+   [navattic-web-174] [navattic-web-153] [manychat-web-126] */
+.ds-button-secondary[data-variant="outlined-lip"] {
+  --_h: var(--ds-control-h-sm);
+  --_pad-x: var(--ds-space-3);
+  box-shadow: var(--ds-shadow-lip), var(--ds-shadow-lift);
+}
+.ds-button-secondary[data-variant="outlined-lip"]:hover { box-shadow: var(--ds-shadow-lip), var(--ds-shadow-lift); }
+
+/* outlined-mono-caps-pill — 44–46 px pill, darker 1px border, label lane in mono caps
+   with +0.12em tracking, 16px leading icon [origin-connecting-an-account-00-04]
+   [origin-connecting-an-account-05-06]. Case is applied HERE (a designer variant),
+   not by --ds-label-case (R8). */
+.ds-button-secondary[data-variant="outlined-mono-caps-pill"] {
+  --_h: var(--ds-control-h-lg);                                /* 44 (46 at origin's 16px base) */
+  --_pad-x: var(--ds-space-6);
+  --_radius: var(--ds-radius-pill);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-sm);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  border-color: var(--ds-border-strong);
+  background: transparent;
+}
+.ds-button-secondary[data-variant="outlined-mono-caps-pill"]:hover { background: var(--ds-hover-bg); border-color: var(--ds-ink-muted); }
+
+/* tint-fill — one tint step, no border, no shadow [perplexity-asking-a-question-00-04]
+   32px "Learn More" · [luma-creating-an-event-24-27] 229×36 #f4f4f4 r8 ·
+   [luma-creating-an-event-00-03] 50px "+ Create Event" · [origin-05-06] quiet pill */
+.ds-button-secondary[data-variant="tint-fill"] {
+  background: var(--ds-surface-2);
+  border-color: transparent;
+  box-shadow: none;
+}
+.ds-button-secondary[data-variant="tint-fill"]:hover,
+.ds-button-secondary[data-variant="tint-fill"][data-state="hover"] { background: var(--ds-surface-3); border-color: transparent; box-shadow: none; }
+.ds-button-secondary[data-variant="tint-fill"]:active { background: var(--ds-surface-pressed, var(--ds-surface-3)); }
+.ds-button-secondary[data-variant="tint-fill"]:disabled { background: var(--ds-surface-3); border-color: transparent; }
+
+/* ghost-text — bare label, no container; hover paints the hover tint
+   [descript-editing-profile-00-03] [clickup-web-147] [confluence-web-23] quiet card CTAs */
+.ds-button-secondary[data-variant="ghost-text"] {
+  --_pad-x: var(--ds-space-2);
+  color: var(--ds-ink-2);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.ds-button-secondary[data-variant="ghost-text"]:hover,
+.ds-button-secondary[data-variant="ghost-text"][data-state="hover"] { background: var(--ds-hover-bg); border-color: transparent; color: var(--ds-ink); box-shadow: none; }
+.ds-button-secondary[data-variant="ghost-text"]:disabled { background: transparent; border-color: transparent; }
+
+/* glass — frosted control over media: --ds-glass-fill + --ds-glass-border + blur,
+   40px pill, leading glyph [hsvu79cweaarswf]. Text is --ds-ink: the glass fill follows
+   the mode (light glass in light, dark glass in dark) so the pair always reads. */
+.ds-button-secondary[data-variant="glass"] {
+  --_h: calc(var(--ds-control-h) + var(--ds-space-1));        /* 40 */
+  --_pad-x: var(--ds-space-5);
+  --_radius: var(--ds-radius-pill);
+  font-size: var(--ds-text-lg);
+  color: var(--ds-ink);
+  background: var(--ds-glass-fill);
+  border-color: var(--ds-glass-border);
+  box-shadow: none;
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur));
+  backdrop-filter: blur(var(--ds-glass-blur));
+}
+.ds-button-secondary[data-variant="glass"]:hover { background: var(--ds-glass-fill); border-color: var(--ds-ink); box-shadow: none; }
+
+/* hsaj-full-width-ghost — input-shaped 48px white bar, radius-md, leading icon, full width
+   [hsajlzkwuaagtdc]. Reference weakness: indistinguishable from disabled; here the
+   rest state keeps --ds-border + ink while disabled drops to --ds-rule + faint. */
+.ds-button-secondary[data-variant="hsaj-full-width-ghost"] {
+  --_w: 100%;
+  --_h: calc(var(--ds-control-h) + var(--ds-space-3));        /* 48 */
+  --_pad-x: var(--ds-space-4);
+  --_radius: var(--ds-radius-md);
+  --_icon: var(--ds-icon-size-row);
+  justify-content: flex-start;
+  font-size: var(--ds-text-lg);
+  font-weight: var(--ds-weight-regular);
+  box-shadow: none;
+}
+
+/* ink-outline — 1px INK border (not the rule grade), 34px, radius-md, 600 label; reads as a
+   control against #ddd chips [airbnb-web-528] */
+.ds-button-secondary[data-variant="ink-outline"] {
+  --_h: calc(var(--ds-control-h-sm) + var(--ds-space-0-5));   /* 34 */
+  --_radius: var(--ds-radius-md);
+  font-weight: var(--ds-weight-semibold);
+  border-color: var(--ds-ink);
+  box-shadow: none;
+}
+.ds-button-secondary[data-variant="ink-outline"]:hover { border-color: var(--ds-ink); background: var(--ds-hover-bg); box-shadow: none; }
+
+/* dark-ghost — on a dark chapter: one tint step up + its own border
+   [attio-2-1-830x8225] #1c1c1e fill / #2e2f31 border. Token-wise it is surface-2 +
+   border inside a data-mode="dark" island, which is how the demo shows it. */
+.ds-button-secondary[data-variant="dark-ghost"] {
+  background: var(--ds-surface-2);
+  border-color: var(--ds-border);
+  box-shadow: none;
+}
+.ds-button-secondary[data-variant="dark-ghost"]:hover { background: var(--ds-surface-3); border-color: var(--ds-border-strong); box-shadow: none; }
+
+/* danger-text — red text only, same outline shape as its sibling [manychat-web-64] "Stop"
+   beside "Edit"; [descript-editing-profile-00-03] danger link. Rules live in the tone
+   block above; the attribute is kept so the reference name selects it. */

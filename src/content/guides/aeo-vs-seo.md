@@ -49,7 +49,7 @@ In our observation, usage varies between writers. Some include voice assistants 
 
 ## What SEO covers
 
-SEO is the broader discipline. It covers technical access, so search engines can fetch and index your pages; content that answers real queries; site structure and internal linking; page experience; and the signals that make a source look credible. It predates answer engines by decades, and the core logic holds: be findable, be useful, be credible. We set out the principles we work from in [our GEO principles](/#principles).
+SEO is the broader discipline. It covers technical access, so search engines can fetch and index your pages; content that answers real queries; site structure and internal linking; page experience; and the signals that make a source look credible. It predates answer engines by decades, and the core logic holds: be findable, be useful, be credible. We set out the principles we work from in [our GEO principles](/guide/#principles).
 
 ## Where AEO and SEO overlap
 
@@ -57,7 +57,7 @@ Most of the work. An answer engine cannot quote a page it cannot reach, and a pa
 
 Google says this directly about its own AI features (documented behaviour). Its Search Central page on AI features states that "The best practices for SEO remain relevant for AI features in Google Search" and that "There are no additional requirements to appear in AI Overviews or AI Mode, nor other special optimizations necessary." To be eligible as a supporting link, "a page must be indexed and eligible to be shown in Google Search with a snippet."
 
-So if your SEO foundations are weak, an AEO layer on top will not rescue them. For the closely related comparison, see [GEO vs SEO](/#geo-vs-seo).
+So if your SEO foundations are weak, an AEO layer on top will not rescue them. For the closely related comparison, see [GEO vs SEO](/guide/#geo-vs-seo).
 
 ## Where they differ in practice
 
@@ -86,7 +86,7 @@ AI products use several user agents, each with its own job, and robots.txt can t
 | Anthropic | Claude-User | Retrieving pages when people ask Claude questions |
 | Anthropic | Claude-SearchBot | Indexing to improve search result quality |
 
-OpenAI says its settings are independent: a site can allow OAI-SearchBot to appear in search results while disallowing GPTBot. The practical risk is a blanket rule aimed at training crawlers that also shuts out a search crawler you wanted. More on this in [crawler access](/#crawler-access).
+OpenAI says its settings are independent: a site can allow OAI-SearchBot to appear in search results while disallowing GPTBot. The practical risk is a blanket rule aimed at training crawlers that also shuts out a search crawler you wanted. More on this in [crawler access](/guide/#crawler-access).
 
 ## What the platforms themselves say
 
@@ -128,10 +128,10 @@ Most small teams can work through the first five in a sitting. The sixth is ongo
 
 This is harder than rank tracking. Answers vary by phrasing, by product and over time, so a single check proves little.
 
-For Google, its guide points to the Generative AI performance report in Search Console as the way to see how your content performs in its generative AI features. For other assistants, list the questions your buyers really ask, run them on a regular schedule, and record whether you are named or cited and whether the details are right. Over time that gives you a trend rather than a snapshot. Our [measurement section](/#measurement) sets out a simple routine.
+For Google, its guide points to the Generative AI performance report in Search Console as the way to see how your content performs in its generative AI features. For other assistants, list the questions your buyers really ask, run them on a regular schedule, and record whether you are named or cited and whether the details are right. Over time that gives you a trend rather than a snapshot. Our [measurement section](/guide/#measurement) sets out a simple routine.
 
 If nothing moves, the work is still useful: the same groundwork supports ordinary search.
 
 ## Where GEO fits in
 
-GEO, generative engine optimisation, is the name the Aggarwal paper gave its framework, and Google's guide mentions it alongside AEO. In our observation the two are often used interchangeably, though some writers draw a line between them. For the longer treatment, see [what GEO is](/#what-is-geo). For practical purposes the labels matter less than the work underneath.
+GEO, generative engine optimisation, is the name the Aggarwal paper gave its framework, and Google's guide mentions it alongside AEO. In our observation the two are often used interchangeably, though some writers draw a line between them. For the longer treatment, see [what GEO is](/guide/#what-is-geo). For practical purposes the labels matter less than the work underneath.

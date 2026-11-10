@@ -74,7 +74,7 @@ On robots.txt itself, RFC 9309 is the standard. It says crawlers "are requested 
 
 ## What you can control on your own site
 
-**Crawler access (documented).** This is the one lever Anthropic describes. Check your robots.txt for a `User-agent: *` group with `Disallow: /`, and for old rules that block bots by name. Either can shut out Claude-SearchBot and Claude-User without anyone meaning to. Check every subdomain too, as Anthropic's instructions apply per subdomain. Our [crawler access](/#crawler-access) section covers the basics for all the main AI crawlers.
+**Crawler access (documented).** This is the one lever Anthropic describes. Check your robots.txt for a `User-agent: *` group with `Disallow: /`, and for old rules that block bots by name. Either can shut out Claude-SearchBot and Claude-User without anyone meaning to. Check every subdomain too, as Anthropic's instructions apply per subdomain. Our [crawler access](/guide/#crawler-access) section covers the basics for all the main AI crawlers.
 
 **Page content (recommended).** Anthropic publishes nothing about what makes a page more likely to be cited, so the points below are our advice.
 
@@ -109,7 +109,7 @@ The most direct check is to ask Claude yourself, in a fixed way. This method is 
 4. Run the full set several times, as one answer proves little when answers vary.
 5. Repeat on a regular schedule and after any change to your site or robots.txt, then compare the logs.
 
-For a fuller method across assistants, see [how to measure AI visibility](/how-to-measure-ai-visibility/) and our notes on [measuring progress](/#measurement).
+For a fuller method across assistants, see [how to measure AI visibility](/how-to-measure-ai-visibility/) and our notes on [measuring progress](/guide/#measurement).
 
 ## What to do in what order
 

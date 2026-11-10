@@ -117,7 +117,7 @@ Agents fit the level 1 groundwork: checking whether pages are crawlable and inde
 
 What no agent can do is guarantee a citation. Google says there are "no additional requirements to appear in AI Overviews or AI Mode, nor other special optimizations necessary", and that SEO best practices remain relevant there. An agent can help you do that work, but it cannot change how Google or an AI assistant picks its sources.
 
-The research is about content, not agents. The GEO paper by Aggarwal et al. (KDD 2024) tested ways of rewriting content on its own benchmark, GEO-bench, in the authors' own generative engine setup. It found that effects varied by domain. It did not study SEO agents and is not evidence that they improve visibility. The site's [principles](/#principles) cover what the evidence does support.
+The research is about content, not agents. The GEO paper by Aggarwal et al. (KDD 2024) tested ways of rewriting content on its own benchmark, GEO-bench, in the authors' own generative engine setup. It found that effects varied by domain. It did not study SEO agents and is not evidence that they improve visibility. The site's [principles](/guide/#principles) cover what the evidence does support.
 
 ## How to choose or build one: questions to ask
 

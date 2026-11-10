@@ -1,5 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
+import FileRail from '../components/FileRail.astro';
 import { ui } from '../data/content';
 ---
-<Base title="Confirm your email | What is GEO" description="Confirm your subscription to What is GEO guides and course updates." noindex suggest={false}><main class="utility-page" id="main"><p class="eyebrow">One more thing</p><h1>Confirm your email.</h1><div class="prose"><p id="confirm-message" role="status">Click the button below to finish subscribing. Your subscription starts after you confirm.</p></div><button class="confirm-button" id="confirm-button" type="button">{ui.confirmButton} ↗</button><noscript><p>Please enable JavaScript to confirm your email securely.</p></noscript><div><a class="text-link" href="/#updates">Back to the guide ↗</a></div></main></Base>
+<Base title="Confirm your email | What is GEO" description="Confirm your subscription to What is GEO guides and course updates." noindex suggest={false}>
+  <main id="main">
+    <div class="lf-shell" data-page="confirm">
+      <FileRail page="other" />
+      <div class="lf-pane lf-in-pane">
+        <header class="lf-intro lf-intro--page"><h1 class="lf-h1">Confirm your email</h1></header>
+        <div class="lf-prose"><p id="confirm-message" role="status">Click the button below to finish subscribing. Your subscription starts after you confirm.</p></div>
+        <p class="lf-more"><button class="ds-button-primary confirm-button" id="confirm-button" type="button"><span class="ds-button-primary__label">{ui.confirmButton}</span></button></p>
+        <noscript><p class="lf-note">Please enable JavaScript to confirm your email securely.</p></noscript>
+        <p class="lf-more"><a class="ds-text-link" href="/guide/">Back to the guide</a></p>
+      </div>
+    </div>
+  </main>
+</Base>

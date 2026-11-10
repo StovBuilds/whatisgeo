@@ -1,15 +1,5 @@
 import { ui } from '../data/content';
-const themeButton = document.querySelector<HTMLButtonElement>('.theme-button');
-function updateThemeButton() { const dark = document.documentElement.dataset.mode === 'dark'; themeButton?.setAttribute('aria-pressed', String(dark)); themeButton?.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} mode`); }
-updateThemeButton();
-themeButton?.addEventListener('click', () => { const theme = document.documentElement.dataset.mode === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.mode = theme; try { localStorage.setItem('wig-theme', theme); } catch {} updateThemeButton(); });
-
-let ticking = false;
-function onScroll() { if(ticking)return; ticking=true;requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-innerHeight;document.documentElement.style.setProperty('--reading-progress',`${max>0?scrollY/max*100:0}%`);ticking=false;}); }
-addEventListener('scroll',onScroll,{passive:true});onScroll();
-const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('.toc a[href^="#"]')];
-if ('IntersectionObserver' in window) { const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){tocLinks.forEach(a=>a.setAttribute('aria-current',String(a.hash==='#'+entry.target.id)));}}},{rootMargin:'-10% 0px -65% 0px'});document.querySelectorAll('.chapter').forEach(section=>observer.observe(section)); }
-
+// Theme, menus, the file list and the reading marker live in src/scripts/linefile.ts.
 const form=document.querySelector<HTMLFormElement>('.signup-form');
 if(form){
  const button=form.querySelector<HTMLButtonElement>('button')!;

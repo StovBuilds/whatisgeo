@@ -83,7 +83,7 @@ Look for patterns across runs and assistants, not single answers. If you are nam
 
 Do not read much into one missing mention. A pattern that repeats across prompts, assistants and days is worth acting on.
 
-Fix access problems first, because they are usually cheap and clear. If you want a structured review, an [AI visibility audit](/ai-visibility-audit/) works through access, prompts, cited sources and accuracy in order. For a repeatable method with scoring, see [how to measure AI visibility](/how-to-measure-ai-visibility/), and for the other signals worth tracking, including Search Console, which Google says counts AI Overviews and AI Mode traffic in its Performance report under the Web search type, see [measuring progress](/#measurement).
+Fix access problems first, because they are usually cheap and clear. If you want a structured review, an [AI visibility audit](/ai-visibility-audit/) works through access, prompts, cited sources and accuracy in order. For a repeatable method with scoring, see [how to measure AI visibility](/how-to-measure-ai-visibility/), and for the other signals worth tracking, including Search Console, which Google says counts AI Overviews and AI Mode traffic in its Performance report under the Web search type, see [measuring progress](/guide/#measurement).
 
 Repeat the manual check on a regular schedule. How often is up to you; we suggest monthly as a sensible default for a small site. The trend across dated checks matters more than any single result.
 

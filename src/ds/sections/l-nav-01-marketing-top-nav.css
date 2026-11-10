@@ -1,0 +1,44 @@
+/* ============================================================================
+   patterns/sections/l-nav-01-marketing-top-nav.css
+   L-NAV-01 · Marketing top nav · core
+   Root <div class="ds-sec-l-nav-01-marketing-top-nav" data-variant="jstov | vercel-button-trio | attio-dual-cta |
+        intercom-dual-cta | fibery-cta-trio | synara-three-cluster-outlined-cta | heron-table-nav | luma-transparent-app-nav"
+        [data-sticky] [data-scrolled]>
+   Everything visible is components/marketing-nav composed by its ROOT class; the wrapper is the page's first row.
+   NO section gap: a nav sits flush under the viewport edge and against the hero (separation = nothing or the nav's
+   own 1 px rule). What the wrapper adds instead:
+     data-sticky   — position: sticky at the top of the page, --ds-z-sticky.
+     data-scrolled — the scrolled state (open question 3 of the taxonomy: no reference defines one): the wrapper
+                     paints --ds-ground at 88 % + a backdrop blur (--ds-glass-blur) + one hairline. A page's scroll
+                     script toggles the attribute past --ds-topbar-h of scroll; CSS only, the composed nav is untouched.
+                     Variants whose resting nav already draws a bottom rule (jstov, attio) keep that rule and the
+                     wrapper draws none, so the scrolled bar never shows two lines.
+   Tokens only. Private knobs: --_ground-alpha (scrolled opacity, 88 %).
+   ========================================================================== */
+
+.ds-sec-l-nav-01-marketing-top-nav {
+  --_ground-alpha: 88%;
+  position: relative;
+  min-width: 0;
+  padding: 0;                                                        /* the one section with no --ds-section-gap */
+  color: var(--ds-ink);
+}
+.ds-sec-l-nav-01-marketing-top-nav > .ds-marketing-nav { width: 100%; }   /* placement of the composed root only */
+
+/* sticky: the page decides; in flow by default */
+.ds-sec-l-nav-01-marketing-top-nav[data-sticky] {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--ds-z-sticky);
+}
+
+/* scrolled: 88 % ground + blur + one hairline; the resting bar is transparent (7/9 references) */
+.ds-sec-l-nav-01-marketing-top-nav[data-scrolled] {
+  background: color-mix(in srgb, var(--ds-ground) var(--_ground-alpha), transparent);
+  -webkit-backdrop-filter: blur(var(--ds-glass-blur));
+  backdrop-filter: blur(var(--ds-glass-blur));
+  transition: background-color var(--ds-dur-base) var(--ds-ease-standard);
+}
+.ds-sec-l-nav-01-marketing-top-nav[data-scrolled]:not([data-variant="jstov"]):not([data-variant="attio-dual-cta"]) {
+  border-block-end: var(--ds-border-width) solid var(--ds-rule);
+}

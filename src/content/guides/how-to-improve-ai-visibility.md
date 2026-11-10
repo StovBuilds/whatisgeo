@@ -57,7 +57,7 @@ Miss any one and you have a problem. Being named but described wrongly is arguab
 
 Visibility is not a ranking. There is no fixed results page to sit at the top of, and no guaranteed slot for a given question. Google's own documentation says AI Overviews and AI Mode may use different models and techniques, so the responses and links they show will vary, and that AI Overviews only appear when Google's systems judge them useful, so they often don't trigger at all. What you can realistically aim for is better odds, measured properly.
 
-That is why the order of work matters: measure first, change things second, check again third. For the wider picture of how answers are assembled, see [how AI answers happen](/#how-it-works).
+That is why the order of work matters: measure first, change things second, check again third. For the wider picture of how answers are assembled, see [how AI answers happen](/guide/#how-it-works).
 
 ## Step 1: Find out where you stand today
 
@@ -67,7 +67,7 @@ Write down the questions a buyer would really ask. Leave out your brand name and
 
 Do it more than once. Answers vary between runs, so a single query tells you very little. Ask each question several times, ideally on different days, and log three things each time: were you named, were you cited, and was the description correct?
 
-A plain spreadsheet does the job, with one row per question per run. You are looking for patterns, not a single verdict. Keep the log, because without it every later claim of improvement is guesswork. If you are setting this up for the first time, [the 30-day plan](/#getting-started) covers the groundwork.
+A plain spreadsheet does the job, with one row per question per run. You are looking for patterns, not a single verdict. Keep the log, because without it every later claim of improvement is guesswork. If you are setting this up for the first time, [the 30-day plan](/guide/#getting-started) covers the groundwork.
 
 ## Step 2: Make sure the right crawlers can reach you
 
@@ -90,7 +90,7 @@ Robots.txt is only part of it. Google lists making sure crawling is allowed "by 
 
 Two cautions. First, robots.txt is a request, not a lock. RFC 9309, the standard that defines it, says its rules "are not a form of access authorization". If something needs to be private, put it behind a login.
 
-Second, Google works differently. For AI Overviews and AI Mode, Google says the same foundational SEO best practices apply. To be shown as a supporting link, a page must be indexed and eligible to appear in Search with a snippet, and "there are no additional technical requirements". Google also says robots.txt rules for Googlebot are the control for Search, including its AI features. Google-Extended is a separate control for training and grounding in some of Google's other systems, so it is not the switch for AI Overviews. More detail is in [crawler access](/#crawler-access).
+Second, Google works differently. For AI Overviews and AI Mode, Google says the same foundational SEO best practices apply. To be shown as a supporting link, a page must be indexed and eligible to appear in Search with a snippet, and "there are no additional technical requirements". Google also says robots.txt rules for Googlebot are the control for Search, including its AI features. Google-Extended is a separate control for training and grounding in some of Google's other systems, so it is not the switch for AI Overviews. More detail is in [crawler access](/guide/#crawler-access).
 
 ## Step 3: Make pages easy to quote
 
@@ -102,7 +102,7 @@ Write sentences that still make sense when quoted on their own. "We do it differ
 
 Keep pages focused: one page, one question, one clear answer. A page that sprawls across six topics is harder to quote accurately.
 
-None of this is exotic. It is good writing for readers, and it happens to suit systems that summarise and cite. The thinking behind it is set out in [the principles](/#principles).
+None of this is exotic. It is good writing for readers, and it happens to suit systems that summarise and cite. The thinking behind it is set out in [the principles](/guide/#principles).
 
 ## Step 4: Be described consistently across the web
 
@@ -138,4 +138,4 @@ Compare patterns, not single answers. One run where you are named proves little,
 
 For Google specifically, traffic from AI Overviews and AI Mode is included in Search Console's Performance report, counted within the "Web" search type. Remember that changes take time to be picked up: Google says crawling can take anywhere from several days to several months, depending on how often its systems decide a page needs refreshing.
 
-Be careful about giving your changes the credit. Assistants change on their own, so a better result might come from your work or from an update you never saw. Note what you changed and when, and don't declare success early. There is more on this in [measuring progress](/#measurement).
+Be careful about giving your changes the credit. Assistants change on their own, so a better result might come from your work or from an update you never saw. Note what you changed and when, and don't declare success early. There is more on this in [measuring progress](/guide/#measurement).

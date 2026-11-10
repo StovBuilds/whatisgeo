@@ -114,7 +114,7 @@ To build a prompt list (our recommendation):
 - Put a handful of those questions to the assistants your buyers use, and note whether you are named and which sources are cited. Repeat this over time, because answers vary.
 - Write pages that answer the questions clearly; see [how to write content for AI search](/how-to-write-content-for-ai-search/).
 
-Research on this exists but is young. Aggarwal et al. (GEO, KDD 2024) built a benchmark of queries across multiple domains and tested ways of making content more visible in generative engine responses. They found that how well each method worked varied by domain. They also describe generative engines as black-box and fast-moving, and say content creators have little to no control over when and how their content is shown. Nobody can guarantee inclusion in an AI answer. To track how you appear, see [how to measure AI visibility](/how-to-measure-ai-visibility/) and the [measurement section of our main guide](/#measurement).
+Research on this exists but is young. Aggarwal et al. (GEO, KDD 2024) built a benchmark of queries across multiple domains and tested ways of making content more visible in generative engine responses. They found that how well each method worked varied by domain. They also describe generative engines as black-box and fast-moving, and say content creators have little to no control over when and how their content is shown. Nobody can guarantee inclusion in an AI answer. To track how you appear, see [how to measure AI visibility](/how-to-measure-ai-visibility/) and the [measurement section of our main guide](/guide/#measurement).
 
 ## Kinds of tool compared
 

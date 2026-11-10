@@ -51,7 +51,7 @@ There are two routes, and OpenAI documents both:
 - **ChatGPT decides.** The help centre says ChatGPT "may search the web automatically when your question would benefit from current information".
 - **The user asks.** People can pick Search from the tools menu, type / in the message box, or regenerate an answer with "Search the web".
 
-OpenAI does not publish a list of what triggers an automatic search, so treat any list you see elsewhere as guesswork. What follows for you is simple: if ChatGPT answers a question from what it already knows, no search happens and no page gets a citation, however good your site is. For how this fits into AI answers generally, see [how AI answers happen](/#how-it-works).
+OpenAI does not publish a list of what triggers an automatic search, so treat any list you see elsewhere as guesswork. What follows for you is simple: if ChatGPT answers a question from what it already knows, no search happens and no page gets a citation, however good your site is. For how this fits into AI answers generally, see [how AI answers happen](/guide/#how-it-works).
 
 ## How does ChatGPT search work?
 
@@ -103,7 +103,7 @@ The details OpenAI documents:
 - **Allow the bot and its IP addresses.** The help centre says that, to make a site eligible, you should allow OAI-SearchBot and make sure your host or CDN lets through traffic from OpenAI's published searchbot IP addresses (openai.com/searchbot.json). A firewall that blocks unfamiliar bots can undo a correct robots.txt.
 - **Changes are not instant.** OpenAI says it can take around 24 hours after a robots.txt update for its search systems to adjust.
 
-Allowing the crawler makes you eligible. It does not earn you a place in an answer. For the file-level rules across every AI crawler, see [AI crawlers and robots.txt](/ai-crawlers-robots-txt/), or the short version in [crawler access](/#crawler-access).
+Allowing the crawler makes you eligible. It does not earn you a place in an answer. For the file-level rules across every AI crawler, see [AI crawlers and robots.txt](/ai-crawlers-robots-txt/), or the short version in [crawler access](/guide/#crawler-access).
 
 ## How do you check whether your site appears?
 

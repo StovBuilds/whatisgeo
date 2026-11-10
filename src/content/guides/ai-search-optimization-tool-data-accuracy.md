@@ -124,4 +124,4 @@ All of this data is imperfect, because it is built on sampled answers that vary,
 
 Use the numbers to see which way things are moving and don't read them as exact counts. Run the same prompt set several times and report the spread as part of the result. Keep the dates and exact prompts on file so next month compares like with like. Use your manual checks as the reference point, and let a tool earn your trust by matching them.
 
-Look at trends across repeated runs over several weeks, not single readings. A brand named more often across many runs has shown you something. One lucky run hasn't. For how this fits into a wider measurement routine, see the [measurement section](/#measurement) of our main guide.
+Look at trends across repeated runs over several weeks, not single readings. A brand named more often across many runs has shown you something. One lucky run hasn't. For how this fits into a wider measurement routine, see the [measurement section](/guide/#measurement) of our main guide.
