@@ -8,6 +8,7 @@ const urls: [string, string][] = [
   [`${site.url}/guide/`, updatedISO],
   [`${site.url}/guides/`, latest],
   ...guides.map(g => [`${site.url}${g.url}`, g.fm.updated] as [string, string]),
+  [`${site.url}/who-we-are/`, updatedISO],
   [`${site.url}/privacy/`, updatedISO],
   [`${site.url}/mcp-server/`, sitePage('mcp-server').fm.updated!],
 ];
