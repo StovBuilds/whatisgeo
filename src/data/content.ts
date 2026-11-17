@@ -1,4 +1,5 @@
 import { crawlerSection } from './crawlers';
+import identity from './identity.json';
 const baseSections = [
   {
     "title": "Hero",
@@ -100,7 +101,12 @@ export const site = {
   url: 'https://whatisgeo.app',
   description: 'A practical, source-linked guide to Generative Engine Optimisation (GEO) for business owners and marketers.',
   contact: 'hello@whatisgeo.app',
-  publisher: { name: 'Adapt Progress Evolve Limited', url: 'https://adaptprogressevolve.com/', hilyt: 'https://i.hilyt.it/ape' },
+  publisher: { name: identity.org.legalName, url: `${identity.org.url}/`, hilyt: identity.org.hilytProfile },
+  // Company details come from the shared registry (src/data/identity.json), never typed here.
+  registration: `Registered in ${identity.org.registeredIn}, company no. ${identity.org.companyNumber}, registered office ${identity.org.address.streetAddress}, ${identity.org.address.addressLocality} ${identity.org.address.postalCode}. VAT ${identity.org.vatID}.`,
+  companyNumber: identity.org.companyNumber,
+  vatID: identity.org.vatID,
+  address: identity.org.address,
   hilyt: 'https://i.hilyt.it/whatisgeo',
   source: 'https://github.com/StovBuilds/whatisgeo'
 } as const;
