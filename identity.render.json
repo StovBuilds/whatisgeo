@@ -1,0 +1,1 @@
+{"_about":"Company details in this site are read from src/data/identity.json (the shared registry). Run node scripts/identity-render.mjs after a sync; CI runs it with --check. See ~/registry/IDENTITY.md.","source":"src/data/identity.json","regions":[],"lines":[]}

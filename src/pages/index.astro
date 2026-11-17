@@ -16,7 +16,7 @@ const opening = renderLines(gf.lines, 1, gf.chapters[0].to);
 const cats = categoriesWithGuides();
 const fmt = (n: number) => n.toLocaleString('en-GB');
 const second = gf.chapters[1];
-const publisher = { '@type': 'Organization', '@id': `${site.publisher.url}#organization`, name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt], identifier: '10047328', address: { '@type': 'PostalAddress', streetAddress: '5 Brayford Square', addressLocality: 'London', postalCode: 'E1 0SG', addressCountry: 'GB' }, vatID: 'GB362654684' };
+const publisher = { '@type': 'Organization', '@id': `${site.publisher.url}#organization`, name: site.publisher.name, url: site.publisher.url, sameAs: [site.publisher.hilyt], identifier: site.companyNumber, address: { '@type': 'PostalAddress', ...site.address }, vatID: site.vatID };
 const schema = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'WebSite', '@id': `${site.url}/#website`, url: `${site.url}/`, name: site.name, description: site.description, inLanguage: 'en-GB', publisher: { '@id': publisher['@id'] }, sameAs: [site.hilyt], hasPart: { '@id': `${site.url}/guide/#article` } },
   publisher
