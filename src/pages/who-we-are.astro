@@ -1,0 +1,50 @@
+---
+// Who we are: the studio behind this site and its other public projects (Jack, 2026-11-16).
+// Generated list: src/data/who-we-are.json via ~/bin/who-we-are.mjs. Same shell as /privacy/.
+import Base from '../layouts/Base.astro';
+import FileRail from '../components/FileRail.astro';
+import { site } from '../data/content';
+import wwa from '../data/who-we-are.json';
+
+const url = `${site.url}/who-we-are/`;
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Organization', '@id': `${site.url}/#site-org`, name: site.name, url: `${site.url}/`, parentOrganization: wwa.parentOrganization },
+    {
+      '@type': 'AboutPage', '@id': `${url}#page`, url, name: `Who we are: ${wwa.org.name}`,
+      isPartOf: { '@id': `${site.url}/#website` }, about: { '@id': wwa.org.id },
+      mainEntity: {
+        '@type': 'ItemList', name: `Projects by ${wwa.org.name}`, numberOfItems: wwa.count,
+        itemListElement: wwa.sections.flatMap(s => s.projects).map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: p.url })),
+      },
+    },
+  ],
+};
+---
+<Base title={`Who we are: ${wwa.org.name} | ${site.name}`} description={`${site.name} is made by ${wwa.org.name}, a London software studio. What the studio does and the ${wwa.count} public projects it runs.`}>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\\u003c')} />
+  <main id="main">
+    <div class="lf-shell" data-page="who-we-are">
+      <FileRail page="other" />
+      <div class="lf-pane lf-in-pane">
+        <header class="lf-intro lf-intro--page"><h1 class="lf-h1">{wwa.org.name}</h1></header>
+        <div class="lf-prose">
+          {wwa.intro.map(p => <p>{p}</p>)}
+          <p>The studio's own site is <a class="ds-text-link" href={wwa.org.url}>{wwa.org.url.replace('https://', '')}</a>.</p>
+          {wwa.sections.map(s => (
+            <>
+              <h2>{s.title}</h2>
+              <ul>
+                {s.projects.map(p => (
+                  <li>{p.self ? <strong>{p.name} (this site)</strong> : <a class="ds-text-link" href={p.url}><strong>{p.name}</strong></a>}: {p.description}</li>
+                ))}
+              </ul>
+            </>
+          ))}
+          <p>{wwa.footnote}</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Base>

@@ -1,3 +1,4 @@
+import wwa from '../data/who-we-are.json';
 import { sections, site, updated } from '../data/content';
 import { questions, sources } from '../lib/content';
 import { guides, guidesIn, categoriesWithGuides } from '../lib/guides';
@@ -55,6 +56,7 @@ ${sources.map(s => `- [${s.name}](${s.url})${sourceNotes[s.url] ? `: ${sourceNot
 
 ## Optional
 
+- [Who we are](${site.url}/who-we-are/): Adapt Progress Evolve, the London studio that publishes this site, and its ${wwa.count} public projects.
 - [Privacy](${site.url}/privacy/): Newsletter data and website preferences.
 - [Sitemap](${site.url}/sitemap.xml): XML sitemap listing the home page, the guide, the guides index, every guide, the privacy page and the MCP server page, with last-modified dates.
 `;
