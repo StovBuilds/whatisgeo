@@ -34,7 +34,7 @@ export function logAiRead(request: Request, env: Env, ctx?: { waitUntil(promise:
     const headers: Record<string, string> = { 'content-type': 'application/json', 'x-ai-read-token': env.AIREAD_TOKEN };
     const probe = request.headers.get('x-fleet-probe');
     if (probe) headers['x-fleet-probe'] = probe; // lets the meter mark our own checks as self-traffic
-    const send = fetch(env.AIREAD_URL || 'https://api.jstov.uk/api/ai-reads/ingest', { method: 'POST', headers, body: JSON.stringify({ site: AIREAD_SITE, path, ua, country: request.headers.get('cf-ipcountry') || '' }), signal: AbortSignal.timeout(5000) }).catch(() => {});
+    const send = fetch(env.AIREAD_URL || 'https://api.jstov.uk/api/ai-reads/ingest', { method: 'POST', headers, body: JSON.stringify({ site: AIREAD_SITE, path, ua, country: request.headers.get('cf-ipcountry') || '' , ip: request.headers.get('cf-connecting-ip') || null, cf_verified_bot: typeof (request as unknown as { cf?: { botManagement?: { verifiedBot?: unknown } } }).cf?.botManagement?.verifiedBot === 'boolean' ? ((request as unknown as { cf?: { botManagement?: { verifiedBot?: unknown } } }).cf?.botManagement?.verifiedBot as boolean) : null }), signal: AbortSignal.timeout(5000) }).catch(() => {});
     ctx?.waitUntil(send);
     return true;
   } catch { return false; } // telemetry must never break a response
